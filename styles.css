@@ -326,6 +326,14 @@ a {
   align-items: center;
   gap: clamp(10px, 1vw, 16px);
 }
+.page3-top-ui .home-brand-overlay {
+  top: clamp(18px, 2.8vh, 34px);
+  bottom: auto;
+}
+.page3-top-nav {
+  top: calc(clamp(16px, 2.6vh, 28px) + 10px);
+  bottom: auto;
+}
 
 .page2-dual-nav .page2-nav-button {
   position: static;
