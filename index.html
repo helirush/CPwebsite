@@ -19,7 +19,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260723-0413" />
+  <link rel="stylesheet" href="./styles.css?v=20260723-1945" />
 </head>
 <body class="home-page">
   <main class="site-wrap">
@@ -35,13 +35,116 @@
         <div class="home-brand-divider" aria-hidden="true"></div>
         <p class="home-brand-caption">REASON TOGETHER. BUILD TOMORROW.</p>
       </div>
+      <div class="page1-audio-controls" aria-label="Page 1 narration controls">
+        <p class="page1-audio-note" id="page1AudioNote">Speaker controls ready. Once Unity records the MP3, press Start to play and Stop to pause.</p>
+        <div class="page1-audio-actions">
+          <button id="page1AudioStartButton" type="button" class="page1-audio-button page1-audio-button-start">Start Speaker</button>
+          <button id="page1AudioStopButton" type="button" class="page1-audio-button page1-audio-button-stop" disabled>Stop Speaker</button>
+        </div>
+        <audio id="page1NarrationAudio" preload="none">
+          Your browser does not support audio playback.
+        </audio>
+      </div>
       <a class="down-nav-button page1-down-nav-button" href="./page2.html" aria-label="Go to page 2 and amplify your reasoning">
-        <span class="down-nav-chevron" aria-hidden="true"></span>
-        <span class="page1-down-nav-label">Amplify Your Reasoning</span>
-        <span class="down-nav-chevron" aria-hidden="true"></span>
+        <span class="page1-down-nav-label">Begin a New Understanding</span>
       </a>
     </section>
   </main>
+  <script>
+    (() => {
+      const AUDIO_CANDIDATES = [
+        'assets/audio/CognitionPartner_page1.mp3',
+        'assets/audio/CognitionPartner_p1_voice.mp3'
+      ];
+      const audioEl = document.getElementById('page1NarrationAudio');
+      const startBtn = document.getElementById('page1AudioStartButton');
+      const stopBtn = document.getElementById('page1AudioStopButton');
+      const noteEl = document.getElementById('page1AudioNote');
+      let candidateIndex = 0;
+
+      if (!audioEl || !startBtn || !stopBtn || !noteEl) return;
+
+      const setNote = (message) => {
+        noteEl.textContent = message;
+      };
+
+      const setButtonState = (isPlaying) => {
+        startBtn.disabled = isPlaying;
+        stopBtn.disabled = !isPlaying;
+        startBtn.classList.toggle('is-active', isPlaying);
+        stopBtn.classList.toggle('is-active', isPlaying);
+      };
+
+      const setAudioSource = (index) => {
+        if (index < 0 || index >= AUDIO_CANDIDATES.length) return false;
+        candidateIndex = index;
+        audioEl.src = AUDIO_CANDIDATES[index];
+        audioEl.load();
+        return true;
+      };
+
+      const tryNextSource = () => {
+        const next = candidateIndex + 1;
+        if (next >= AUDIO_CANDIDATES.length) return false;
+        return setAudioSource(next);
+      };
+
+      const stopAudio = ({ reset = false } = {}) => {
+        audioEl.pause();
+        if (reset) {
+          try { audioEl.currentTime = 0; } catch (_) {}
+        }
+        setButtonState(false);
+      };
+
+      startBtn.addEventListener('click', () => {
+        const playPromise = audioEl.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {
+            if (tryNextSource()) {
+              audioEl.play().catch(() => {
+                setNote('MP3 is not available yet. Once Unity exports it, this control will play it.');
+              });
+            } else {
+              setNote('MP3 is not available yet. Once Unity exports it, this control will play it.');
+            }
+          });
+        }
+      });
+
+      stopBtn.addEventListener('click', () => {
+        stopAudio({ reset: false });
+        setNote('Narration stopped. Press Start to continue.');
+      });
+
+      audioEl.addEventListener('playing', () => {
+        setButtonState(true);
+        setNote('Narration is playing.');
+      });
+
+      audioEl.addEventListener('pause', () => {
+        if (!audioEl.ended) {
+          setButtonState(false);
+        }
+      });
+
+      audioEl.addEventListener('ended', () => {
+        stopAudio({ reset: true });
+        setNote('Narration finished. Press Start to replay.');
+      });
+
+      audioEl.addEventListener('error', () => {
+        if (tryNextSource()) {
+          return;
+        }
+        stopAudio({ reset: true });
+        setNote('MP3 is not available yet. Once Unity exports it, this control will play it.');
+      });
+
+      setAudioSource(0);
+      setButtonState(false);
+    })();
+  </script>
 </body>
 </html>
 
