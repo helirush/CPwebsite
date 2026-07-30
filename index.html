@@ -19,7 +19,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260723-1945" />
+  <link rel="stylesheet" href="./styles.css?v=20260730-1800" />
 </head>
 <body class="home-page">
   <main class="site-wrap">
@@ -35,13 +35,17 @@
         <div class="home-brand-divider" aria-hidden="true"></div>
         <p class="home-brand-caption">REASON TOGETHER. BUILD TOMORROW.</p>
       </div>
-      <div class="page1-audio-controls" aria-label="Page 1 narration controls">
-        <p class="page1-audio-note" id="page1AudioNote">Speaker controls ready. Once Unity records the MP3, press Start to play and Stop to pause.</p>
-        <div class="page1-audio-actions">
-          <button id="page1AudioStartButton" type="button" class="page1-audio-button page1-audio-button-start">Start Speaker</button>
-          <button id="page1AudioStopButton" type="button" class="page1-audio-button page1-audio-button-stop" disabled>Stop Speaker</button>
+      <div class="page1-audio-controls" aria-label="Meet Unity narration controls">
+        <p class="page1-audio-note" id="page1AudioNote">Meet Unity to begin the Cognition Partner introduction.</p>
+        <div class="page1-meet-unity" role="group" aria-label="Meet Unity">
+          <span class="page1-meet-unity-label">Meet Unity</span>
+          <div class="page1-narration-chips">
+            <button id="page1AudioOnButton" type="button" class="page1-narration-chip page1-chip-on" aria-label="Turn Unity narration on">ON</button>
+            <button id="page1AudioOffButton" type="button" class="page1-narration-chip page1-chip-off" aria-label="Turn Unity narration off and restart">OFF</button>
+            <button id="page1AudioPauseButton" type="button" class="page1-narration-chip page1-chip-pause" aria-label="Pause Unity narration">PAUSE</button>
+          </div>
         </div>
-        <audio id="page1NarrationAudio" preload="none">
+        <audio id="page1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1.mp3">
           Your browser does not support audio playback.
         </audio>
       </div>
@@ -52,97 +56,104 @@
   </main>
   <script>
     (() => {
-      const AUDIO_CANDIDATES = [
-        'assets/audio/CognitionPartner_page1.mp3',
-        'assets/audio/CognitionPartner_p1_voice.mp3'
-      ];
       const audioEl = document.getElementById('page1NarrationAudio');
-      const startBtn = document.getElementById('page1AudioStartButton');
-      const stopBtn = document.getElementById('page1AudioStopButton');
+      const onBtn = document.getElementById('page1AudioOnButton');
+      const offBtn = document.getElementById('page1AudioOffButton');
+      const pauseBtn = document.getElementById('page1AudioPauseButton');
       const noteEl = document.getElementById('page1AudioNote');
-      let candidateIndex = 0;
 
-      if (!audioEl || !startBtn || !stopBtn || !noteEl) return;
+      if (!audioEl || !onBtn || !offBtn || !pauseBtn || !noteEl) return;
 
       const setNote = (message) => {
         noteEl.textContent = message;
       };
 
-      const setButtonState = (isPlaying) => {
-        startBtn.disabled = isPlaying;
-        stopBtn.disabled = !isPlaying;
-        startBtn.classList.toggle('is-active', isPlaying);
-        stopBtn.classList.toggle('is-active', isPlaying);
+      const setUiState = (state) => {
+        // state: idle | playing | paused
+        onBtn.classList.toggle('is-active', state === 'playing');
+        pauseBtn.classList.toggle('is-active', state === 'paused');
+        offBtn.classList.toggle('is-active', state === 'idle');
+
+        onBtn.setAttribute('aria-pressed', state === 'playing' ? 'true' : 'false');
+        pauseBtn.setAttribute('aria-pressed', state === 'paused' ? 'true' : 'false');
+        offBtn.setAttribute('aria-pressed', state === 'idle' ? 'true' : 'false');
       };
 
-      const setAudioSource = (index) => {
-        if (index < 0 || index >= AUDIO_CANDIDATES.length) return false;
-        candidateIndex = index;
-        audioEl.src = AUDIO_CANDIDATES[index];
-        audioEl.load();
-        return true;
+      const playNarration = ({ restart = false } = {}) => {
+        if (restart) {
+          try { audioEl.currentTime = 0; } catch (_) {}
+        }
+        const playPromise = audioEl.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {
+            setUiState('idle');
+            setNote('Unity narration needs a click to start. Press ON to begin.');
+          });
+        }
       };
 
-      const tryNextSource = () => {
-        const next = candidateIndex + 1;
-        if (next >= AUDIO_CANDIDATES.length) return false;
-        return setAudioSource(next);
+      const pauseNarration = () => {
+        if (audioEl.paused && !audioEl.ended) {
+          setUiState(audioEl.currentTime > 0 ? 'paused' : 'idle');
+          return;
+        }
+        audioEl.pause();
+        setUiState('paused');
+        setNote('Unity is paused. Press ON to continue, or OFF to start over.');
       };
 
-      const stopAudio = ({ reset = false } = {}) => {
+      const stopNarration = ({ reset = true } = {}) => {
         audioEl.pause();
         if (reset) {
           try { audioEl.currentTime = 0; } catch (_) {}
         }
-        setButtonState(false);
+        setUiState('idle');
       };
 
-      startBtn.addEventListener('click', () => {
-        const playPromise = audioEl.play();
-        if (playPromise && typeof playPromise.catch === 'function') {
-          playPromise.catch(() => {
-            if (tryNextSource()) {
-              audioEl.play().catch(() => {
-                setNote('MP3 is not available yet. Once Unity exports it, this control will play it.');
-              });
-            } else {
-              setNote('MP3 is not available yet. Once Unity exports it, this control will play it.');
-            }
-          });
-        }
+      onBtn.addEventListener('click', () => {
+        // Resume if paused mid-track; restart if ended/idle at start.
+        const restart = audioEl.ended || audioEl.currentTime <= 0.05;
+        playNarration({ restart });
       });
 
-      stopBtn.addEventListener('click', () => {
-        stopAudio({ reset: false });
-        setNote('Narration stopped. Press Start to continue.');
+      pauseBtn.addEventListener('click', () => {
+        if (audioEl.paused) {
+          if (audioEl.currentTime > 0 && !audioEl.ended) {
+            setUiState('paused');
+            setNote('Unity is paused. Press ON to continue, or OFF to start over.');
+          }
+          return;
+        }
+        pauseNarration();
+      });
+
+      offBtn.addEventListener('click', () => {
+        stopNarration({ reset: true });
+        setNote('Unity narration is off. Press ON when you are ready to Meet Unity.');
       });
 
       audioEl.addEventListener('playing', () => {
-        setButtonState(true);
-        setNote('Narration is playing.');
+        setUiState('playing');
+        setNote('Listening now: Unity introduces Cognition Partner.');
       });
 
       audioEl.addEventListener('pause', () => {
-        if (!audioEl.ended) {
-          setButtonState(false);
+        if (!audioEl.ended && audioEl.currentTime > 0) {
+          setUiState('paused');
         }
       });
 
       audioEl.addEventListener('ended', () => {
-        stopAudio({ reset: true });
-        setNote('Narration finished. Press Start to replay.');
+        stopNarration({ reset: true });
+        setNote('Narration complete. Press ON to Meet Unity again.');
       });
 
       audioEl.addEventListener('error', () => {
-        if (tryNextSource()) {
-          return;
-        }
-        stopAudio({ reset: true });
-        setNote('MP3 is not available yet. Once Unity exports it, this control will play it.');
+        stopNarration({ reset: true });
+        setNote('Unity narration is temporarily unavailable. Please try ON again shortly.');
       });
 
-      setAudioSource(0);
-      setButtonState(false);
+      setUiState('idle');
     })();
   </script>
 </body>
