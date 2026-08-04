@@ -11,15 +11,15 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260804-0420" />
-  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260804-0420"></script>
-  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260804-0420"></script>
-  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260804-0420"></script>
+  <link rel="stylesheet" href="./styles.css?v=20260804-1722" />
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260804-1722"></script>
+  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260804-1722"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260804-1722"></script>
 </head>
 <body class="home-page page6-kuranda-voice-page">
   <main class="site-wrap">
     <section class="page-card">
-      <img class="page-image" src="./assets/kuranda_p2.png?v=20260804-0420" alt="Kuranda page 2 with Claire voice experience" />
+      <img class="page-image" src="./assets/kuranda_p2.png?v=20260804-1722" alt="Kuranda page 2 with Claire voice experience" />
       <div class="page5-kuranda-nav" aria-label="Page navigation controls">
         <a class="page5-kuranda-nav-link" id="page7-return-link" href="./page6.html" aria-label="Return to Kuranda page 1">Back</a>
         <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
@@ -85,7 +85,7 @@
         // Keep this compact (not the giant full pack) so voice still launches.
         let claireBrief = "";
         try {
-          const briefUrl = "./assets/kuranda/clare/knowledge/CLAIRE_DEMO_RUNTIME_BRIEF.md?v=20260804-0420";
+          const briefUrl = "./assets/kuranda/clare/knowledge/CLAIRE_DEMO_RUNTIME_BRIEF.md?v=20260804-1722";
           const resp = await fetch(briefUrl, { cache: "no-store" });
           if (resp && resp.ok) {
             claireBrief = await resp.text();
@@ -100,14 +100,14 @@
             "Formal only if asked: Dr. Claire Charcot, PhD (Charcot=Charco). " +
             "Delton Hyatt is authority; Isaiah is private partner. " +
             "Use approved Kuranda Library concepts only. No diagnosis/cure promises. " +
-            "First turn: Hi, I'm Claire. May I ask who I'm speaking with?";
+            "First turn: Hi, I'm Claire with Kuranda Mind & Body. May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more.";
         }
 
-        const openingLine = "Hi, I'm Claire. May I ask who I'm speaking with?";
+        const openingLine = "Hi, I'm Claire with Kuranda Mind & Body. May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more.";
         const operatingLine =
           "Before you speak, absorb the Claire Demo Runtime Brief (onboard, internal identity narrative, and Kuranda Library digest). " +
-          "Do not recite documents. Open with everyday name only. " +
-          "First spoken turn must be: Hi, I'm Claire. May I ask who I'm speaking with? " +
+          "Do not recite documents. " +
+          "First spoken turn must introduce yourself before asking for a name: Hi, I'm Claire with Kuranda Mind & Body. Then ask: May I ask who I'm speaking with—just your first name so we can talk? Add gently that more details can come later if they want to learn more. Do not rush straight to the name ask without saying who you are and Kuranda Mind & Body. Everyday name Claire only. No last name, PhD, or title in the opening. " +
           "After they share a first name, use it warmly. Then help from approved library knowledge. " +
           "Stay calm, short, and clear. No diagnosis. No cure promises.";
 
@@ -118,7 +118,7 @@
         if (window.MAXWELLIAN_HUME.session_variables) {
           window.MAXWELLIAN_HUME.session_variables.character_name = "Claire";
           window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
-          window.MAXWELLIAN_HUME.session_variables.name_request_line = "May I ask who I'm speaking with?";
+          window.MAXWELLIAN_HUME.session_variables.name_request_line = "May I ask who I'm speaking with—just your first name so we can talk?";
           window.MAXWELLIAN_HUME.session_variables.library_prep = "runtime-brief-loaded";
         }
         // Also stamp engagement fields if present on config object.
@@ -127,7 +127,7 @@
           if (window.MAXWELLIAN_HUME.engagement_protocol) {
             window.MAXWELLIAN_HUME.engagement_protocol =
               "Absorb onboard + identity + library brief first. " +
-              "Open: Hi, I'm Claire. May I ask who I'm speaking with? " +
+              "Open with identity then first-name ask: Hi, I'm Claire with Kuranda Mind & Body, then ask first name only. " +
               "Then guide from approved Kuranda Library knowledge only.";
           }
         } catch (e) {}
@@ -155,7 +155,7 @@
               organization: "Kuranda Mind & Body",
               public_guide: "Claire",
               demo_mode: true,
-              opening_expectation: "Hi, I'm Claire. May I ask who I'm speaking with?"
+              opening_expectation: "Hi, I'm Claire with Kuranda Mind & Body. May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more."
             }
           });
           if (result && typeof result.then === "function") {
