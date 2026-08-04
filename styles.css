@@ -671,6 +671,419 @@ a {
   font-size: 15px;
   line-height: 1;
 }
+.page5-kuranda-page .home-brand-overlay,
+.page5-kuranda-page .page2-dual-nav,
+.page5-kuranda-page .unity-case-cta,
+.page5-kuranda-page .lead-form-modal {
+  display: none !important;
+}
+.page5-kuranda-nav {
+  position: absolute;
+  top: clamp(12px, 2vh, 24px);
+  right: clamp(12px, 2vw, 24px);
+  z-index: 7;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.page5-kuranda-nav-link {
+  min-width: 72px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid rgba(227, 197, 131, 0.72);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(15, 22, 36, 0.68) 0%, rgba(9, 16, 28, 0.82) 100%);
+  color: rgba(245, 236, 214, 0.95);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.35px;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.page5-kuranda-nav-link:hover {
+  border-color: rgba(236, 208, 149, 0.96);
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(222, 188, 119, 0.24);
+}
+.page5-kuranda-nav-link:active {
+  transform: translateY(0);
+}
+.kuranda-meet-claire-button {
+  position: absolute;
+  left: 31%;
+  top: 58%;
+  transform: translate(-50%, -50%) translate(30px, -10px);
+  z-index: 6;
+  width: calc(clamp(206px, 18.5vw, 380px) - 10px);
+  min-height: calc(clamp(41px, 4.2vh, 60px) + 10px);
+  border: 1px solid rgba(216, 176, 101, 0.88);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(247, 221, 153, 0.98) 0%, rgba(225, 174, 90, 0.98) 100%);
+  box-shadow: 0 0 0 1px rgba(255, 228, 167, 0.4), 0 6px 20px rgba(183, 134, 56, 0.34);
+  color: #2f2310;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.kuranda-meet-claire-label {
+  font-size: clamp(15.8px, 1.214vw, 22.4px);
+  font-weight: 770;
+  letter-spacing: clamp(1.3px, 0.15vw, 2.5px);
+  line-height: 1;
+}
+.kuranda-meet-claire-arrow {
+  font-size: clamp(17px, 1.2vw, 22px);
+  line-height: 1;
+}
+.kuranda-meet-claire-button:hover {
+  transform: translate(-50%, calc(-20% - 1px)) translate(30px, -30px);
+  border-color: rgba(236, 198, 127, 0.98);
+  box-shadow: 0 0 0 1px rgba(255, 236, 186, 0.48), 0 8px 22px rgba(181, 128, 45, 0.4);
+}
+.kuranda-meet-claire-button:active {
+  transform: translate(-50%, -20%) translate(25px, -25px);
+}
+.kuranda-meet-claire-button:focus-visible {
+  outline: 2px solid rgba(237, 209, 149, 0.98);
+  outline-offset: 2px;
+}
+.kuranda-meet-claire-button.is-waiting {
+  animation: kurandaMeetClairePulse 0.65s ease;
+}
+@keyframes kurandaMeetClairePulse {
+  0% {
+    transform: translate(-50%, -50%) translate(20px, -15px) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(20px, -15px) scale(1.03);
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(20px, -15px) scale(1);
+  }
+}
+.page6-kuranda-voice-page .home-brand-overlay,
+.page6-kuranda-voice-page .page2-dual-nav,
+.page6-kuranda-voice-page .unity-case-cta,
+.page6-kuranda-voice-page .lead-form-modal {
+  display: none !important;
+}
+.kuranda-speaking-bubble {
+  position: absolute;
+  left: 38.8%;
+  top: 69.2%;
+  transform: translate(-50%, -50%) translate(29px, -12px); /* 5px right, 5px down from original */
+  z-index: 6;
+  width: clamp(83px, 8.8vw, 157px);
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+}
+/*
+  Blue pulse rings: 4 rings (was 2), wider spacing between orbits.
+  Real .kuranda-speaking-ring nodes so we can double past ::before/::after.
+*/
+.kuranda-speaking-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(158, 228, 255, 0.78);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9, 0.5);
+  box-shadow:
+    0 0 5px rgba(120, 205, 255, 0.42),
+    inset 0 0 4px rgba(170, 235, 255, 0.18);
+  pointer-events: none;
+}
+/* More separation between each ring orbit */
+.kuranda-speaking-ring:nth-child(1) {
+  width: 128%;
+  height: 72%;
+  border-color: rgba(158, 228, 255, 0.82);
+}
+.kuranda-speaking-ring:nth-child(2) {
+  width: 168%;
+  height: 92%;
+  border-width: 0.95px;
+  border-color: rgba(140, 218, 252, 0.68);
+  box-shadow: 0 0 6px rgba(110, 198, 248, 0.34);
+}
+.kuranda-speaking-ring:nth-child(3) {
+  width: 212%;
+  height: 114%;
+  border-width: 0.9px;
+  border-color: rgba(130, 210, 250, 0.55);
+  box-shadow: 0 0 7px rgba(100, 190, 245, 0.28);
+}
+.kuranda-speaking-ring:nth-child(4) {
+  width: 260%;
+  height: 138%;
+  border-width: 0.85px;
+  border-color: rgba(120, 200, 245, 0.42);
+  box-shadow: 0 0 8px rgba(90, 180, 240, 0.22);
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-ring {
+  animation: kurandaVoicePulse 2.4s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-ring:nth-child(1) {
+  animation-delay: 0s;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-ring:nth-child(2) {
+  animation-delay: 0.6s;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-ring:nth-child(3) {
+  animation-delay: 1.2s;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-ring:nth-child(4) {
+  animation-delay: 1.8s;
+}
+/* Legacy pseudo rings off (replaced by .kuranda-speaking-ring). */
+.kuranda-speaking-bubble::before,
+.kuranda-speaking-bubble::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+}
+.kuranda-speaking-inner {
+  width: 78%;
+  height: 78%;
+  border-radius: 999px;
+  border: 1px solid rgba(151, 232, 255, 0.72);
+  background: radial-gradient(circle at 45% 35%, rgba(165, 247, 255, 0.28) 0%, rgba(80, 154, 220, 0.22) 46%, rgba(24, 57, 107, 0.5) 100%);
+  box-shadow:
+    0 0 14px rgba(124, 209, 255, 0.52),
+    inset 0 0 10px rgba(140, 222, 255, 0.36);
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding: 18% 18% 22%;
+}
+.kuranda-speaking-bar {
+  width: clamp(2px, 0.26vw, 4px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 252, 244, 0.96) 0%, rgba(244, 220, 154, 0.96) 56%, rgba(183, 131, 59, 0.95) 100%);
+  box-shadow: 0 0 7px rgba(241, 206, 130, 0.42);
+  height: 26%;
+  transform-origin: bottom center;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-bar {
+  animation: kurandaVoiceBars 0.92s ease-in-out infinite;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-bar:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-bar:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-bar:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.kuranda-speaking-bubble.is-speaking .kuranda-speaking-bar:nth-child(5) {
+  animation-delay: 0.4s;
+}
+/* Sine-ish expand from each ring's base size; stays elongated (wave-like). */
+@keyframes kurandaVoicePulse {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.92, 0.52);
+  }
+  35% {
+    opacity: 0.58;
+    transform: translate(-50%, -50%) scale(1.08, 0.62);
+  }
+  70% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1.28, 0.74);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.48, 0.86);
+  }
+}
+@keyframes kurandaVoiceBars {
+  0%,
+  100% {
+    height: 22%;
+  }
+  40% {
+    height: 72%;
+  }
+  72% {
+    height: 36%;
+  }
+}
+.kuranda-speaking-status {
+  position: absolute;
+  left: 38.8%;
+  top: 82%;
+  transform: translate(-50%, -50%) translate(40px, -20px);
+  z-index: 6;
+  width: min(62vw, 430px);
+  margin: 0;
+  border: 1px solid rgba(133, 195, 228, 0.36);
+  border-radius: 10px;
+  background: rgba(8, 14, 25, 0.52);
+  padding: 7px 10px;
+  color: rgba(229, 240, 252, 0.93);
+  text-align: center;
+  font-size: clamp(10px, 0.75vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.16px;
+  line-height: 1.24;
+}
+.page6-demo-page .home-brand-overlay,
+.page6-demo-page .page2-dual-nav,
+.page6-demo-page .unity-case-cta,
+.page6-demo-page .lead-form-modal {
+  display: none !important;
+}
+.page6-demo-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(circle at 28% 35%, rgba(35, 58, 90, 0.16) 0%, rgba(8, 13, 24, 0.74) 66%, rgba(4, 7, 14, 0.9) 100%);
+}
+.page6-demo-shell {
+  position: absolute;
+  z-index: 6;
+  left: clamp(18px, 3vw, 42px);
+  right: clamp(18px, 3vw, 42px);
+  top: clamp(56px, 8vh, 98px);
+  bottom: clamp(18px, 3vh, 34px);
+  overflow: auto;
+  border: 1px solid rgba(212, 178, 112, 0.54);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(7, 13, 24, 0.89) 0%, rgba(5, 9, 18, 0.94) 100%);
+  box-shadow:
+    0 0 0 1px rgba(242, 217, 162, 0.12),
+    0 14px 42px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(192, 142, 66, 0.14);
+  padding: clamp(16px, 2.3vh, 26px) clamp(14px, 2.3vw, 28px);
+}
+.page6-demo-eyebrow {
+  margin: 0 0 8px;
+  color: rgba(224, 197, 140, 0.95);
+  font-size: clamp(11px, 0.82vw, 14px);
+  font-weight: 700;
+  letter-spacing: clamp(1.3px, 0.18vw, 2.4px);
+  text-transform: uppercase;
+}
+.page6-demo-title {
+  margin: 0;
+  color: rgba(246, 237, 219, 0.98);
+  font-size: clamp(22px, 2.3vw, 38px);
+  line-height: 1.1;
+}
+.page6-demo-lead {
+  margin: clamp(10px, 1.2vh, 14px) 0 0;
+  color: rgba(229, 236, 247, 0.9);
+  font-size: clamp(13px, 1.05vw, 18px);
+  line-height: 1.4;
+  max-width: 900px;
+}
+.page6-demo-chain {
+  margin: clamp(14px, 1.4vh, 18px) 0 0;
+  color: rgba(248, 232, 199, 0.98);
+  font-size: clamp(13px, 1.02vw, 17px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.24px;
+}
+.page6-demo-chain span {
+  color: rgba(221, 184, 113, 0.96);
+  padding: 0 4px;
+}
+.page6-usecase-grid {
+  margin-top: clamp(14px, 1.6vh, 22px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.2vw, 18px);
+}
+.page6-usecase-card {
+  border: 1px solid rgba(174, 136, 74, 0.42);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(12, 20, 35, 0.76) 0%, rgba(8, 14, 25, 0.88) 100%);
+  padding: clamp(11px, 1.2vh, 16px) clamp(11px, 1.4vw, 16px);
+  box-shadow: 0 0 12px rgba(129, 171, 223, 0.1);
+}
+.page6-usecase-title {
+  margin: 0;
+  color: rgba(244, 224, 184, 0.98);
+  font-size: clamp(14px, 1.2vw, 20px);
+  line-height: 1.2;
+}
+.page6-usecase-list {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: rgba(229, 237, 248, 0.9);
+  font-size: clamp(12px, 0.95vw, 15px);
+  line-height: 1.42;
+}
+.page6-usecase-list li + li {
+  margin-top: 4px;
+}
+.page6-demo-actions {
+  margin-top: clamp(14px, 1.7vh, 20px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.page6-demo-action {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(206, 165, 91, 0.74);
+  border-radius: 999px;
+  font-size: clamp(12px, 0.92vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.26px;
+  line-height: 1;
+  color: rgba(244, 236, 220, 0.98);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(18, 27, 43, 0.8) 0%, rgba(10, 18, 30, 0.92) 100%);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.page6-demo-action:hover {
+  border-color: rgba(231, 197, 131, 0.94);
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(196, 152, 79, 0.3);
+}
+.page6-demo-action:active {
+  transform: translateY(0);
+}
+.page6-demo-action-primary {
+  color: rgba(50, 32, 8, 0.98);
+  border-color: rgba(220, 179, 105, 0.98);
+  background: linear-gradient(180deg, rgba(248, 227, 177, 0.98) 0%, rgba(227, 174, 89, 0.98) 100%);
+}
+.page6-demo-action-secondary {
+  color: rgba(236, 241, 250, 0.94);
+}
+.page6-demo-action:focus-visible {
+  outline: 2px solid rgba(233, 202, 137, 0.98);
+  outline-offset: 2px;
+}
+.page6-demo-action.is-waiting {
+  animation: kurandaMeetClairePulse 0.65s ease;
+}
+.page6-demo-status {
+  margin: 12px 0 0;
+  color: rgba(231, 236, 246, 0.92);
+  font-size: clamp(12px, 0.88vw, 14px);
+  line-height: 1.36;
+}
 
 .page2-dual-nav .page2-nav-button {
   position: static;
@@ -957,6 +1370,31 @@ body.lead-form-open {
   .page3-bottom-right-ui .home-brand-overlay {
     bottom: calc(clamp(12px, 2.5vh, 20px) + 18px);
   }
+  .kuranda-meet-claire-button {
+    left: 31.6%;
+    top: 58.8%;
+    width: calc(clamp(192px, 30vw, 324px) + 10px);
+  }
+  .kuranda-speaking-bubble {
+    left: 38.8%;
+    top: 69.6%;
+    width: clamp(77px, 9.8vw, 144px);
+  }
+  .kuranda-speaking-status {
+    left: 38.8%;
+    top: 83.2%;
+    width: min(64vw, 390px);
+    font-size: clamp(9px, 1.2vw, 12px);
+  }
+  .page6-demo-shell {
+    top: clamp(52px, 7.4vh, 84px);
+    left: clamp(14px, 2.2vw, 26px);
+    right: clamp(14px, 2.2vw, 26px);
+    bottom: clamp(12px, 2vh, 20px);
+  }
+  .page6-usecase-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 900px) and (orientation: portrait) {
@@ -1142,6 +1580,77 @@ body.lead-form-open {
   .unity-case-subtitle {
     font-size: 10px;
   }
+  .page5-kuranda-nav {
+    top: 10px;
+    right: 10px;
+    gap: 6px;
+  }
+  .page5-kuranda-nav-link {
+    min-width: 62px;
+    min-height: 30px;
+    padding: 0 10px;
+    font-size: 10px;
+    letter-spacing: 0.2px;
+  }
+  .kuranda-meet-claire-button {
+    left: 32%;
+    top: 59.2%;
+    width: calc(min(69.6vw, 274px) + 10px);
+    min-height: 38px;
+    gap: 8px;
+  }
+  .kuranda-meet-claire-label {
+    font-size: 14.5px;
+    letter-spacing: 1.1px;
+  }
+  .kuranda-meet-claire-arrow {
+    font-size: 17px;
+  }
+  .kuranda-speaking-bubble {
+    left: 38.8%;
+    top: 70.1%;
+    width: min(21vw, 106px);
+  }
+  .kuranda-speaking-status {
+    left: 38.8%;
+    top: 84.8%;
+    width: min(70vw, 260px);
+    padding: 5px 7px;
+    font-size: 9px;
+  }
+  .page6-demo-shell {
+    top: 48px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 12px;
+    padding: 12px 10px;
+  }
+  .page6-demo-title {
+    font-size: clamp(19px, 5vw, 28px);
+  }
+  .page6-demo-lead,
+  .page6-demo-chain {
+    font-size: 12px;
+  }
+  .page6-usecase-title {
+    font-size: 14px;
+  }
+  .page6-usecase-list {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .page6-demo-actions {
+    gap: 7px;
+  }
+  .page6-demo-action {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 11px;
+  }
+  .page6-demo-status {
+    font-size: 10px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1158,5 +1667,348 @@ body.lead-form-open {
   .page1-copy-subtagline {
     font-size: clamp(13px, 4.8vw, 17px);
   }
+  .kuranda-meet-claire-button {
+    left: 32.6%;
+    top: 59.8%;
+    width: calc(min(74.4vw, 252px) + 10px);
+  }
+  .kuranda-speaking-bubble {
+    left: 38.8%;
+    top: 70.8%;
+    width: min(24vw, 93px);
+  }
+  .kuranda-speaking-status {
+    left: 38.8%;
+    top: 86.1%;
+    width: min(74vw, 238px);
+    font-size: 8px;
+  }
+  .page6-demo-shell {
+    top: 44px;
+    padding: 10px 9px;
+  }
+  .page6-demo-eyebrow {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .page6-demo-title {
+    font-size: clamp(18px, 6.4vw, 24px);
+  }
 }
+
+
+/* Claire page6 bubble accents — blue core bars */
+.page6-kuranda-voice-page .kuranda-speaking-bar {
+  background: linear-gradient(180deg, rgba(120, 168, 230, 0.98) 0%, rgba(72, 122, 196, 0.96) 42%, rgba(42, 88, 164, 0.98) 100%) !important;
+  box-shadow: 0 0 12px rgba(80, 140, 220, 0.42);
+}
+.page6-kuranda-voice-page .kuranda-speaking-bubble {
+  border-color: rgba(120, 168, 230, 0.58) !important;
+  box-shadow: 0 0 0 1px rgba(140, 184, 236, 0.22), 0 12px 30px rgba(12, 24, 48, 0.28) !important;
+}
+
+
+
+
+
+
+/* Decorative bubble never steals clicks. */
+
+
+/* The real start control: centered under orb. */
+
+
+/* Keep voice iframe alive off-art so session can connect. */
+
+
+
+
+
+
+
+/* Keep chrome hidden; only the start control is visible on Kuranda trial art. */
+
+
+
+
+/* Decorative bubble must not intercept clicks on the real start control. */
+
+
+/* Keep iframe alive for voice, but out of the designed art layout. */
+
+
+
+
+
+
+
+/* On Kuranda trial page, hide bulky chrome; keep the start control obvious. */
+
+
+
+
+/* Decorative bubble should not intercept clicks on the real start control. */
+
+
+
+
+/* Single source of truth: Waiting on Claire centered under the waveform orb. */
+
+
+
+
+
+
+.page6-kuranda-voice-page #kuranda-speaking-bubble,
+.page6-kuranda-voice-page .kuranda-speaking-bubble {
+  pointer-events: none !important;
+  z-index: 5 !important;
+}
+
+
+
+/* Keep iframe alive but off-canvas so Claire can still connect. */
+
+
+/* CLAIRE_VOICE_MODAL_KURANDA_LOCK */
+/* Waiting on Claire + SELECT: under orb center, bluish-purple (NOT green, NOT gold fill). */
+.page6-kuranda-voice-page #kuranda-speaking-bubble,
+.page6-kuranda-voice-page .kuranda-speaking-bubble {
+  pointer-events: none !important;
+}
+
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn,
+.page6-kuranda-voice-page #clerkVoiceStartBtn,
+.page6-kuranda-voice-page .clerk-voice-start-btn {
+  position: fixed !important;
+  /* Centered under the speaking orb */
+  left: 38.8% !important;
+  top: 69.2% !important;
+  right: auto !important;
+  bottom: auto !important;
+  /* Match orb X nudge (29px, -12px), then drop below orb */
+  transform: translate(-50%, -50%) translate(29px, 92px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 230px !important;
+  min-width: 230px !important;
+  max-width: 230px !important;
+  min-height: 58px !important;
+  height: auto !important;
+  padding: 10px 18px 8px !important;
+  margin: 0 !important;
+  z-index: 15000 !important;
+  pointer-events: auto !important;
+  border-radius: 999px !important;
+  /* Thin gold rim, lighter bluish-purple body */
+  border: 1.5px solid rgba(214, 180, 110, 0.92) !important;
+  background: linear-gradient(180deg, rgba(98, 118, 168, 0.98) 0%, rgba(72, 92, 142, 0.98) 48%, rgba(58, 74, 120, 0.99) 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(180, 150, 90, 0.22),
+    0 8px 22px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(210, 220, 255, 0.22) !important;
+  color: rgba(245, 240, 230, 0.98) !important;
+  -webkit-text-fill-color: rgba(245, 240, 230, 0.98) !important;
+  font-size: clamp(15px, 1.05vw, 18px) !important;
+  font-weight: 760 !important;
+  letter-spacing: 0.15px !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 0 rgba(10, 16, 32, 0.35) !important;
+  filter: none !important;
+  cursor: pointer !important;
+}
+
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn::after,
+.page6-kuranda-voice-page #clerkVoiceStartBtn::after,
+.page6-kuranda-voice-page .clerk-voice-start-btn::after {
+  display: block !important;
+  content: "SELECT" !important;
+  margin-top: 2px !important;
+  font-size: 0.62em !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  line-height: 1 !important;
+  color: rgba(232, 210, 150, 0.95) !important;
+  -webkit-text-fill-color: rgba(232, 210, 150, 0.95) !important;
+  text-shadow: none !important;
+}
+
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn:hover,
+.page6-kuranda-voice-page #clerkVoiceStartBtn:hover,
+.page6-kuranda-voice-page .clerk-voice-start-btn:hover {
+  filter: brightness(1.08) !important;
+  border-color: rgba(230, 198, 120, 0.98) !important;
+  color: rgba(255, 250, 240, 0.99) !important;
+  -webkit-text-fill-color: rgba(255, 250, 240, 0.99) !important;
+}
+
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn:disabled,
+.page6-kuranda-voice-page #clerkVoiceStartBtn:disabled {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+
+/* CLAIRE_HIDE_DONOR_CORNER_CHROME */
+/*
+  Hide donor Speak-with-Claire / Connecting card pieces ONLY.
+  Do NOT display:none modal-content or frame-wrap — iframe lives there and must stay alive after mic.
+*/
+.page6-kuranda-voice-page .clerk-voice-modal,
+.page6-kuranda-voice-page #clerkVoiceModal {
+  background: transparent !important;
+}
+.page6-kuranda-voice-page .clerk-voice-modal.active,
+.page6-kuranda-voice-page #clerkVoiceModal.active {
+  display: block !important;
+  background: transparent !important;
+}
+/* Keep shell layout alive (contains iframe + start button) */
+.page6-kuranda-voice-page .clerk-voice-modal-content {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  width: min(320px, calc(100vw - 24px)) !important;
+  height: min(320px, calc(100vh - 24px)) !important;
+}
+.page6-kuranda-voice-page .clerk-voice-frame-wrap {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+/* Hide only the visible donor chrome */
+.page6-kuranda-voice-page .clerk-voice-modal-header,
+.page6-kuranda-voice-page .clerk-voice-launch-emblem,
+.page6-kuranda-voice-page #clerkVoiceLaunchEmblem,
+.page6-kuranda-voice-page .clerk-voice-signal-stage,
+.page6-kuranda-voice-page #clerkVoiceSignalStage,
+.page6-kuranda-voice-page .clerk-voice-signal-wave,
+.page6-kuranda-voice-page .clerk-voice-signal-nameplate,
+.page6-kuranda-voice-page .clerk-voice-signal-title,
+.page6-kuranda-voice-page .clerk-voice-signal-label,
+.page6-kuranda-voice-page #clerkVoiceSignalLabel,
+.page6-kuranda-voice-page .clerk-voice-status,
+.page6-kuranda-voice-page #clerkVoiceStatus,
+.page6-kuranda-voice-page .clerk-voice-help,
+.page6-kuranda-voice-page #clerkVoiceHelp,
+.page6-kuranda-voice-page .clerk-voice-diagnostics,
+.page6-kuranda-voice-page #clerkVoiceDiagnostics,
+.page6-kuranda-voice-page .clerk-voice-character-wrap,
+.page6-kuranda-voice-page .clerk-voice-character-select,
+.page6-kuranda-voice-page #clerkVoiceCharacterSelect,
+.page6-kuranda-voice-page .clerk-voice-panel-toggle,
+.page6-kuranda-voice-page #clerkVoicePanelToggleBtn,
+.page6-kuranda-voice-page .clerk-voice-close,
+.page6-kuranda-voice-page #clerkVoiceCloseBtn,
+.page6-kuranda-voice-page .clerk-voice-backdrop,
+.page6-kuranda-voice-page #clerkVoiceBackdrop,
+.page6-kuranda-voice-page .clerk-voice-watermark,
+.page6-kuranda-voice-page .clerk-voice-unity-overlay,
+.page6-kuranda-voice-page .clerk-voice-unity-bottom-mask {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+/* Iframe: invisible but real size so Hume/audio can connect */
+.page6-kuranda-voice-page #clerkVoiceFrame,
+.page6-kuranda-voice-page .clerk-voice-frame {
+  position: fixed !important;
+  left: 12px !important;
+  top: 12px !important;
+  width: 360px !important;
+  height: 280px !important;
+  max-width: 40vw !important;
+  max-height: 40vh !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border: 0 !important;
+  z-index: 1 !important;
+}
+/* Bottom Waiting / Stop-Listening is the only visible control */
+.page6-kuranda-voice-page #clerkVoiceStartBtn,
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn,
+.page6-kuranda-voice-page .clerk-voice-start-btn {
+  pointer-events: auto !important;
+  z-index: 15000 !important;
+  position: fixed !important;
+}
+
+
+/* CLAIRE_CLOSE_AND_STATUS_LOCK */
+/* Hide the "Tap Waiting on Claire..." status bubble on Kuranda trial page. */
+.page6-kuranda-voice-page .clerk-voice-status,
+.page6-kuranda-voice-page #clerkVoiceStatus {
+  display: none !important;
+}
+
+/* CLAIRE_SIMPLE_STOP: keep button visible for Waiting and Stop-Listening */
+.page6-kuranda-voice-page #clerkVoiceStartBtn[data-claire-state="close-ready"],
+.page6-kuranda-voice-page #clerkVoiceStartBtn[data-claire-state="waiting"],
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Close X: hidden; Stop-Listening is the stop control. */
+.page6-kuranda-voice-page .clerk-voice-close,
+.page6-kuranda-voice-page #clerkVoiceCloseBtn {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Close X: hidden for now while placement is redesigned. */
+.page6-kuranda-voice-page .clerk-voice-close,
+.page6-kuranda-voice-page #clerkVoiceCloseBtn {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
+/* CLAIRE_BUBBLE_ANIM_ONLY_WHEN_SPEAKING */
+/* Default: orb/bars frozen. Motion only with .is-speaking while Claire talks. */
+.page6-kuranda-voice-page .kuranda-speaking-bubble:not(.is-speaking) .kuranda-speaking-bar,
+.page6-kuranda-voice-page .kuranda-speaking-bubble:not(.is-speaking) .kuranda-speaking-ring,
+.page6-kuranda-voice-page .kuranda-speaking-bubble:not(.is-speaking)::before,
+.page6-kuranda-voice-page .kuranda-speaking-bubble:not(.is-speaking)::after {
+  animation: none !important;
+}
+.page6-kuranda-voice-page .kuranda-speaking-bubble:not(.is-speaking) .kuranda-speaking-ring,
+.page6-kuranda-voice-page .kuranda-speaking-bubble:not(.is-speaking)::before,
+.page6-kuranda-voice-page .kuranda-speaking-bubble:not(.is-speaking)::after {
+  opacity: 0 !important;
+}
+
+
+/* CLAIRE_WAITING_BTN_CLICKABLE + control bar always available */
+.page6-kuranda-voice-page #claireControlBar,
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn:not([data-claire-state="connecting"]) {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn:not([data-claire-state="connecting"]):disabled {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+
+
+
 
