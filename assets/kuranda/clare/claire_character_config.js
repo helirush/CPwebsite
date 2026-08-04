@@ -1006,7 +1006,7 @@ window.MAXWELLIAN_HUME = {
   // OpenAI cognition defaults (used as text-generation guidance).
   // Keep false unless a production OpenAI realtime session backend is available.
   // Emergency public fallback: allow direct Hume connect attempts when runtime auth bootstrap is unavailable.
-  hume_runtime_auth_endpoint: "/api/hume/runtime-auth",
+  hume_runtime_auth_endpoint: "https://unityenergy.com/api/hume/runtime-auth",
   allow_hume_authless_connect: true,
   allow_openai_fallback: false,
   openai_session_endpoint: "/api/openai/realtime/session",
