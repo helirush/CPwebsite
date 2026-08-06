@@ -19,73 +19,65 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260806-0253" />
+  <link rel="stylesheet" href="./styles.css?v=20260730-1800" />
 </head>
 <body class="home-page">
-  <main class="site-wrap cp-r1-wrap">
-    <section class="page-card cp-r1-card">
-      <img class="page-image cp-r1-image" src="./assets/CognitionPartner_p1r1.png?cp_bg=20260805c" alt="Cognition Partner page 1 revision 1" />
-
-      <nav class="cp-r1-top-nav" aria-label="Cognition Partner pages">
-        <a class="cp-r1-nav-link" href="./index.html" aria-label="Go to page 1: Who is your partner"></a>
-        <a class="cp-r1-nav-link" href="./page2.html" aria-label="Go to page 2: Continuous reasoning"></a>
-        <a class="cp-r1-nav-link" href="./page3.html" aria-label="Go to page 3: Operating system"></a>
-        <a class="cp-r1-nav-link" href="./page5.html" aria-label="Go to page 4: Living library"></a>
-        <a class="cp-r1-nav-link" href="./page6.html" aria-label="Go to page 5: Use cases"></a>
-      </nav>
-
-      <section class="cp-r1-play-card cp-r1-play-card--next-only" aria-label="Cognition Partner playback card">
-        <div class="cp-r1-headphone-glyph-wrap" aria-hidden="true">
-          <img class="cp-r1-headphone-glyph" src="./assets/cp_headphones_glyph.svg" alt="" />
+  <main class="site-wrap">
+    <section class="page-card">
+      <img class="page-image" src="./assets/CognitionPartner_p1.png?v=20260722-2327" alt="Cognition Partner page 1" />
+      <div class="home-brand-overlay" aria-label="Cognition Partner branding">
+        <img class="home-brand-logo" src="./assets/CPlogo_60715.png?v=20260715-1844" alt="Cognition Partner logo" />
+        <div class="home-brand-wordmark" aria-hidden="true">
+          <span class="home-brand-word home-brand-word-white">COGNITION</span>
+          <span class="home-brand-word home-brand-word-gold">PARTNER</span>
+          <span class="home-brand-tm">™</span>
         </div>
-        <a class="cp-r1-brand-logo-hit" href="./index.html" aria-label="Cognition Partner home"></a>
-        <a class="cp-r1-brand-name-hit" href="./index.html" aria-label="Cognition Partner home"></a>
-
-        <div class="cp-r1-audio-controls" role="group" aria-label="Why it matters narration controls">
-          <div class="cp-r1-audio-control">
-            <button id="cpR1PlayButton" type="button" class="cp-r1-audio-btn cp-r1-play" aria-label="Play Why it matters narration"></button>
-            <span class="cp-r1-audio-label">Play</span>
-          </div>
-          <div class="cp-r1-audio-control">
-            <button id="cpR1PauseButton" type="button" class="cp-r1-audio-btn cp-r1-pause" aria-label="Pause Why it matters narration"></button>
-            <span class="cp-r1-audio-label">Pause</span>
-          </div>
-          <div class="cp-r1-audio-control">
-            <button id="cpR1RestartButton" type="button" class="cp-r1-audio-btn cp-r1-restart" aria-label="Restart Why it matters narration"></button>
-            <span class="cp-r1-audio-label">Restart</span>
+        <div class="home-brand-divider" aria-hidden="true"></div>
+        <p class="home-brand-caption">REASON TOGETHER. BUILD TOMORROW.</p>
+      </div>
+      <div class="page1-audio-controls" aria-label="Meet Unity narration controls">
+        <p class="page1-audio-note" id="page1AudioNote">Meet Unity to begin the Cognition Partner introduction.</p>
+        <div class="page1-meet-unity" role="group" aria-label="Meet Unity">
+          <span class="page1-meet-unity-label">Meet Unity</span>
+          <div class="page1-narration-chips">
+            <button id="page1AudioOnButton" type="button" class="page1-narration-chip page1-chip-on" aria-label="Turn Unity narration on">ON</button>
+            <button id="page1AudioOffButton" type="button" class="page1-narration-chip page1-chip-off" aria-label="Turn Unity narration off and restart">OFF</button>
+            <button id="page1AudioPauseButton" type="button" class="page1-narration-chip page1-chip-pause" aria-label="Pause Unity narration">PAUSE</button>
           </div>
         </div>
-
-        <div class="cp-r1-why-wave" id="cpR1WhyWave" aria-hidden="true">
-          <div class="cp-r1-why-wave-track"></div>
-        </div>
-
-        <div class="cp-r1-page-nav" aria-label="Page navigation">
-          <a class="cp-r1-prev-link" href="./index.html" aria-label="Previous: page 1"></a>
-          <a class="cp-r1-next-link" href="./page2.html" aria-label="Next: page 2"></a>
-        </div>
-      </section>
-
-
-      <audio id="cpR1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1r1.mp3">
-        Your browser does not support audio playback.
-      </audio>
+        <audio id="page1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1.mp3">
+          Your browser does not support audio playback.
+        </audio>
+      </div>
+      <a class="down-nav-button page1-down-nav-button" href="./page2.html" aria-label="Go to page 2 and amplify your reasoning">
+        <span class="page1-down-nav-label">Begin a New Understanding</span>
+      </a>
     </section>
   </main>
-  <script src="../../UnityEnergy/founder_share_panel.js?v=20260805a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260805a';"></script>
+  <script src="../../UnityEnergy/founder_share_panel.js?v=20260731b" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260731b';"></script>
   <script>
     (() => {
-      const audioEl = document.getElementById('cpR1NarrationAudio');
-      const playBtn = document.getElementById('cpR1PlayButton');
-      const pauseBtn = document.getElementById('cpR1PauseButton');
-      const restartBtn = document.getElementById('cpR1RestartButton');
-      const waveEl = document.getElementById('cpR1WhyWave');
+      const audioEl = document.getElementById('page1NarrationAudio');
+      const onBtn = document.getElementById('page1AudioOnButton');
+      const offBtn = document.getElementById('page1AudioOffButton');
+      const pauseBtn = document.getElementById('page1AudioPauseButton');
+      const noteEl = document.getElementById('page1AudioNote');
 
-      if (!audioEl || !playBtn || !pauseBtn || !restartBtn || !waveEl) return;
+      if (!audioEl || !onBtn || !offBtn || !pauseBtn || !noteEl) return;
 
-      const setWaveState = (state) => {
-        waveEl.classList.toggle('is-playing', state === 'playing');
-        waveEl.classList.toggle('is-paused', state === 'paused');
+      const setNote = (message) => {
+        noteEl.textContent = message;
+      };
+
+      const setUiState = (state) => {
+        // state: idle | playing | paused
+        onBtn.classList.toggle('is-active', state === 'playing');
+        pauseBtn.classList.toggle('is-active', state === 'paused');
+        offBtn.classList.toggle('is-active', state === 'idle');
+
+        onBtn.setAttribute('aria-pressed', state === 'playing' ? 'true' : 'false');
+        pauseBtn.setAttribute('aria-pressed', state === 'paused' ? 'true' : 'false');
+        offBtn.setAttribute('aria-pressed', state === 'idle' ? 'true' : 'false');
       };
 
       const playNarration = ({ restart = false } = {}) => {
@@ -95,43 +87,74 @@
         const playPromise = audioEl.play();
         if (playPromise && typeof playPromise.catch === 'function') {
           playPromise.catch(() => {
-            setWaveState('paused');
+            setUiState('idle');
+            setNote('Unity narration needs a click to start. Press ON to begin.');
           });
         }
       };
 
-      playBtn.addEventListener('click', () => {
-        playNarration();
+      const pauseNarration = () => {
+        if (audioEl.paused && !audioEl.ended) {
+          setUiState(audioEl.currentTime > 0 ? 'paused' : 'idle');
+          return;
+        }
+        audioEl.pause();
+        setUiState('paused');
+        setNote('Unity is paused. Press ON to continue, or OFF to start over.');
+      };
+
+      const stopNarration = ({ reset = true } = {}) => {
+        audioEl.pause();
+        if (reset) {
+          try { audioEl.currentTime = 0; } catch (_) {}
+        }
+        setUiState('idle');
+      };
+
+      onBtn.addEventListener('click', () => {
+        // Resume if paused mid-track; restart if ended/idle at start.
+        const restart = audioEl.ended || audioEl.currentTime <= 0.05;
+        playNarration({ restart });
       });
 
       pauseBtn.addEventListener('click', () => {
-        audioEl.pause();
+        if (audioEl.paused) {
+          if (audioEl.currentTime > 0 && !audioEl.ended) {
+            setUiState('paused');
+            setNote('Unity is paused. Press ON to continue, or OFF to start over.');
+          }
+          return;
+        }
+        pauseNarration();
       });
 
-      restartBtn.addEventListener('click', () => {
-        playNarration({ restart: true });
+      offBtn.addEventListener('click', () => {
+        stopNarration({ reset: true });
+        setNote('Unity narration is off. Press ON when you are ready to Meet Unity.');
       });
 
       audioEl.addEventListener('playing', () => {
-        setWaveState('playing');
+        setUiState('playing');
+        setNote('Listening now: Unity introduces Cognition Partner.');
       });
 
       audioEl.addEventListener('pause', () => {
-        if (!audioEl.ended) {
-          setWaveState('paused');
+        if (!audioEl.ended && audioEl.currentTime > 0) {
+          setUiState('paused');
         }
       });
 
       audioEl.addEventListener('ended', () => {
-        try { audioEl.currentTime = 0; } catch (_) {}
-        setWaveState('paused');
+        stopNarration({ reset: true });
+        setNote('Narration complete. Press ON to Meet Unity again.');
       });
 
       audioEl.addEventListener('error', () => {
-        setWaveState('paused');
+        stopNarration({ reset: true });
+        setNote('Unity narration is temporarily unavailable. Please try ON again shortly.');
       });
 
-      setWaveState('paused');
+      setUiState('idle');
     })();
   </script>
 </body>
