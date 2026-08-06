@@ -11,15 +11,15 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260804-1722" />
-  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260804-1722"></script>
-  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260804-1722"></script>
-  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260804-1722"></script>
+  <link rel="stylesheet" href="./styles.css?v=20260806-0348" />
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260806-0348"></script>
+  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260806-0348"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260806-0348"></script>
 </head>
 <body class="home-page page6-kuranda-voice-page">
   <main class="site-wrap">
     <section class="page-card">
-      <img class="page-image" src="./assets/kuranda_p2.png?v=20260804-1722" alt="Kuranda page 2 with Claire voice experience" />
+      <img class="page-image" src="./assets/kuranda_p2.png?v=20260806-0348" alt="Kuranda page 2 with Claire voice experience" />
       <div class="page5-kuranda-nav" aria-label="Page navigation controls">
         <a class="page5-kuranda-nav-link" id="page7-return-link" href="./page6.html" aria-label="Return to Kuranda page 1">Back</a>
         <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
@@ -39,7 +39,7 @@
       </div>
     </section>
   </main>
-  <script src="../../UnityEnergy/founder_share_panel.js?v=20260731b" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260731b';"></script>
+  <script src="../../UnityEnergy/founder_share_panel.js?v=20260805a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260805a';"></script>
   <script>
     (() => {
       const returnLink = document.getElementById("page7-return-link");
@@ -72,64 +72,72 @@
           return;
         }
 
-        // Claire identity + Kuranda library prep for demo intelligence.
+        // Claire identity only. Not page-aware. Not Clerk content-aware.
         window.MAXWELLIAN_HUME.character_name = "Claire";
         window.MAXWELLIAN_HUME.character_id = "claire-charcot";
         window.MAXWELLIAN_HUME.default_character_id = "claire-charcot";
         window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
-        window.MAXWELLIAN_HUME.default_context_source = "kuranda-claire-demo";
+        window.MAXWELLIAN_HUME.default_context_source = "kuranda-claire";
         window.MAXWELLIAN_HUME.content_awareness_mode = false;
+        window.MAXWELLIAN_HUME.content_awareness_scope_lock = false;
         window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
-
-        // CLAIRE_LIBRARY_PREP: load compact onboard + identity + library digest.
-        // Keep this compact (not the giant full pack) so voice still launches.
-        let claireBrief = "";
+        window.MAXWELLIAN_HUME.session_context_char_limit = 24000;
+        // Hard-disable page/pattern context injection for Claire.
         try {
-          const briefUrl = "./assets/kuranda/clare/knowledge/CLAIRE_DEMO_RUNTIME_BRIEF.md?v=20260804-1722";
-          const resp = await fetch(briefUrl, { cache: "no-store" });
-          if (resp && resp.ok) {
-            claireBrief = await resp.text();
-          }
+          window.MAXWELLIAN_HUME.disable_page_context = true;
+          window.MAXWELLIAN_HUME.page_context_enabled = false;
+          window.MAXWELLIAN_HUME.prefetch_active_page_context = false;
+          window.MAXWELLIAN_HUME.include_page_context = false;
+          window.MAXWELLIAN_HUME.content_awareness_page_source_files = {};
+        } catch (e) {}
+
+        // Load lean identity pack only (onboard + bio). No page7 text. No giant library dump.
+        let claireIdentityPack = "";
+        try {
+          const packUrl = "./assets/kuranda/clare/knowledge/CLAIRE_IDENTITY_PACK.md?v=20260806-0348";
+          const resp = await fetch(packUrl, { cache: "no-store" });
+          if (resp && resp.ok) claireIdentityPack = await resp.text();
         } catch (e) {
-          console.warn("Claire runtime brief fetch failed; using compact fallback.", e);
+          console.warn("Claire identity pack fetch failed; using compact fallback.", e);
         }
-        if (!claireBrief || claireBrief.length < 200) {
-          claireBrief =
-            "You are Claire, public guide for Kuranda Mind & Body. " +
-            "Absorb onboard/identity privately. Everyday name Claire only. " +
-            "Formal only if asked: Dr. Claire Charcot, PhD (Charcot=Charco). " +
+        if (!claireIdentityPack || claireIdentityPack.length < 200) {
+          claireIdentityPack =
+            "You are Claire with Kuranda Mind & Body, public guide only. " +
+            "Everyday name Claire. Formal only if asked: Dr. Claire Charcot, PhD (Charcot=Charco). " +
             "Delton Hyatt is authority; Isaiah is private partner. " +
-            "Use approved Kuranda Library concepts only. No diagnosis/cure promises. " +
-            "First turn: Hi, I'm Claire with Kuranda Mind & Body. May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more.";
+            "Not page-aware. Not demo-aware. Know who you are from onboard/bio. " +
+            "No diagnosis/cure promises. " +
+            "First turn monologue required (bio history). May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more.";
         }
 
-        const openingLine = "Hi, I'm Claire with Kuranda Mind & Body. May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more.";
-        const operatingLine =
-          "Before you speak, absorb the Claire Demo Runtime Brief (onboard, internal identity narrative, and Kuranda Library digest). " +
-          "Do not recite documents. " +
-          "First spoken turn must introduce yourself before asking for a name: Hi, I'm Claire with Kuranda Mind & Body. Then ask: May I ask who I'm speaking with—just your first name so we can talk? Add gently that more details can come later if they want to learn more. Do not rush straight to the name ask without saying who you are and Kuranda Mind & Body. Everyday name Claire only. No last name, PhD, or title in the opening. " +
-          "After they share a first name, use it warmly. Then help from approved library knowledge. " +
-          "Stay calm, short, and clear. No diagnosis. No cure promises.";
+        const openingLine = "Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions?";
 
+        const operatingLine =
+          "NOT PAGE-AWARE. Never mention page numbers or page 7. " +
+          "FIRST TURN: Recite Claire bio monologue word-for-word (Dr. Claire Charcot, Jean-Martin Charcot, vibratory chairs, Delton Hyatt). " +
+          "Do not ask for name in first turn. End with: Now, how might I answer your questions? " +
+          "Monologue: " + openingLine;
+
+        // Session context = identity pack ONLY.
         window.MAXWELLIAN_HUME.session_context =
-          operatingLine + "\n\n--- CLAIRE DEMO RUNTIME BRIEF ---\n" + claireBrief;
+          operatingLine + "\n\n--- CLAIRE IDENTITY PACK ---\n" + claireIdentityPack;
         window.MAXWELLIAN_HUME.system_prompt_text =
           "You are Claire. " + operatingLine + " Opening line: " + openingLine;
         if (window.MAXWELLIAN_HUME.session_variables) {
           window.MAXWELLIAN_HUME.session_variables.character_name = "Claire";
           window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
-          window.MAXWELLIAN_HUME.session_variables.name_request_line = "May I ask who I'm speaking with—just your first name so we can talk?";
-          window.MAXWELLIAN_HUME.session_variables.library_prep = "runtime-brief-loaded";
+          window.MAXWELLIAN_HUME.session_variables.name_request_line =
+            "May I ask who I'm speaking with—just your first name so we can talk?";
+          window.MAXWELLIAN_HUME.session_variables.library_prep = "identity-pack-only";
+          window.MAXWELLIAN_HUME.session_variables.bio_source =
+            "SpeakWithClaireOnBoard + Internal Identity Narrative";
+          window.MAXWELLIAN_HUME.session_variables.must_know_bio = "true";
+          window.MAXWELLIAN_HUME.session_variables.page_aware = "false";
+          window.MAXWELLIAN_HUME.session_variables.content_aware = "false";
         }
-        // Also stamp engagement fields if present on config object.
         try {
           window.MAXWELLIAN_HUME.opening_line = openingLine;
-          if (window.MAXWELLIAN_HUME.engagement_protocol) {
-            window.MAXWELLIAN_HUME.engagement_protocol =
-              "Absorb onboard + identity + library brief first. " +
-              "Open with identity then first-name ask: Hi, I'm Claire with Kuranda Mind & Body, then ask first name only. " +
-              "Then guide from approved Kuranda Library knowledge only.";
-          }
+          window.MAXWELLIAN_HUME.engagement_protocol = "First turn: recite full Claire bio monologue. Then answer questions. Not page-aware.";
         } catch (e) {}
 
         const launcher = await waitFor(() => {
@@ -147,15 +155,20 @@
         try {
           const result = launcher({
             characterId: "claire-charcot",
-            contextSource: "kuranda-claire-demo",
-            pageKey: "page7",
-            entryPoint: "cp-page6-meet-claire",
+            contextSource: "kuranda-claire",
+            // Keep keys for launcher compatibility, but payload forbids page awareness.
+            pageKey: "claire-session",
+            entryPoint: "kuranda-claire-meet",
             uiMode: "modal",
+            disablePageContext: true,
+            includePageContext: false,
             contextPayload: {
               organization: "Kuranda Mind & Body",
               public_guide: "Claire",
-              demo_mode: true,
-              opening_expectation: "Hi, I'm Claire with Kuranda Mind & Body. May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more."
+              page_aware: false,
+              content_aware: false,
+              identity_pack: "CLAIRE_IDENTITY_PACK",
+              opening_expectation: openingLine
             }
           });
           if (result && typeof result.then === "function") {

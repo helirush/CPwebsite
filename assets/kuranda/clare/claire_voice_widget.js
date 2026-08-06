@@ -77,6 +77,21 @@
   const SIGNAL_MODE_SPEAKING = "speaking";
   const SIGNAL_SPEAKING_DECAY_MS = 780;
   const SIGNAL_FORMATION_DURATION_MS = 2300;
+  function isClaireCharacterConfig(cfg, launchSession) {
+    try {
+      const c = cfg || {};
+      const ls = launchSession || {};
+      const blob = [
+        c.character_id, c.default_character_id, c.character_name,
+        ls.characterId, ls.character_id,
+        c.default_context_source, ls.contextSource
+      ].map(function (x) { return String(x || "").toLowerCase(); }).join(" ");
+      if (blob.indexOf("claire") >= 0 || blob.indexOf("charcot") >= 0 || blob.indexOf("kuranda-claire") >= 0) return true;
+      if (typeof document !== "undefined" && document.body && document.body.classList.contains("page6-kuranda-voice-page")) return true;
+    } catch (_e) {}
+    return false;
+  }
+
   const START_BUTTON_WAITING_LABEL = "Waiting on Claire";
   const START_BUTTON_CLOSE_LABEL = "Stop-Listening";
   const UNITY_START_GATE_MAX_STALL_RETRIES = 2;
@@ -1205,7 +1220,7 @@
       intelligence_default_profile_id: "",
       intelligence_profiles: {},
       intelligence_routing_rules: [],
-      session_context_char_limit: 3600,
+      session_context_char_limit: 24000,
       syntax_awareness_context: "",
       syntax_awareness_glossary: [],
       page_context_profiles: {},
@@ -2355,17 +2370,22 @@
   }
 
   function combineContextBlocks(blocks, maxChars) {
-    if (!Array.isArray(blocks)) return "";
-    const unique = [];
-    blocks.forEach(function (block) {
+    const parts = [];
+    const seen = new Set();
+    (Array.isArray(blocks) ? blocks : []).forEach(function (block) {
       const text = coerceText(block);
-      if (!text || unique.includes(text)) return;
-      unique.push(text);
+      if (!text) return;
+      const key = text.toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      parts.push(text);
     });
-    if (unique.length === 0) return "";
-    const limit = Number.isFinite(maxChars) ? Math.max(800, Math.floor(maxChars)) : 3600;
-    const combined = unique.join("\n\n");
-    return combined.length > limit ? `${combined.slice(0, limit)}…` : combined;
+    if (!parts.length) return "";
+    const joined = parts.join("\n\n");
+    const limit = Number(maxChars);
+    if (!Number.isFinite(limit) || limit <= 0 || joined.length <= limit) return joined;
+    // Prefer keeping the start (onboard/bio first) when truncating.
+    return `${joined.slice(0, Math.max(0, limit - 1)).trim()}…`;
   }
 
   function normalizeSyntaxAwarenessGlossary(cfg) {
@@ -2478,6 +2498,13 @@
   }
 
   function buildPageAwareOpeningLine(profile, payload) {
+    // CLAIRE_NO_PAGE_OPENING
+    try {
+      if (isClaireCharacterConfig(getVoiceConfig ? getVoiceConfig() : window.MAXWELLIAN_HUME, typeof pendingLaunchSession !== "undefined" ? pendingLaunchSession : null)) {
+        return "";
+      }
+    } catch (_e) {}
+
     const profileId = resolvePageContextProfileId(profile, payload);
     const explicit = coerceText(payload && payload.page_context_opening_line);
     if (explicit) return explicit;
@@ -2729,6 +2756,17 @@
   }
 
   function collectActivePageContextSnapshot() {
+    try {
+      const cfg = (typeof getVoiceConfig === "function" ? getVoiceConfig() : null) || window.MAXWELLIAN_HUME || {};
+      const cid = String((cfg && (cfg.character_id || cfg.default_character_id || cfg.character_name)) || "").toLowerCase();
+      if (cfg.disable_page_context || cfg.page_context_enabled === false || cfg.include_page_context === false) {
+        return {};
+      }
+      if (cid.includes("claire") || cid.includes("charcot")) {
+        return {};
+      }
+    } catch (_e) {}
+
     const snapshot = {
       pathname: getCurrentPagePathname(),
       href: getCurrentPageHref(),
@@ -3255,7 +3293,7 @@
           : cfg && cfg.session_context_char_limit;
       payload.session_context = combineContextBlocks(
         [retrievalContextBlock, coerceText(payload.session_context)],
-        clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
+        clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
       );
       payload.content_scope_instructions = combineContextBlocks(
         [
@@ -5290,7 +5328,15 @@
       pageAwareFollowupPrompt = buildPageAwareFollowupPrompt(profile, payload);
       pageAwareNameRequestLine = buildPageAwareNameRequestLine(profile, payload);
       if (pageAwareOpeningLine) {
+        // CLAIRE_STRIP_PAGE_CONTEXT_PAYLOAD
+      try {
+        if (isClaireCharacterConfig(cfg, launchSession)) {
+          pageAwareOpeningLine = "";
+        }
+      } catch (_e) {}
+      if (pageAwareOpeningLine) {
         assignContextValueIfMissing(payload, "page_context_opening_line", pageAwareOpeningLine);
+      }
         assignContextValueIfMissing(payload, "opening_line", pageAwareOpeningLine);
       }
       if (pageAwareFollowupPrompt) {
@@ -5408,7 +5454,7 @@
         knowledgeReferenceSpine ? `Canonical reference spine: ${knowledgeReferenceSpine}` : "",
         syntaxContext,
       ],
-      clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
+      clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
     );
     if (mergedSessionContext) {
       payload.session_context = mergedSessionContext;
@@ -5456,7 +5502,7 @@
         : cfg && cfg.session_context_char_limit;
     const mergedSessionContext = combineContextBlocks(
       [groundingAppendix, coerceText(payload.session_context)],
-      clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
+      clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
     );
     if (mergedSessionContext) {
       payload.session_context = mergedSessionContext;
@@ -5711,7 +5757,7 @@
         : cfg && cfg.session_context_char_limit;
     const mergedSessionContext = combineContextBlocks(
       [scopeContextBlock, coerceText(payload.session_context)],
-      clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
+      clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
     );
     if (mergedSessionContext) {
       payload.session_context = mergedSessionContext;
@@ -5989,6 +6035,17 @@
   }
 
   async function prefetchActivePagePatternContext() {
+    try {
+      const cfg = (typeof getVoiceConfig === "function" ? getVoiceConfig() : null) || window.MAXWELLIAN_HUME || {};
+      const cid = String((cfg && (cfg.character_id || cfg.default_character_id || cfg.character_name)) || "").toLowerCase();
+      if (cfg.disable_page_context || cfg.page_context_enabled === false || cfg.include_page_context === false) {
+        return Promise.resolve(null);
+      }
+      if (cid.includes("claire") || cid.includes("charcot")) {
+        return Promise.resolve(null);
+      }
+    } catch (_e) {}
+
     if (!isLikelySummaryboardPage()) return null;
     if (typeof window.fetch !== "function") return null;
     const cacheKey = buildSummaryboardPatternContextKey();
@@ -8727,7 +8784,21 @@
         Object.assign(merged, forcedOpenAiFallback);
       }
     }
-    if (!coerceText(merged.session_context)) merged.session_context = coerceText(cfg.session_context);
+    (function () {
+      const fromMerged = coerceText(merged.session_context);
+      const fromCfg = coerceText(cfg.session_context);
+      const score = function (text) {
+        let s = text.length;
+        if (/Jean-Martin|vibratory chair|Delton Hyatt|Internal Identity|CLAIRE IDENTITY PACK/i.test(text)) s += 50000;
+        return s;
+      };
+      if (!fromMerged) merged.session_context = fromCfg;
+      else if (fromCfg && score(fromCfg) > score(fromMerged)) merged.session_context = fromCfg;
+      const spMerged = coerceText(merged.system_prompt_text);
+      const spCfg = coerceText(cfg.system_prompt_text);
+      if (!spMerged) merged.system_prompt_text = spCfg;
+      else if (spCfg && score(spCfg) > score(spMerged)) merged.system_prompt_text = spCfg;
+    })();
     return merged;
   }
 
@@ -9373,6 +9444,38 @@
   function sendWidgetConfig(cfg, launchSession) {
     const payload = buildWidgetConnectConfig(cfg, launchSession);
     if (!payload) return false;
+    // CLAIRE_STRIP_PAGE_CONTEXT_PAYLOAD
+    try {
+      if (isClaireCharacterConfig(cfg, launchSession)) {
+        const killKeys = [
+          "page_context_opening_line","page_context_title","page_context_summary","page_context_key_points",
+          "active_page_title","active_page_slug","active_page_headings","active_page_excerpt","active_page_path",
+          "source_page","pageKey","page_key","active_page_file","active_page_href","page_context_memory"
+        ];
+        killKeys.forEach(function (k) { try { delete payload[k]; } catch (_e) {} });
+        payload.page_aware = false;
+        payload.content_awareness_mode = false;
+        payload.disable_page_context = true;
+        // Force monologue opening into context/prompt
+        if (!coerceText(payload.opening_line) || !/Dr\. Claire Charcot|Jean-Martin|vibratory/i.test(coerceText(payload.opening_line))) {
+          payload.opening_line = "Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions?";
+        }
+        const must = "NOT PAGE-AWARE. Never say page 7 or any page number. FIRST SPOKEN OUTPUT MUST BE THIS MONOLOGUE: Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions? After monologue, answer questions. You know your bio from the monologue.";
+        const sc = coerceText(payload.session_context);
+        if (!sc || !/Jean-Martin Charcot|vibratory chairs|Now, how might I answer your questions/i.test(sc)) {
+          payload.session_context = must;
+        } else if (!/NOT PAGE-AWARE|Never say page/i.test(sc)) {
+          payload.session_context = "NOT PAGE-AWARE. Never mention page numbers or page 7.\n\n" + sc;
+        }
+        const sp = coerceText(payload.system_prompt_text);
+        if (!sp || !/Jean-Martin Charcot|RECITE the approved opening monologue|Now, how might I answer your questions/i.test(sp)) {
+          payload.system_prompt_text = "You are Claire for Kuranda Mind & Body. CRITICAL: You are NOT page-aware. Never mention page numbers, page 7, website layout, or that the visitor is on a page. CRITICAL FIRST TURN: When the session starts, RECITE this monologue almost word-for-word as your first spoken output. Do not shorten it. Do not ask for the visitor name first. Monologue: Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions? After the monologue ending with Now, how might I answer your questions?, wait for the visitor. No diagnosis. No cure promises.";
+        } else if (!/NOT page-aware|Never mention page/i.test(sp)) {
+          payload.system_prompt_text = "CRITICAL: NOT page-aware. Never mention page numbers or page 7. " + sp;
+        }
+        payload.session_context_char_limit = Math.max(Number(payload.session_context_char_limit) || 0, 24000);
+      }
+    } catch (_e) {}
 
     const dims = getViewportDimensions();
     if (launchSession && typeof launchSession === "object") {
