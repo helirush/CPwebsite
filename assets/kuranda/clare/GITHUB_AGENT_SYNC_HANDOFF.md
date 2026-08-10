@@ -17,7 +17,7 @@ Do **not** promote to `/Users/mdhowell/uewebsite` unless Mr. Howell explicitly r
 ## Claire behavior locked for this sync
 1. **Not page-aware** — must never say page 7 / page numbers / website layout.
 2. **First turn monologue** — recite Dr. Claire Charcot bio/history (Jean-Martin Charcot, vibratory chairs, Delton Hyatt), end with: "Now, how might I answer your questions?"
-3. Control: Waiting on Claire / Stop-Listening under orb; donor corner chrome hidden; iframe remains alive for voice.
+3. Control: Claire is ready / Pause Claire under orb; donor corner chrome hidden; iframe remains alive for voice.
 4. Identity pack: `knowledge/CLAIRE_IDENTITY_PACK.md` (+ brief alias).
 
 ## Repo notes / branch caution
@@ -59,7 +59,7 @@ Suggested message:
 - [ ] `node --check` Claire widget + character configs pass
 - [ ] page7 hard-refresh loads `kuranda_p2.png?v=...` new art
 - [ ] Waiting → mic → first turn is bio monologue (not page-7 greeting)
-- [ ] Stop-Listening returns to Waiting and can relaunch without Back
+- [ ] Pause Claire returns to Waiting and can relaunch without Back
 - [ ] No uewebsite files modified
 
 ## Explicit non-goals

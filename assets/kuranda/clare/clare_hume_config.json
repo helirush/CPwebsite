@@ -10,7 +10,7 @@
   "return_page_url": "./page6.html",
   "open_in_new_tab": false,
   "auto_launch_on_demo_page": true,
-  "status_ready": "Claire is ready. Press Meet Claire to continue.",
+  "status_ready": "Claire is ready. Select to begin speaking with Claire.",
   "status_demo": "Press Meet Claire to open the Claire trial experience.",
   "status_speaking": "Claire is speaking from the Kuranda Knowledge Library.",
   "status_pending": "Claire voice link is being prepared.",

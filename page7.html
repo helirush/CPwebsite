@@ -11,24 +11,29 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260806-0348" />
-  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260806-0348"></script>
-  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260806-0348"></script>
-  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260806-0348"></script>
+  <link rel="stylesheet" href="./styles.css?v=20260808-2038" />
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260808-2038"></script>
+  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260808-2038"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260808-2038"></script>
 </head>
 <body class="home-page page6-kuranda-voice-page">
   <main class="site-wrap">
     <section class="page-card">
-      <img class="page-image" src="./assets/kuranda_p2.png?v=20260806-0348" alt="Kuranda page 2 with Claire voice experience" />
+      <img class="page-image" src="./assets/kuranda_p2.png?v=20260808-2038" alt="Kuranda page 2 with Claire voice experience" />
       <div class="page5-kuranda-nav" aria-label="Page navigation controls">
         <a class="page5-kuranda-nav-link" id="page7-return-link" href="./page6.html" aria-label="Return to Kuranda page 1">Back</a>
         <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
       </div>
-      <div class="kuranda-speaking-bubble" id="kuranda-speaking-bubble" aria-hidden="true">
+                  <div class="kuranda-speaking-bubble" id="kuranda-speaking-bubble" aria-hidden="true">
         <span class="kuranda-speaking-ring" aria-hidden="true"></span>
         <span class="kuranda-speaking-ring" aria-hidden="true"></span>
         <span class="kuranda-speaking-ring" aria-hidden="true"></span>
         <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-orb-core" aria-hidden="true"></span>
         <div class="kuranda-speaking-inner">
           <span class="kuranda-speaking-bar"></span>
           <span class="kuranda-speaking-bar"></span>
@@ -94,7 +99,7 @@
         // Load lean identity pack only (onboard + bio). No page7 text. No giant library dump.
         let claireIdentityPack = "";
         try {
-          const packUrl = "./assets/kuranda/clare/knowledge/CLAIRE_IDENTITY_PACK.md?v=20260806-0348";
+          const packUrl = "./assets/kuranda/clare/knowledge/CLAIRE_IDENTITY_PACK.md?v=20260808-2038";
           const resp = await fetch(packUrl, { cache: "no-store" });
           if (resp && resp.ok) claireIdentityPack = await resp.text();
         } catch (e) {
@@ -237,7 +242,7 @@
       }, 200);
       
       // CLAIRE_SOFT_RESET_AFTER_STOP
-      // Stop-Listening ends audio; soft re-arm so Waiting works without Back.
+      // Pause Claire ends audio; soft re-arm so Waiting works without Back.
       const softRearmClaire = async function () {
         try {
           if (typeof window.stopKurandaClaireBubble === "function") window.stopKurandaClaireBubble();
@@ -254,7 +259,7 @@
             b.style.opacity = "1";
             b.style.pointerEvents = "auto";
             b.setAttribute("data-claire-state", "waiting");
-            b.textContent = "Waiting on Claire";
+            b.textContent = "Claire is ready";
           }
         } catch (e) {}
         // Re-run the same prep as first load so next SELECT has a live session path.
@@ -281,7 +286,7 @@
           if (!b) return;
           const st = String(b.getAttribute("data-claire-state") || "");
           const label = String(b.textContent || "").trim().toLowerCase();
-          if (st === "close-ready" || st === "connecting" || label === "stop-listening") return;
+          if (st === "close-ready" || st === "connecting" || label === "pause claire" || label === "stop-listening") return;
           b.disabled = false;
           b.removeAttribute("disabled");
           b.hidden = false;
@@ -290,7 +295,7 @@
           b.style.opacity = "1";
           b.style.pointerEvents = "auto";
           b.setAttribute("data-claire-state", "waiting");
-          b.textContent = "Waiting on Claire";
+          b.textContent = "Claire is ready";
         } catch (e) {}
       }, 800);
     })();

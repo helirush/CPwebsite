@@ -92,8 +92,8 @@
     return false;
   }
 
-  const START_BUTTON_WAITING_LABEL = "Waiting on Claire";
-  const START_BUTTON_CLOSE_LABEL = "Stop-Listening";
+  const START_BUTTON_WAITING_LABEL = "Claire is ready";
+  const START_BUTTON_CLOSE_LABEL = "Pause Claire";
   const UNITY_START_GATE_MAX_STALL_RETRIES = 2;
   const UNITY_START_GATE_MOBILE_MAX_STALL_RETRIES = 4;
   const UNITY_START_GATE_STALL_TIMEOUT_MS = 5000;
@@ -11089,7 +11089,7 @@
             </div>
             <div id="clerkVoiceSignalLabel" class="clerk-voice-signal-label">Clerk is ready.</div>
           </div>
-          <button id="clerkVoiceStartBtn" class="clerk-voice-start-btn" type="button">Waiting on Claire</button>
+          <button id="clerkVoiceStartBtn" class="clerk-voice-start-btn" type="button">Claire is ready</button>
           <iframe
             id="clerkVoiceFrame"
             class="clerk-voice-frame"
@@ -11132,7 +11132,7 @@
       try {
         const st = startBtnEl ? String(startBtnEl.getAttribute("data-claire-state") || "") : "";
         const label = startBtnEl ? String(startBtnEl.textContent || "").trim().toLowerCase() : "";
-        if (st === "close-ready" || label === "stop-listening") {
+        if (st === "close-ready" || label === "pause claire" || label === "stop-listening") {
           try { if (typeof window.stopKurandaClaireBubble === "function") window.stopKurandaClaireBubble(); } catch (_e) {}
           try { document.body.classList.remove("claire-is-speaking"); } catch (_e) {}
           // Full stop + reset control to Waiting. Page can soft re-arm without Back.
@@ -11398,7 +11398,7 @@
     try { mountClaireStartButtonToBody(); } catch (_e) {}
     const btn = document.getElementById("clerkVoiceStartBtn");
     if (!btn) return;
-    btn.textContent = START_BUTTON_CLOSE_LABEL || "Stop-Listening";
+    btn.textContent = START_BUTTON_CLOSE_LABEL || "Pause Claire";
     btn.setAttribute("data-claire-state", "close-ready");
     btn.disabled = false;
     btn.removeAttribute("disabled");
@@ -11413,7 +11413,7 @@
     try { mountClaireStartButtonToBody(); } catch (_e) {}
     const btn = document.getElementById("clerkVoiceStartBtn");
     if (!btn) return;
-    btn.textContent = START_BUTTON_WAITING_LABEL || "Waiting on Claire";
+    btn.textContent = START_BUTTON_WAITING_LABEL || "Claire is ready";
     btn.setAttribute("data-claire-state", "waiting");
     btn.disabled = false;
     btn.removeAttribute("disabled");
