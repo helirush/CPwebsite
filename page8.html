@@ -1477,6 +1477,14 @@
           // Passive wait only. Avoid repeated synthetic start presses that can
           // churn backend sessions and trigger hidden capacity errors.
           if (pausedHard || !autoStartArmed) return;
+          if (ticks === 15 && startClickCount < 2 && !detectCapacityMessage()) {
+            const retriggered = clickNativeStartOrPause();
+            if (retriggered) {
+              startClickCount += 1;
+              try { postVoiceMessage('start_listening'); } catch (_e) {}
+              console.info('[cp-page8] Performed single Clerk start re-trigger during silent launch window.');
+            }
+          }
           if (ticks >= 40) {
             window.clearInterval(liveWatchTimer);
             liveWatchTimer = 0;
