@@ -869,6 +869,15 @@
         setTalkWaveSpeaking(false);
         if (active) setTalkWaveVisible(true);
       };
+      const setBottomCapacity = () => {
+        isLive = false;
+        bottomBtn.classList.remove('is-live');
+        bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Clerk at Capacity</span><small>Retry</small>';
+        bottomBtn.setAttribute('aria-label', 'Clerk demo is at capacity. Retry.');
+        bottomBtn.setAttribute('data-clerk-state', 'capacity');
+        setTalkWaveSpeaking(false);
+        if (active) setTalkWaveVisible(true);
+      };
 
       const setBottomPause = () => {
         isLive = true;
@@ -1389,6 +1398,20 @@
         await new Promise((r) => setTimeout(r, 350));
         return true;
       };
+      const detectCapacityMessage = () => {
+        const frame = getVoiceFrame();
+        if (!frame) return null;
+        try {
+          const doc = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
+          if (!doc || !doc.body) return null;
+          const text = String(doc.body.innerText || '').toLowerCase();
+          if (!text) return null;
+          if (text.includes('demo is at capacity') || text.includes('at capacity right now')) {
+            return 'Our demo is at capacity right now.';
+          }
+        } catch (_err) {}
+        return null;
+      };
 
       const waitAndClickStart = async () => {
         // NEVER click start until iframe has loaded/ready. Early click posts
@@ -1401,9 +1424,20 @@
 
         // Ensure auth is still present right before start.
         try { await ensureClerkRuntimeAuth(); } catch (_e) {}
-
-        const readyBtn = await waitFor(() => getNativeStartButton(), 8000);
-        if (!readyBtn) return false;
+        const launchControl = await waitFor(() => {
+          const capacityMessage = detectCapacityMessage();
+          if (capacityMessage) return { type: 'capacity', message: capacityMessage };
+          const btn = getNativeStartButton();
+          if (btn) return { type: 'start', button: btn };
+          return null;
+        }, 8000);
+        if (!launchControl) return false;
+        if (launchControl.type === 'capacity') {
+          console.warn('[cp-page8] Clerk renderer capacity state detected before start.');
+          setBottomCapacity();
+          window.alert('Clerk demo is currently at capacity. Please retry in a moment.');
+          return false;
+        }
 
         const epoch = sessionEpoch;
         await new Promise((r) => setTimeout(r, 180));
@@ -1435,6 +1469,11 @@
           if (ticks >= 40) {
             window.clearInterval(liveWatchTimer);
             liveWatchTimer = 0;
+            if (detectCapacityMessage()) {
+              console.warn('[cp-page8] Clerk renderer reached capacity while waiting for live audio.');
+              setBottomCapacity();
+              return;
+            }
             console.warn('[cp-page8] Clerk still silent after start retries. Check console for Hume auth/connect errors.');
             setBottomWaiting();
           }
