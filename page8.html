@@ -622,9 +622,9 @@
       };
     })();
   </script>
-  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260810-clerkfix-local1" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/hume_auth_bootstrap.js?v=20260809-clerk-simple21';"></script>
-  <script src="./assets/kuranda/clare/hume_character_config.js?v=20260810-clerkfix-local1" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/hume_character_config.js?v=20260809-clerk-simple21';"></script>
-  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260810-clerkfix-local1" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/clerk_voice_widget.js?v=20260809-clerk-simple21';"></script>
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260810-clerkfix-local1"></script>
+  <script src="./assets/kuranda/clare/hume_character_config.js?v=20260810-clerkfix-local1"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260810-clerkfix-local1"></script>
 </head>
 <body class="home-page cp-clerk-onepage">
   <main class="site-wrap">
@@ -648,7 +648,6 @@
           class="cp-clerk-presence-image"
           id="cpClerkPresenceImage"
           src="./assets/ClerkMaxwell_60423t.png"
-          onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/assets/images/ClerkMaxwell_60423t.png';"
           alt="J. Clerk Maxwell"
         >
         <div class="cp-clerk-presence-meta">
@@ -697,6 +696,8 @@
       let startClickCount = 0;
       let sessionEpoch = 0;          // invalidate delayed start clicks after pause
       let pausedHard = false;        // block auto-restart after Pause
+      let clerkLibraryContextCache = '';
+      let clerkLibraryContextLoading = null;
       const talkWaveCtx = talkWaveCanvas && talkWaveCanvas.getContext
         ? talkWaveCanvas.getContext('2d')
         : null;
@@ -905,12 +906,42 @@
           return './assets/kuranda/clare/' + String(relativePath || '').replace(/^\.?\//, '');
         }
       };
+      const getClerkLibraryContext = async () => {
+        if (clerkLibraryContextCache) return clerkLibraryContextCache;
+        if (clerkLibraryContextLoading) return clerkLibraryContextLoading;
+        clerkLibraryContextLoading = (async () => {
+          const defaultContext =
+            'MAXWELLIAN LIBRARY DEMO CONTEXT:\n' +
+            '- Clerk Maxwell is connected to Maxwellian Library knowledge.\n' +
+            '- Primary doctrine is Measure, Manage (M P T S), Exchange.\n' +
+            '- Stay educational and practical; never invent data or guarantees.\n' +
+            '- This Cognition Partner host is not page-aware and should not mention page numbers or page layout.\n';
+          try {
+            const packUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260810-clerk-library1');
+            const response = await window.fetch(packUrl, { cache: 'no-store' });
+            if (response && response.ok) {
+              const text = await response.text();
+              if (text && text.trim().length > 200) {
+                clerkLibraryContextCache = text.trim();
+                return clerkLibraryContextCache;
+              }
+            }
+          } catch (_err) {}
+          clerkLibraryContextCache = defaultContext;
+          return clerkLibraryContextCache;
+        })();
+        const loaded = await clerkLibraryContextLoading;
+        clerkLibraryContextLoading = null;
+        return loaded;
+      };
 
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
         const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
         const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260810-p1-r4');
-        const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClaireOnBoard.md?v=20260809-clerk-simple21');
+        const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260810-clerk-library1');
+        const clerkConfigId = '316eb863-97d3-4708-9dba-ccd6e3d21265';
+        const clerkVoiceId = '316eb863-97d3-4708-9dba-ccd6e3d21265';
 
         // Critical: page8 is outside Unity allowlist. Disable page lock for CP demo.
         window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
@@ -921,11 +952,15 @@
         window.MAXWELLIAN_HUME.character_name = 'Clerk Maxwell';
         window.MAXWELLIAN_HUME.character_id = 'clerk-maxwell';
         window.MAXWELLIAN_HUME.default_character_id = 'clerk-maxwell';
+        window.MAXWELLIAN_HUME.default_context_source = 'maxwellian-library-session';
         window.MAXWELLIAN_HUME.lock_character_to_default = true;
         window.MAXWELLIAN_HUME.voice_engine = 'hume';
         window.MAXWELLIAN_HUME.voice_engine_preference = 'hume';
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
         window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
+        window.MAXWELLIAN_HUME.hume_config_id = clerkConfigId;
+        window.MAXWELLIAN_HUME.config_id = clerkConfigId;
+        window.MAXWELLIAN_HUME.voice_id = clerkVoiceId;
 
         // Prefer same-origin local bridge first (python server root serves /api/hume/*),
         // then production absolute fallback.
@@ -955,12 +990,38 @@
         window.MAXWELLIAN_HUME.lead_capture_enabled = false;
         window.MAXWELLIAN_HUME.content_awareness_mode = false;
         window.MAXWELLIAN_HUME.content_awareness_scope_lock = false;
+        window.MAXWELLIAN_HUME.disable_page_context = true;
+        window.MAXWELLIAN_HUME.page_context_enabled = false;
+        window.MAXWELLIAN_HUME.include_page_context = false;
+        window.MAXWELLIAN_HUME.prefetch_active_page_context = false;
+        window.MAXWELLIAN_HUME.content_awareness_page_source_files = {};
         window.MAXWELLIAN_HUME.cross_page_roaming_enabled = false;
 
-        if (window.MAXWELLIAN_HUME.characters && window.MAXWELLIAN_HUME.characters['clerk-maxwell']) {
-          window.MAXWELLIAN_HUME.characters['clerk-maxwell'].character_avatar_url = portrait;
-          window.MAXWELLIAN_HUME.characters['clerk-maxwell'].character_background_url = portrait;
-        }
+        const existingCharacters =
+          window.MAXWELLIAN_HUME.characters && typeof window.MAXWELLIAN_HUME.characters === 'object'
+            ? window.MAXWELLIAN_HUME.characters
+            : {};
+        const existingClerk =
+          existingCharacters['clerk-maxwell'] && typeof existingCharacters['clerk-maxwell'] === 'object'
+            ? existingCharacters['clerk-maxwell']
+            : {};
+        window.MAXWELLIAN_HUME.characters = Object.assign({}, existingCharacters, {
+          'clerk-maxwell': Object.assign({}, existingClerk, {
+            character_name: 'Clerk Maxwell',
+            character_avatar_url: portrait,
+            character_background_url: portrait,
+            hume_config_id: clerkConfigId,
+            config_id: clerkConfigId,
+            voice_id: clerkVoiceId,
+            session_variables: Object.assign({}, existingClerk.session_variables || {}, {
+              character_name: 'Clerk Maxwell',
+              character_role: 'Chief Scientist at Unity Energy',
+              library_authority: 'Maxwellian Library',
+              page_aware: 'false',
+              content_aware: 'library-only'
+            })
+          })
+        });
         return true;
       };
 
@@ -1047,7 +1108,6 @@
         const endpoints = [
           '/api/hume/runtime-auth',
           '/api/hume/runtime-auth.json',
-          'https://unityenergy.com/api/hume/runtime-auth',
           new URL('../../../api/hume/runtime-auth', window.location.href).toString(),
           new URL('../../../api/hume/runtime-auth.json', window.location.href).toString()
         ];
@@ -1364,6 +1424,27 @@
 
       const openClerkSession = async ({ autoStart = true } = {}) => {
         applyClerkConfig();
+        const clerkLibraryContext = await getClerkLibraryContext();
+        try {
+          if (window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === 'object') {
+            const openingLine = 'Hello, I am Clerk Maxwell. I can help you explore the Maxwellian Library and explain Unity Energy concepts clearly.';
+            window.MAXWELLIAN_HUME.opening_line = openingLine;
+            window.MAXWELLIAN_HUME.session_context =
+              'You are Clerk Maxwell connected to Maxwellian Library context only. ' +
+              'Do not use page-aware language or describe page layout.\n\n' + clerkLibraryContext;
+            window.MAXWELLIAN_HUME.system_prompt_text =
+              'You are Clerk Maxwell. Use Maxwellian Library context for answers. ' +
+              'Be concise and practical, and never mention page numbers or page structure.';
+            if (!window.MAXWELLIAN_HUME.session_variables || typeof window.MAXWELLIAN_HUME.session_variables !== 'object') {
+              window.MAXWELLIAN_HUME.session_variables = {};
+            }
+            window.MAXWELLIAN_HUME.session_variables.character_name = 'Clerk Maxwell';
+            window.MAXWELLIAN_HUME.session_variables.library_authority = 'Maxwellian Library';
+            window.MAXWELLIAN_HUME.session_variables.page_aware = 'false';
+            window.MAXWELLIAN_HUME.session_variables.content_aware = 'library-only';
+            window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
+          }
+        } catch (_err) {}
         sessionEpoch += 1;
         const epoch = sessionEpoch;
         pausedHard = false;
@@ -1423,14 +1504,15 @@
             uiMode: 'modal',
             conversationMode: 'followup',
             contextPayload: {
-              organization: 'Unity Energy',
+              organization: 'Maxwellian / Unity Energy',
               public_guide: 'Clerk Maxwell',
-              source_page: 'cp-page8-clerk-simple',
+              source_page: 'cp-page8-clerk-library-host',
               page_aware: false,
-              content_aware: false,
-              guide_mode: 'unity',
+              content_aware: 'library-only',
+              guide_mode: 'maxwellian-library',
+              library_authority: 'Maxwellian Library',
               voice_engine_preference: 'hume',
-              opening_expectation: 'Greet the visitor warmly as Clerk Maxwell and offer to help them understand Unity Energy.'
+              opening_expectation: 'Greet the visitor warmly as Clerk Maxwell and offer help using Maxwellian Library context.'
             }
           });
           if (result && typeof result.then === 'function') {
@@ -1553,7 +1635,7 @@
         return ok;
       };
 
-      // 1) Speak with Clerk -> reveal presence + auto-start greeting
+      // 1) Speak with Clerk -> reveal presence only (session starts from Waiting button)
       speakBtn.addEventListener('click', () => {
         if (active) return;
         setActive(true);
@@ -1562,7 +1644,6 @@
         setBottomWaiting();
         // Kick auth fetch immediately so credentials are warm before modal open.
         void ensureClerkRuntimeAuth();
-        window.setTimeout(() => { void launchClerkVoice({ toggleOnly: false }); }, 650);
       });
 
       // 2) Claire-style control: Pause Clerk <-> Waiting on Clerk

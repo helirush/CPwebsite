@@ -44,7 +44,6 @@
       </div>
     </section>
   </main>
-  <script src="../../UnityEnergy/founder_share_panel.js?v=20260805a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260805a';"></script>
   <script>
     (() => {
       const returnLink = document.getElementById("page7-return-link");
@@ -96,14 +95,22 @@
           window.MAXWELLIAN_HUME.content_awareness_page_source_files = {};
         } catch (e) {}
 
-        // Load lean identity pack only (onboard + bio). No page7 text. No giant library dump.
+        // Load Claire identity + Kuranda library pack (host-level context, not page-aware).
         let claireIdentityPack = "";
+        let claireKnowledgePack = "";
         try {
           const packUrl = "./assets/kuranda/clare/knowledge/CLAIRE_IDENTITY_PACK.md?v=20260808-2038";
           const resp = await fetch(packUrl, { cache: "no-store" });
           if (resp && resp.ok) claireIdentityPack = await resp.text();
         } catch (e) {
           console.warn("Claire identity pack fetch failed; using compact fallback.", e);
+        }
+        try {
+          const knowledgeUrl = "./assets/kuranda/clare/knowledge/CLAIRE_DEMO_KNOWLEDGE_PACK.md?v=20260810-claire-library1";
+          const knowledgeResp = await fetch(knowledgeUrl, { cache: "no-store" });
+          if (knowledgeResp && knowledgeResp.ok) claireKnowledgePack = await knowledgeResp.text();
+        } catch (e) {
+          console.warn("Claire knowledge pack fetch failed; using compact fallback.", e);
         }
         if (!claireIdentityPack || claireIdentityPack.length < 200) {
           claireIdentityPack =
@@ -114,6 +121,13 @@
             "No diagnosis/cure promises. " +
             "First turn monologue required (bio history). May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more.";
         }
+        if (!claireKnowledgePack || claireKnowledgePack.length < 200) {
+          claireKnowledgePack =
+            "KURANDA LIBRARY DEMO CONTEXT:\n" +
+            "- Claire is connected to Kuranda Library material for grounded discussion.\n" +
+            "- Discuss evolving research on vibration, sensory regulation, and well-being with safety guardrails.\n" +
+            "- Never promise cures or diagnosis, and never mention page numbers or page layout.\n";
+        }
 
         const openingLine = "Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions?";
 
@@ -123,17 +137,20 @@
           "Do not ask for name in first turn. End with: Now, how might I answer your questions? " +
           "Monologue: " + openingLine;
 
-        // Session context = identity pack ONLY.
+        // Session context = identity pack + Kuranda library pack.
         window.MAXWELLIAN_HUME.session_context =
-          operatingLine + "\n\n--- CLAIRE IDENTITY PACK ---\n" + claireIdentityPack;
+          operatingLine +
+          "\n\n--- CLAIRE IDENTITY PACK ---\n" + claireIdentityPack +
+          "\n\n--- KURANDA LIBRARY PACK ---\n" + claireKnowledgePack;
         window.MAXWELLIAN_HUME.system_prompt_text =
-          "You are Claire. " + operatingLine + " Opening line: " + openingLine;
+          "You are Claire connected to Kuranda Library context. " + operatingLine + " Opening line: " + openingLine;
         if (window.MAXWELLIAN_HUME.session_variables) {
           window.MAXWELLIAN_HUME.session_variables.character_name = "Claire";
           window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
           window.MAXWELLIAN_HUME.session_variables.name_request_line =
             "May I ask who I'm speaking with—just your first name so we can talk?";
-          window.MAXWELLIAN_HUME.session_variables.library_prep = "identity-pack-only";
+          window.MAXWELLIAN_HUME.session_variables.library_prep = "identity-pack-plus-kuranda-library";
+          window.MAXWELLIAN_HUME.session_variables.library_authority = "Kuranda Library";
           window.MAXWELLIAN_HUME.session_variables.bio_source =
             "SpeakWithClaireOnBoard + Internal Identity Narrative";
           window.MAXWELLIAN_HUME.session_variables.must_know_bio = "true";
