@@ -940,14 +940,14 @@
         clerkLibraryContextLoading = null;
         return loaded;
       };
+      const CLERK_CONFIG_ID = '316eb863-97d3-4708-9dba-ccd6e3d21265';
+      const CLERK_VOICE_ID = '604edff3-0145-433e-9b5f-fc2f916e78ef';
 
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
         const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
         const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260810-p1-r4');
         const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/CLERK_DEMO_INITIATION_PREP.md?v=20260810-clerk-demo-init1');
-        const clerkConfigId = '316eb863-97d3-4708-9dba-ccd6e3d21265';
-        const clerkVoiceId = '604edff3-0145-433e-9b5f-fc2f916e78ef';
 
         // Critical: page8 is outside Unity allowlist. Disable page lock for CP demo.
         window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
@@ -964,10 +964,10 @@
         window.MAXWELLIAN_HUME.voice_engine_preference = 'hume';
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
         window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
-        window.MAXWELLIAN_HUME.hume_config_id = clerkConfigId;
-        window.MAXWELLIAN_HUME.hume_voice_id = clerkVoiceId;
-        window.MAXWELLIAN_HUME.config_id = clerkConfigId;
-        window.MAXWELLIAN_HUME.voice_id = clerkVoiceId;
+        window.MAXWELLIAN_HUME.hume_config_id = CLERK_CONFIG_ID;
+        window.MAXWELLIAN_HUME.hume_voice_id = CLERK_VOICE_ID;
+        window.MAXWELLIAN_HUME.config_id = CLERK_CONFIG_ID;
+        window.MAXWELLIAN_HUME.voice_id = CLERK_VOICE_ID;
 
         // Prefer same-origin local bridge first (python server root serves /api/hume/*),
         // then production absolute fallback.
@@ -1019,10 +1019,10 @@
             character_name: 'Clerk Maxwell',
             character_avatar_url: portrait,
             character_background_url: portrait,
-            hume_config_id: clerkConfigId,
-            hume_voice_id: clerkVoiceId,
-            config_id: clerkConfigId,
-            voice_id: clerkVoiceId,
+            hume_config_id: CLERK_CONFIG_ID,
+            hume_voice_id: CLERK_VOICE_ID,
+            config_id: CLERK_CONFIG_ID,
+            voice_id: CLERK_VOICE_ID,
             session_variables: Object.assign({}, existingClerk.session_variables || {}, {
               character_name: 'Clerk Maxwell',
               character_role: 'Chief Scientist at Unity Energy',
@@ -1521,8 +1521,8 @@
             intelligenceProfile: {
               id: 'clerk-demo-voice-lock',
               label: 'Clerk Demo Voice Lock',
-              configId: clerkConfigId,
-              voiceId: clerkVoiceId,
+              configId: CLERK_CONFIG_ID,
+              voiceId: CLERK_VOICE_ID,
               responseStyle: 'Maxwellian library guide voice; concise educational style.'
             },
             contextSource: 'cp-page8-clerk-demo',
@@ -1541,10 +1541,10 @@
               content_aware: 'library-only',
               guide_mode: 'maxwellian-library',
               library_authority: 'Maxwellian Library',
-              hume_config_id: clerkConfigId,
-              hume_voice_id: clerkVoiceId,
-              voice_id: clerkVoiceId,
-              config_id: clerkConfigId,
+              hume_config_id: CLERK_CONFIG_ID,
+              hume_voice_id: CLERK_VOICE_ID,
+              voice_id: CLERK_VOICE_ID,
+              config_id: CLERK_CONFIG_ID,
               voice_engine_preference: 'hume',
               opening_expectation: 'Greet the visitor warmly as Clerk Maxwell and offer help using Maxwellian Library context.'
             }
