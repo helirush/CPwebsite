@@ -622,9 +622,9 @@
       };
     })();
   </script>
-  <script src="../../UnityEnergy/hume_auth_bootstrap.js?v=20260809-clerk-simple21" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/hume_auth_bootstrap.js?v=20260809-clerk-simple21';"></script>
-  <script src="../../UnityEnergy/hume_character_config.js?v=20260809-clerk-simple21" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/hume_character_config.js?v=20260809-clerk-simple21';"></script>
-  <script src="../../UnityEnergy/clerk_voice_widget.js?v=20260809-clerk-simple21" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/clerk_voice_widget.js?v=20260809-clerk-simple21';"></script>
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260810-clerkfix-local1" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/hume_auth_bootstrap.js?v=20260809-clerk-simple21';"></script>
+  <script src="./assets/kuranda/clare/hume_character_config.js?v=20260810-clerkfix-local1" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/hume_character_config.js?v=20260809-clerk-simple21';"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260810-clerkfix-local1" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/clerk_voice_widget.js?v=20260809-clerk-simple21';"></script>
 </head>
 <body class="home-page cp-clerk-onepage">
   <main class="site-wrap">
@@ -647,8 +647,8 @@
         <img
           class="cp-clerk-presence-image"
           id="cpClerkPresenceImage"
-          src="../../UnityEnergy/assets/images/ClerkMaxwell_60423t.png"
-          onerror="this.onerror=null;this.src='./assets/ClerkMaxwell_60423t.png';"
+          src="./assets/ClerkMaxwell_60423t.png"
+          onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/assets/images/ClerkMaxwell_60423t.png';"
           alt="J. Clerk Maxwell"
         >
         <div class="cp-clerk-presence-meta">
@@ -660,7 +660,8 @@
         </div>
         <div class="cp-clerk-presence-controls">
           <button class="cp-clerk-bottom-btn" id="cpClerkBottomBtn" type="button">
-            Waiting on Clerk
+            <span class="cp-clerk-bottom-btn-primary">Clerk is Ready</span>
+            <small>Select</small>
           </button>
           <a class="cp-clerk-unity-link" href="https://unityenergy.com" target="_blank" rel="noopener noreferrer">
             Go to Unity Energy Website
@@ -732,7 +733,7 @@
       };
 
       // Claire pattern labels:
-      // waiting/ready => "Waiting on Clerk"
+      // waiting/ready => "Clerk is Ready" + "Select"
       // live => "Pause Clerk"
       const ensureTalkWaveSize = () => {
         if (!talkWaveCanvas || !talkWaveCtx || !talkWave) return;
@@ -861,9 +862,9 @@
       const setBottomWaiting = () => {
         isLive = false;
         bottomBtn.classList.remove('is-live');
-        bottomBtn.textContent = 'Waiting on Clerk';
-        bottomBtn.setAttribute('aria-label', 'Waiting on Clerk');
-        bottomBtn.setAttribute('data-clerk-state', 'waiting');
+        bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Clerk is Ready</span><small>Select</small>';
+        bottomBtn.setAttribute('aria-label', 'Clerk is Ready. Select.');
+        bottomBtn.setAttribute('data-clerk-state', 'ready');
         setTalkWaveSpeaking(false);
         if (active) setTalkWaveVisible(true);
       };
@@ -889,19 +890,27 @@
         setBottomPause();
       };
 
-      const resolveUnityAssetUrl = (relativePath) => {
+      const resolveCpAssetUrl = (relativePath) => {
         try {
-          return new URL('../../UnityEnergy/' + String(relativePath || '').replace(/^\.?\//, ''), window.location.href).toString();
+          return new URL('./assets/' + String(relativePath || '').replace(/^\.?\//, ''), window.location.href).toString();
         } catch (_err) {
-          return '../../UnityEnergy/' + String(relativePath || '').replace(/^\.?\//, '');
+          return './assets/' + String(relativePath || '').replace(/^\.?\//, '');
+        }
+      };
+
+      const resolveCpClerkRuntimeUrl = (relativePath) => {
+        try {
+          return new URL('./assets/kuranda/clare/' + String(relativePath || '').replace(/^\.?\//, ''), window.location.href).toString();
+        } catch (_err) {
+          return './assets/kuranda/clare/' + String(relativePath || '').replace(/^\.?\//, '');
         }
       };
 
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
-        const portrait = resolveUnityAssetUrl('assets/images/ClerkMaxwell_60423t.png');
-        const embedUrl = resolveUnityAssetUrl('hume_renderer/index.html?v=20260810-p1-r4');
-        const onboardUrl = resolveUnityAssetUrl('maxwellian/briefs/SPEAK_WITH_CLERK_ONBOARD.md?v=20260809-clerk-simple21');
+        const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
+        const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260810-p1-r4');
+        const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClaireOnBoard.md?v=20260809-clerk-simple21');
 
         // Critical: page8 is outside Unity allowlist. Disable page lock for CP demo.
         window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
@@ -927,7 +936,7 @@
         window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '/api/hume/runtime-auth';
         window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
 
-        // Point assets at UnityEnergy from Cognition Partner page path.
+        // Point assets at Cognition Partner local package paths.
         window.MAXWELLIAN_HUME.embed_url = embedUrl;
         window.MAXWELLIAN_HUME.clerk_onboard_primer_url = onboardUrl;
         window.MAXWELLIAN_HUME.character_avatar_url = portrait;
@@ -1348,8 +1357,7 @@
             window.clearInterval(liveWatchTimer);
             liveWatchTimer = 0;
             console.warn('[cp-page8] Clerk still silent after start retries. Check console for Hume auth/connect errors.');
-            bottomBtn.textContent = 'Waiting on Clerk';
-            bottomBtn.setAttribute('data-clerk-state', 'waiting');
+            setBottomWaiting();
           }
         }, 400);
       };
