@@ -978,13 +978,12 @@
         window.MAXWELLIAN_HUME.config_id = CLERK_CONFIG_ID;
         window.MAXWELLIAN_HUME.voice_id = CLERK_VOICE_ID;
 
-        // Prefer same-origin local bridge first (python server root serves /api/hume/*),
-        // then production absolute fallback.
-        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '/api/hume/runtime-auth';
-        window.MAXWELLIAN_HUME.runtime_auth_endpoint = '/api/hume/runtime-auth';
+        // Use production Unity runtime-auth first so CP host 404 probes do not delay launch.
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = 'https://unityenergy.com/api/hume/runtime-auth';
+        window.MAXWELLIAN_HUME.runtime_auth_endpoint = 'https://unityenergy.com/api/hume/runtime-auth';
         window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
-        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '/api/hume/runtime-auth';
-        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '/api/hume/runtime-auth';
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
         window.MAXWELLIAN_FALLBACK_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
         window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
 
@@ -1125,10 +1124,10 @@
         if (hasRuntimeAuth()) return true;
 
         const endpoints = [
-          '/api/hume/runtime-auth',
-          '/api/hume/runtime-auth.json',
           'https://unityenergy.com/api/hume/runtime-auth',
           'https://unityenergy.com/api/hume/runtime-auth.json',
+          '/api/hume/runtime-auth',
+          '/api/hume/runtime-auth.json',
           new URL('../../../api/hume/runtime-auth', window.location.href).toString(),
           new URL('../../../api/hume/runtime-auth.json', window.location.href).toString()
         ];
