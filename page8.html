@@ -1001,6 +1001,8 @@
         window.MAXWELLIAN_HUME.force_unity_start_gate = true;
         window.MAXWELLIAN_HUME.preflight_microphone_on_launch = true;
         window.MAXWELLIAN_HUME.openai_auto_greeting_enabled = true;
+        window.MAXWELLIAN_HUME.openai_auto_greeting_text = 'Hello. I’m Clerk Maxwell.';
+        window.MAXWELLIAN_HUME.openai_delayed_followup_enabled = false;
 
         // Keep CP demo focused: no lead capture / page awareness friction.
         window.MAXWELLIAN_HUME.lead_capture_enabled = false;
@@ -1524,6 +1526,7 @@
             window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
             window.MAXWELLIAN_HUME.session_variables.demo_initiation_prep = 'CLERK_DEMO_INITIATION_PREP';
             window.MAXWELLIAN_HUME.session_variables.first_turn_story_required = 'true';
+            window.MAXWELLIAN_HUME.session_variables.openai_auto_greeting_text = openingLine;
           }
         } catch (_err) {}
         sessionEpoch += 1;
@@ -1726,24 +1729,12 @@
             launchInProgress = false;
             return false;
           }
-          const modal = document.getElementById('clerkVoiceModal');
-          const modalActive = Boolean(modal && modal.classList.contains('active'));
-          let ok = modalActive;
-          if (!modalActive) {
-            ok = await openClerkSession({ autoStart: false });
-          }
+          const ok = await openClerkSession({ autoStart: true });
           if (ok) {
             pausedHard = false;
-            autoStartArmed = true;
-            let started = await waitAndClickStart();
-            if (started) startClickCount += 1;
-            if (started) {
-              startLiveWatch();
-            } else {
-              console.warn('[cp-page8] Direct Clerk start did not trigger from Waiting click.');
-              setBottomWaiting();
-            }
-            autoStartArmed = false;
+            startLiveWatch();
+          } else {
+            setBottomWaiting();
           }
           bottomBtn.disabled = false;
           launchInProgress = false;
