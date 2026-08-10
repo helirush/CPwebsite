@@ -950,7 +950,7 @@
         return loaded;
       };
       const CLERK_CONFIG_ID = '316eb863-97d3-4708-9dba-ccd6e3d21265';
-      const CLERK_VOICE_ID = '604edff3-0145-433e-9b5f-fc2f916e78ef';
+      const CLERK_VOICE_ID = CLERK_CONFIG_ID;
 
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
@@ -998,8 +998,8 @@
 
         // Disable start-gate stall: on widget ready, widget auto-sends config + starts.
         // Page8 still clicks native start after ready as a backup.
-        window.MAXWELLIAN_HUME.use_unity_start_gate = false;
-        window.MAXWELLIAN_HUME.force_unity_start_gate = false;
+        window.MAXWELLIAN_HUME.use_unity_start_gate = true;
+        window.MAXWELLIAN_HUME.force_unity_start_gate = true;
         window.MAXWELLIAN_HUME.preflight_microphone_on_launch = true;
         window.MAXWELLIAN_HUME.openai_auto_greeting_enabled = true;
 
@@ -1557,13 +1557,6 @@
         try {
           const result = launcher({
             characterId: 'clerk-maxwell',
-            intelligenceProfile: {
-              id: 'clerk-demo-voice-lock',
-              label: 'Clerk Demo Voice Lock',
-              configId: CLERK_CONFIG_ID,
-              voiceId: CLERK_VOICE_ID,
-              responseStyle: 'Maxwellian library guide voice; concise educational style.'
-            },
             contextSource: 'cp-page8-clerk-demo',
             context: 'technical-follow-up',
             mode: 'technical-follow-up',
