@@ -1412,6 +1412,10 @@
         } catch (_err) {}
         return null;
       };
+      const waitForCapacityState = async (timeoutMs = 5000) => {
+        const found = await waitFor(() => detectCapacityMessage(), timeoutMs);
+        return found || null;
+      };
 
       const waitAndClickStart = async () => {
         // NEVER click start until iframe has loaded/ready. Early click posts
@@ -1431,7 +1435,15 @@
           if (btn) return { type: 'start', button: btn };
           return null;
         }, 8000);
-        if (!launchControl) return false;
+        if (!launchControl) {
+          const lateCapacityMessage = await waitForCapacityState(5000);
+          if (lateCapacityMessage) {
+            console.warn('[cp-page8] Clerk renderer capacity state detected after delayed probe.');
+            setBottomCapacity();
+            window.alert('Clerk demo is currently at capacity. Please retry in a moment.');
+          }
+          return false;
+        }
         if (launchControl.type === 'capacity') {
           console.warn('[cp-page8] Clerk renderer capacity state detected before start.');
           setBottomCapacity();
@@ -1614,6 +1626,12 @@
           // Wait for iframe ready, then click native start (mic + config + session).
           const started = await waitAndClickStart();
           if (!started) {
+            const delayedCapacity = await waitForCapacityState(5000);
+            if (delayedCapacity) {
+              setBottomCapacity();
+              window.alert('Clerk demo is currently at capacity. Please retry in a moment.');
+              return false;
+            }
             console.warn('[cp-page8] Native Clerk start did not run after iframe ready.');
             setBottomWaiting();
             return false;
