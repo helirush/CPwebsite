@@ -1350,6 +1350,28 @@
         startBtn.click();
         return true;
       };
+      const requestMicPermissionFromUserGesture = async () => {
+        if (!(navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function')) {
+          return true;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          try {
+            stream.getTracks().forEach((track) => {
+              try { track.stop(); } catch (_e) {}
+            });
+          } catch (_e) {}
+          return true;
+        } catch (err) {
+          const name = String(err && err.name ? err.name : '').toLowerCase();
+          if (name === 'notallowederror' || name === 'securityerror' || name === 'permissiondeniederror') {
+            window.alert('Microphone permission is blocked for this site. Please allow microphone access for cognitionpartner.ai, then select Clerk is Ready again.');
+          } else {
+            window.alert('Microphone could not be initialized. Please allow access and try Clerk is Ready again.');
+          }
+          return false;
+        }
+      };
 
       const waitForWidgetReady = async (timeoutMs = 14000) => {
         if (widgetReadySeen) return true;
@@ -1636,32 +1658,28 @@
             launchInProgress = false;
             return true;
           }
-          // Waiting button behavior:
-          // 1) if modal not active, open the modal/session shell only (no auto-start)
-          // 2) if modal is already active, this click starts voice directly.
+          // One-click start path: user gesture requests mic, opens session shell, and starts voice.
+          bottomBtn.disabled = true;
+          bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Connecting...</span><small>Please wait</small>';
+          bottomBtn.setAttribute('aria-label', 'Connecting Clerk voice.');
+          const micReady = await requestMicPermissionFromUserGesture();
+          if (!micReady) {
+            bottomBtn.disabled = false;
+            setBottomWaiting();
+            launchInProgress = false;
+            return false;
+          }
           const modal = document.getElementById('clerkVoiceModal');
           const modalActive = Boolean(modal && modal.classList.contains('active'));
           let ok = modalActive;
           if (!modalActive) {
             ok = await openClerkSession({ autoStart: false });
-            if (ok) {
-              bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Start Clerk Voice</span><small>Select</small>';
-              bottomBtn.setAttribute('aria-label', 'Start Clerk Voice. Select.');
-              bottomBtn.setAttribute('data-clerk-state', 'ready-to-start');
-            }
-            launchInProgress = false;
-            return ok;
           }
           if (ok) {
             pausedHard = false;
             autoStartArmed = true;
-            let started = clickNativeStartOrPause();
-            if (started) {
-              startClickCount += 1;
-            } else {
-              started = await waitAndClickStart();
-              if (started) startClickCount += 1;
-            }
+            let started = await waitAndClickStart();
+            if (started) startClickCount += 1;
             if (started) {
               startLiveWatch();
             } else {
@@ -1670,6 +1688,7 @@
             }
             autoStartArmed = false;
           }
+          bottomBtn.disabled = false;
           launchInProgress = false;
           return ok;
         }
