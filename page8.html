@@ -1638,7 +1638,31 @@
             return true;
           }
           // Waiting button after pause => start again.
-          const ok = await openClerkSession({ autoStart: true });
+          // Prefer a direct user-gesture start when modal/start button already exists.
+          const modal = document.getElementById('clerkVoiceModal');
+          const modalActive = Boolean(modal && modal.classList.contains('active'));
+          let ok = modalActive;
+          if (!modalActive) {
+            ok = await openClerkSession({ autoStart: false });
+          }
+          if (ok) {
+            pausedHard = false;
+            autoStartArmed = true;
+            let started = clickNativeStartOrPause();
+            if (started) {
+              startClickCount += 1;
+            } else {
+              started = await waitAndClickStart();
+              if (started) startClickCount += 1;
+            }
+            if (started) {
+              startLiveWatch();
+            } else {
+              console.warn('[cp-page8] Direct Clerk start did not trigger from Waiting click.');
+              setBottomWaiting();
+            }
+            autoStartArmed = false;
+          }
           launchInProgress = false;
           return ok;
         }
@@ -1657,6 +1681,13 @@
         setBottomWaiting();
         // Kick auth fetch immediately so credentials are warm before modal open.
         void ensureClerkRuntimeAuth();
+        // Prewarm modal/session shell so next Waiting click can start with a real user gesture.
+        if (!launchInProgress && !softRearmInFlight) {
+          softRearmInFlight = true;
+          void openClerkSession({ autoStart: false }).finally(() => {
+            softRearmInFlight = false;
+          });
+        }
       });
 
       // 2) Claire-style control: Pause Clerk <-> Waiting on Clerk
