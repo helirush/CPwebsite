@@ -114,7 +114,8 @@ a {
   height: auto;
   object-fit: contain;
   flex: 0 0 auto;
-  filter: sepia(0.15) saturate(0.65) hue-rotate(350deg) brightness(1.12) contrast(0.94);
+  /* Finished gold-rim mark — no sepia remap */
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.28));
 }
 .cp-r1-brand-lockup-copy {
   display: inline-flex;
@@ -145,23 +146,23 @@ a {
 }
 .cp-r1-brand-lockup--top {
   top: calc(6.0% + 10px);
-  left: calc(5.0% + 10px);
-  gap: clamp(10px, 0.72vw, 16px);
+  left: calc(5.0% + 20px);
+  gap: clamp(3.43px, 0.247vw, 5.49px);
 }
 .cp-r1-brand-lockup--top .cp-r1-brand-lockup-logo {
-  width: clamp(55px, 4.1vw, 81px);
+  width: clamp(66.55px, 4.961vw, 98.01px);
 }
 .cp-r1-brand-lockup--top .cp-r1-brand-lockup-wordmark {
   font-size: clamp(18px, 1.15vw, 25px);
   letter-spacing: 0.14em;
 }
 .cp-r1-brand-lockup--bottom {
-  right: calc(5.0% + 50px);
-  bottom: calc(6.5% - 10px);
-  gap: clamp(10px, 0.82vw, 17px);
+  right: calc(5.0% + 40px);
+  bottom: calc(6.5% - 20px); /* +10px lower — logo+wordmark+tagline on pages 2-5 */
+  gap: clamp(3.43px, 0.281vw, 5.83px);
 }
 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-logo {
-  width: clamp(53px, 3.98vw, 82px);
+  width: clamp(64.13px, 4.816vw, 99.22px);
 }
 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-wordmark {
   font-size: clamp(18px, 1.27vw, 29px);
@@ -330,8 +331,8 @@ a {
   position: absolute;
   left: calc(8.2% + 0px);
   top: calc(37.5% + 15px);
-  width: 4.32%;
-  height: 27%;
+  width: 3.629%;
+  height: 22.680%;
   display: grid;
   place-items: center;
   z-index: 2;
@@ -345,7 +346,7 @@ a {
 .cp-r1-listen-copy {
   position: absolute;
   left: calc(5.9% + 135px);
-  top: calc(29.5% + 60px);
+  top: calc(29.5% + 50px);
   width: 16.8%;
   z-index: 2;
   color: rgba(238, 240, 244, 0.94);
@@ -389,7 +390,7 @@ a {
 .cp-r1-audio-controls {
   position: absolute;
   left: 24.9%;
-  top: calc(34% + 44px);
+  top: calc(34% + 34px);
   width: 17.2%;
   height: 38%;
   z-index: 2;
@@ -452,7 +453,7 @@ a {
 .cp-r1-why-wave {
   position: absolute;
   left: calc(43.0% - 10px);
-  top: calc(35% + 30px);
+  top: calc(35% + 20px);
   width: 23.5%;
   height: 25%;
   z-index: 2;
@@ -715,16 +716,16 @@ a {
     width: 7.5%;
   }
   .cp-r1-cplisten-glyph-wrap {
-    width: 5.04%;
+    width: 4.234%;
   }
   .cp-r1-listen-copy {
     width: 18%;
   }
   .cp-r1-audio-controls {
-    top: calc(31% + 44px);
+    top: calc(31% + 34px);
   }
   .cp-r1-why-wave {
-    top: calc(31% + 16px);
+    top: calc(31% + 6px);
     width: 25%;
   }
   .cp-r1-play-card--next-only .cp-r1-page-nav {
@@ -798,7 +799,7 @@ a {
     left: 2.4%;
   }
   .cp-r1-cplisten-glyph-wrap {
-    width: 5.76%;
+    width: 4.838%;
     left: calc(2.4% + 86px);
   }
   .cp-r1-listen-copy {
@@ -806,13 +807,13 @@ a {
     width: 20%;
   }
   .cp-r1-audio-controls {
-    top: calc(27% + 44px);
+    top: calc(27% + 34px);
     left: 23.8%;
     width: 21%;
   }
   .cp-r1-why-wave {
     left: calc(45.8% - 10px);
-    top: calc(31% + 18px);
+    top: calc(31% + 8px);
     width: 26.5%;
   }
   .cp-r1-play-card--next-only .cp-r1-page-nav {
@@ -2904,5 +2905,138 @@ body.lead-form-open {
 }
 
 
+/* Page 5 — finished center Cognition Partner mark over baked-in badge */
+.cp-r1-page5-center-logo-wrap {
+  position: absolute;
+  left: 53.2%;
+  top: 43.67%;
+  /* Sized to fully cover baked-in circular badge */
+  width: 7.515%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+}
+.cp-r1-page5-center-logo-under {
+  position: absolute;
+  inset: 8%;
+  border-radius: 999px;
+  /* Light circular veil only — logo file is now transparent, no black square */
+  background: radial-gradient(circle, rgba(4, 10, 24, 0.55) 0%, rgba(6, 14, 30, 0.22) 58%, rgba(6, 14, 30, 0) 78%);
+}
+.cp-r1-page5-center-logo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45));
+}
+@media (max-width: 1100px) {
+  .cp-r1-page5-center-logo-wrap {
+    width: 7.380%;
+  }
+}
+@media (max-width: 760px) {
+  .cp-r1-page5-center-logo-wrap {
+    width: 9.450%;
+  }
+}
 
 
+/* Page 1 only — large stacked logo on the man's back, above lowered media bar */
+body.cp-page1 .cp-r1-play-card {
+  /* Remove blank lower band and park media bar lower */
+  bottom: 0.4%;
+  height: 28%;
+}
+body.cp-page1 .cp-r1-brand-lockup--bottom,
+body.cp-page1 .cp-r1-brand-lockup--above-banner,
+body.cp-page1 .cp-r1-brand-lockup--hero {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: clamp(10px, 0.9vw, 16px);
+  /* Right-center over the man's back in the page art */
+  left: auto;
+  right: calc(18.5% - 50px); /* +50px to the right */
+  top: auto;
+  bottom: calc(28% + 0.4% - 32px); /* was +18px; moved down 50px */
+  transform: none;
+  z-index: 9;
+  pointer-events: auto;
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.45));
+}
+body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-logo,
+body.cp-page1 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-logo {
+  /* Larger circular mark for hero placement */
+  width: clamp(118px, 9.4vw, 176px);
+  height: auto;
+}
+body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-copy,
+body.cp-page1 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 0.55vw, 12px);
+}
+body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-wordmark,
+body.cp-page1 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-wordmark {
+  font-size: clamp(18px, 1.45vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  color: rgba(236, 240, 246, 0.98);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-wordmark-gold {
+  color: rgba(228, 184, 106, 0.98);
+}
+body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-tm,
+body.cp-page1 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-tm {
+  color: rgba(228, 184, 106, 0.95);
+  font-size: 0.55em;
+  margin-left: 0.12em;
+  vertical-align: 0.45em;
+}
+body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-rule {
+  display: block;
+  width: min(100%, 18vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(228, 184, 106, 0) 0%,
+    rgba(228, 184, 106, 0.95) 18%,
+    rgba(228, 184, 106, 0.95) 82%,
+    rgba(228, 184, 106, 0) 100%
+  );
+}
+body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-tagline,
+body.cp-page1 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-tagline {
+  margin-top: 0;
+  font-size: clamp(10px, 0.78vw, 15px);
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  color: rgba(228, 184, 106, 0.96);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+@media (max-width: 1100px) {
+  body.cp-page1 .cp-r1-brand-lockup--hero,
+  body.cp-page1 .cp-r1-brand-lockup--bottom {
+    right: calc(12% - 50px);
+  }
+  body.cp-page1 .cp-r1-brand-lockup--hero .cp-r1-brand-lockup-logo,
+  body.cp-page1 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-logo {
+    width: clamp(100px, 12vw, 148px);
+  }
+}
+
+
+/* Keep top-left lockup on page1 as well unless we later remove it */
+
+/* Keep top lockup on page1 for now; new upper logo comes next */
