@@ -965,6 +965,7 @@
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
         window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
         window.MAXWELLIAN_HUME.hume_config_id = clerkConfigId;
+        window.MAXWELLIAN_HUME.hume_voice_id = clerkVoiceId;
         window.MAXWELLIAN_HUME.config_id = clerkConfigId;
         window.MAXWELLIAN_HUME.voice_id = clerkVoiceId;
 
@@ -1012,12 +1013,14 @@
           existingCharacters['clerk-maxwell'] && typeof existingCharacters['clerk-maxwell'] === 'object'
             ? existingCharacters['clerk-maxwell']
             : {};
-        window.MAXWELLIAN_HUME.characters = Object.assign({}, existingCharacters, {
+        // CLERK_ONLY_LOCK: page8 must not inherit Claire or any other character profile.
+        window.MAXWELLIAN_HUME.characters = {
           'clerk-maxwell': Object.assign({}, existingClerk, {
             character_name: 'Clerk Maxwell',
             character_avatar_url: portrait,
             character_background_url: portrait,
             hume_config_id: clerkConfigId,
+            hume_voice_id: clerkVoiceId,
             config_id: clerkConfigId,
             voice_id: clerkVoiceId,
             session_variables: Object.assign({}, existingClerk.session_variables || {}, {
@@ -1028,7 +1031,7 @@
               content_aware: 'library-only'
             })
           })
-        });
+        };
         return true;
       };
 
@@ -1493,6 +1496,13 @@
         try {
           const result = launcher({
             characterId: 'clerk-maxwell',
+            intelligenceProfile: {
+              id: 'clerk-demo-voice-lock',
+              label: 'Clerk Demo Voice Lock',
+              configId: clerkConfigId,
+              voiceId: clerkVoiceId,
+              responseStyle: 'Maxwellian library guide voice; concise educational style.'
+            },
             contextSource: 'cp-page8-clerk-demo',
             context: 'technical-follow-up',
             mode: 'technical-follow-up',
@@ -1509,6 +1519,10 @@
               content_aware: 'library-only',
               guide_mode: 'maxwellian-library',
               library_authority: 'Maxwellian Library',
+              hume_config_id: clerkConfigId,
+              hume_voice_id: clerkVoiceId,
+              voice_id: clerkVoiceId,
+              config_id: clerkConfigId,
               voice_engine_preference: 'hume',
               opening_expectation: 'Greet the visitor warmly as Clerk Maxwell and offer help using Maxwellian Library context.'
             }
