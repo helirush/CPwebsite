@@ -917,17 +917,23 @@
             '- Stay educational and practical; never invent data or guarantees.\n' +
             '- This Cognition Partner host is not page-aware and should not mention page numbers or page layout.\n';
           try {
-            const packUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260810-clerk-library1');
+            const packUrl = resolveCpClerkRuntimeUrl('knowledge/CLERK_DEMO_INITIATION_PREP.md?v=20260810-clerk-demo-init1');
             const response = await window.fetch(packUrl, { cache: 'no-store' });
             if (response && response.ok) {
               const text = await response.text();
-              if (text && text.trim().length > 200) {
+              if (text && text.trim().length > 120) {
                 clerkLibraryContextCache = text.trim();
                 return clerkLibraryContextCache;
               }
             }
           } catch (_err) {}
-          clerkLibraryContextCache = defaultContext;
+          clerkLibraryContextCache = defaultContext + '\n\n' +
+            'CLERK DEMO INITIATION PREP:\n' +
+            'Hello.\n' +
+            'I’m Clerk Maxwell.\n' +
+            'My name was chosen in honor of James Clerk Maxwell. ' +
+            'I am the Cognition Partner for Unity Energy, here to help visitors explore our research journey and ask questions.\n' +
+            'Whenever you’re ready, ask me anything. Let’s explore it together.';
           return clerkLibraryContextCache;
         })();
         const loaded = await clerkLibraryContextLoading;
@@ -939,7 +945,7 @@
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
         const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
         const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260810-p1-r4');
-        const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260810-clerk-library1');
+        const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/CLERK_DEMO_INITIATION_PREP.md?v=20260810-clerk-demo-init1');
         const clerkConfigId = '316eb863-97d3-4708-9dba-ccd6e3d21265';
         const clerkVoiceId = '316eb863-97d3-4708-9dba-ccd6e3d21265';
 
@@ -1430,14 +1436,16 @@
         const clerkLibraryContext = await getClerkLibraryContext();
         try {
           if (window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === 'object') {
-            const openingLine = 'Hello, I am Clerk Maxwell. I can help you explore the Maxwellian Library and explain Unity Energy concepts clearly.';
+            const openingLine = 'Hello. I’m Clerk Maxwell.';
             window.MAXWELLIAN_HUME.opening_line = openingLine;
             window.MAXWELLIAN_HUME.session_context =
               'You are Clerk Maxwell connected to Maxwellian Library context only. ' +
-              'Do not use page-aware language or describe page layout.\n\n' + clerkLibraryContext;
+              'Do not use page-aware language or describe page layout. ' +
+              'FIRST RESPONSE REQUIREMENT: Recite the Clerk Demo Initiation Prep naturally as the opening story before follow-up Q&A.\n\n' +
+              clerkLibraryContext;
             window.MAXWELLIAN_HUME.system_prompt_text =
-              'You are Clerk Maxwell. Use Maxwellian Library context for answers. ' +
-              'Be concise and practical, and never mention page numbers or page structure.';
+              'You are Clerk Maxwell. First response should deliver the demo initiation story from the prep file. ' +
+              'After that, use Maxwellian Library context for answers and never mention page numbers or page structure.';
             if (!window.MAXWELLIAN_HUME.session_variables || typeof window.MAXWELLIAN_HUME.session_variables !== 'object') {
               window.MAXWELLIAN_HUME.session_variables = {};
             }
@@ -1446,6 +1454,8 @@
             window.MAXWELLIAN_HUME.session_variables.page_aware = 'false';
             window.MAXWELLIAN_HUME.session_variables.content_aware = 'library-only';
             window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
+            window.MAXWELLIAN_HUME.session_variables.demo_initiation_prep = 'CLERK_DEMO_INITIATION_PREP';
+            window.MAXWELLIAN_HUME.session_variables.first_turn_story_required = 'true';
           }
         } catch (_err) {}
         sessionEpoch += 1;
