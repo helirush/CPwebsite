@@ -1391,15 +1391,6 @@
           clicked = clickNativeStartOrPause();
           if (clicked) startClickCount += 1;
         }
-        // Delayed retries only for this session epoch (invalidated on Pause).
-        window.setTimeout(() => {
-          if (epoch !== sessionEpoch || pausedHard || isLive || greetingStarted) return;
-          if (clickNativeStartOrPause()) startClickCount += 1;
-        }, 900);
-        window.setTimeout(() => {
-          if (epoch !== sessionEpoch || pausedHard || isLive || greetingStarted) return;
-          if (clickNativeStartOrPause()) startClickCount += 1;
-        }, 2200);
         return clicked;
       };
 
@@ -1413,15 +1404,9 @@
             liveWatchTimer = 0;
             return;
           }
-          // Keep retrying native start while still waiting for real assistant audio.
-          // Do NOT promote Pause on timeout — that fakes a live session.
-          // Never retry after hard Pause.
+          // Passive wait only. Avoid repeated synthetic start presses that can
+          // churn backend sessions and trigger hidden capacity errors.
           if (pausedHard || !autoStartArmed) return;
-          if (ticks === 4 || ticks === 10 || ticks === 18) {
-            if (autoStartArmed || startClickCount > 0) {
-              clickNativeStartOrPause();
-            }
-          }
           if (ticks >= 40) {
             window.clearInterval(liveWatchTimer);
             liveWatchTimer = 0;
@@ -1637,13 +1622,21 @@
             launchInProgress = false;
             return true;
           }
-          // Waiting button after pause => start again.
-          // Prefer a direct user-gesture start when modal/start button already exists.
+          // Waiting button behavior:
+          // 1) if modal not active, open the modal/session shell only (no auto-start)
+          // 2) if modal is already active, this click starts voice directly.
           const modal = document.getElementById('clerkVoiceModal');
           const modalActive = Boolean(modal && modal.classList.contains('active'));
           let ok = modalActive;
           if (!modalActive) {
             ok = await openClerkSession({ autoStart: false });
+            if (ok) {
+              bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Start Clerk Voice</span><small>Select</small>';
+              bottomBtn.setAttribute('aria-label', 'Start Clerk Voice. Select.');
+              bottomBtn.setAttribute('data-clerk-state', 'ready-to-start');
+            }
+            launchInProgress = false;
+            return ok;
           }
           if (ok) {
             pausedHard = false;
@@ -1681,13 +1674,6 @@
         setBottomWaiting();
         // Kick auth fetch immediately so credentials are warm before modal open.
         void ensureClerkRuntimeAuth();
-        // Prewarm modal/session shell so next Waiting click can start with a real user gesture.
-        if (!launchInProgress && !softRearmInFlight) {
-          softRearmInFlight = true;
-          void openClerkSession({ autoStart: false }).finally(() => {
-            softRearmInFlight = false;
-          });
-        }
       });
 
       // 2) Claire-style control: Pause Clerk <-> Waiting on Clerk
