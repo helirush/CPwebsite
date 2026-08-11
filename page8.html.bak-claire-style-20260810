@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cognition Partner — Unity / Clerk Trial</title>
+  <link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/x-icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="192x192" href="cp-thk-icon-192.png?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="512x512" href="cp-thk-icon-512.png?cp_icon=20260722a">
+  <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
+  <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
+  <meta name="theme-color" content="#2f5e4f">
+  <link rel="stylesheet" href="./styles.css?v=20260810-clerk-claire-parity1" />
+  <script src="./assets/unity/clerk/hume_auth_bootstrap.js?v=20260810-clerk-claire-parity1"></script>
+  <script src="./assets/unity/clerk/clerk_character_config.js?v=20260810-clerk-claire-parity1"></script>
+  <script src="./assets/unity/clerk/clerk_voice_widget.js?v=20260810-clerk-claire-parity1"></script>
+</head>
+<body class="home-page page6-kuranda-voice-page">
+  <main class="site-wrap">
+    <section class="page-card">
+      <img class="page-image" src="./assets/unityenergy_p1.png?v=20260810-clerk-claire-parity1" alt="Unity page with Clerk voice experience" />
+      <div class="page5-kuranda-nav" aria-label="Page navigation controls">
+        <a class="page5-kuranda-nav-link" id="page8-return-link" href="./page9.html?v=20260810-clerk-claire-parity1" aria-label="Return to Unity intro">Back</a>
+        <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
+      </div>
+                  <div class="kuranda-speaking-bubble" id="clerk-speaking-bubble" aria-hidden="true">
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-orb-core" aria-hidden="true"></span>
+        <div class="kuranda-speaking-inner">
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const returnLink = document.getElementById("page8-return-link");
+      const bubbleEl = document.getElementById("clerk-speaking-bubble");
+      if (!returnLink || !bubbleEl) return;
+
+      const setSpeaking = (on) => {
+        bubbleEl.classList.toggle("is-speaking", Boolean(on));
+      };
+
+      const waitFor = async (testFn, timeoutMs = 10000) => {
+        const start = Date.now();
+        while (Date.now() - start < timeoutMs) {
+          const value = testFn();
+          if (value) return value;
+          await new Promise((r) => setTimeout(r, 40));
+        }
+        return null;
+      };
+
+
+      const setStartButtonLabel = (label, state) => {
+        try {
+          const b = document.getElementById("clerkVoiceStartBtn");
+          if (!b) return;
+          b.disabled = false;
+          b.removeAttribute("disabled");
+          b.hidden = false;
+          b.style.display = "flex";
+          b.style.visibility = "visible";
+          b.style.opacity = "1";
+          b.style.pointerEvents = "auto";
+          if (state) {
+            b.setAttribute("data-clerk-state", state);
+            b.setAttribute("data-claire-state", state);
+          }
+          b.textContent = label;
+        } catch (e) {}
+      };
+
+      const enterLibraryResearchHold = (reason) => {
+        setStartButtonLabel("Researching", "researching");
+        try {
+          if (window.MAXWELLIAN_HUME) {
+            window.MAXWELLIAN_HUME._cp_research_hold_active = true;
+            window.MAXWELLIAN_HUME._cp_research_hold_reason = String(reason || "");
+          }
+        } catch (e) {}
+        console.info("[cp-page8] Clerk library research hold:", reason || "unspecified");
+      };
+
+      const exitLibraryResearchHold = () => {
+        try {
+          if (window.MAXWELLIAN_HUME) window.MAXWELLIAN_HUME._cp_research_hold_active = false;
+        } catch (e) {}
+        setStartButtonLabel("Pause Clerk", "close-ready");
+      };
+
+      window.cpEnterHostLibraryResearchHold = enterLibraryResearchHold;
+      window.cpExitHostLibraryResearchHold = exitLibraryResearchHold;
+
+      const launchClerk = async () => {
+        setSpeaking(false);
+
+        const cfgReady = await waitFor(
+          () => window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === "object",
+          8000
+        );
+        if (!cfgReady) {
+          console.error("Clerk character config missing after package load.");
+          return;
+        }
+
+        // Clerk identity only. Not page-aware. Independent CP demo package.
+        window.MAXWELLIAN_HUME.character_name = "Clerk Maxwell";
+        window.MAXWELLIAN_HUME.character_id = "clerk-maxwell";
+        window.MAXWELLIAN_HUME.default_character_id = "clerk-maxwell";
+        window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
+        window.MAXWELLIAN_HUME.default_context_source = "maxwellian-library-session";
+        window.MAXWELLIAN_HUME.content_awareness_mode = false;
+        window.MAXWELLIAN_HUME.content_awareness_scope_lock = false;
+        window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
+        window.MAXWELLIAN_HUME.session_context_char_limit = 24000;
+        window.MAXWELLIAN_HUME.hume_config_id = "316eb863-97d3-4708-9dba-ccd6e3d21265";
+        window.MAXWELLIAN_HUME.config_id = "316eb863-97d3-4708-9dba-ccd6e3d21265";
+        window.MAXWELLIAN_HUME.voice_id = "316eb863-97d3-4708-9dba-ccd6e3d21265";
+        window.MAXWELLIAN_HUME.embed_url = "./assets/unity/clerk/hume_renderer/index.html?v=20260810-clerk-claire-parity1";
+        window.MAXWELLIAN_HUME.character_avatar_url = "./assets/unity/clerk/assets/images/ClerkMaxwell_60423t.png";
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = "https://unityenergy.com/api/hume/runtime-auth";
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+        window.MAXWELLIAN_HUME.library_research_enabled = true;
+        window.MAXWELLIAN_HUME.library_research_status_label = "Researching";
+        window.MAXWELLIAN_HUME.library_research_hold_line = "Hold on while I check the Maxwellian Library.";
+        // Hard-disable page/pattern context injection for Clerk.
+        try {
+          window.MAXWELLIAN_HUME.disable_page_context = true;
+          window.MAXWELLIAN_HUME.page_context_enabled = false;
+          window.MAXWELLIAN_HUME.prefetch_active_page_context = false;
+          window.MAXWELLIAN_HUME.include_page_context = false;
+          window.MAXWELLIAN_HUME.content_awareness_page_source_files = {};
+        } catch (e) {}
+
+        // Load Clerk identity + Maxwellian library pack (host-level context, not page-aware).
+        let clerkIdentityPack = "";
+        let clerkKnowledgePack = "";
+        try {
+          const packUrl = "./assets/unity/clerk/knowledge/CLERK_IDENTITY_PACK.md?v=20260810-clerk-claire-parity1";
+          const resp = await fetch(packUrl, { cache: "no-store" });
+          if (resp && resp.ok) clerkIdentityPack = await resp.text();
+        } catch (e) {
+          console.warn("Clerk identity pack fetch failed; using compact fallback.", e);
+        }
+        try {
+          const knowledgeUrl = "./assets/unity/clerk/knowledge/CLERK_DEMO_KNOWLEDGE_PACK.md?v=20260810-clerk-claire-parity1";
+          const knowledgeResp = await fetch(knowledgeUrl, { cache: "no-store" });
+          if (knowledgeResp && knowledgeResp.ok) clerkKnowledgePack = await knowledgeResp.text();
+        } catch (e) {
+          console.warn("Clerk knowledge pack fetch failed; using compact fallback.", e);
+        }
+        if (!clerkIdentityPack || clerkIdentityPack.length < 200) {
+          clerkIdentityPack =
+            "You are Clerk Maxwell, Cognition Host for Unity Energy. " +
+            "Namesake: James Clerk Maxwell. Not page-aware. " +
+            "First turn monologue required. Maxwellian Library authority. " +
+            "No invented outcomes or guarantees.";
+        }
+if (!clerkKnowledgePack || clerkKnowledgePack.length < 200) {
+          clerkKnowledgePack =
+            "MAXWELLIAN LIBRARY DEMO CONTEXT:\n" +
+            "- Clerk is connected to Maxwellian Library material for grounded discussion.\n" +
+            "- Unity operating law: Measure • Manage • Exchange.\n" +
+            "- M P T S lives in Manage. Speak M P T S as four letters.\n" +
+            "- Never invent outcomes, and never mention page numbers or page layout.\n";
+        }
+
+        const openingLine = "Hello. I'm Clerk Maxwell. My name was chosen in honor of the physicist James Clerk Maxwell, whose work transformed our understanding of electricity, magnetism, and the invisible fields that connect them. His curiosity continues to inspire the work we do today. I'm the Cognition Partner for Unity Energy. My role is to help visitors explore our research, answer questions, and share the story behind a journey that began with a simple observation. What if there was still more to learn about the behavior of industrial electrical energy fields? That question led Mike Howell and the Unity Energy team down a path of measurement, discovery, and continuous learning. Along the way, they developed new ways to observe industrial energy fields and to better understand how those fields behave in the real world. As a Cognition Partner, I help preserve that growing understanding so each conversation can continue instead of starting over. This demonstration is just the beginning. If something sparks your curiosity, I invite you to continue the journey on the Unity Energy website. There you'll discover the history of our work, the evolution of our thinking, and the research that continues to shape our understanding of industrial energy. Whenever you're ready, ask me anything. Let's explore it together.";
+
+        const operatingLine =
+          "NOT PAGE-AWARE. Never mention page numbers or page layout. " +
+          "FIRST TURN: Recite Clerk identity monologue almost word-for-word. " +
+          "Do not ask for name in first turn. End by inviting questions. " +
+          "If a later answer is not in local memory, say: Hold on while I check the Maxwellian Library. " +
+          "Then answer only from approved Maxwellian Library material. " +
+          "Monologue: " + openingLine;
+
+        // Session context = identity pack + Maxwellian library pack.
+        window.MAXWELLIAN_HUME.session_context =
+          operatingLine +
+          "\n\n--- CLERK IDENTITY PACK ---\n" + clerkIdentityPack +
+          "\n\n--- MAXWELLIAN LIBRARY PACK ---\n" + clerkKnowledgePack;
+        window.MAXWELLIAN_HUME.system_prompt_text =
+          "You are Clerk Maxwell connected to Maxwellian Library context. " + operatingLine + " Opening line: " + openingLine;
+        if (!window.MAXWELLIAN_HUME.session_variables || typeof window.MAXWELLIAN_HUME.session_variables !== "object") {
+          window.MAXWELLIAN_HUME.session_variables = {};
+        }
+        if (window.MAXWELLIAN_HUME.session_variables) {
+          window.MAXWELLIAN_HUME.session_variables.character_name = "Clerk Maxwell";
+          window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
+          window.MAXWELLIAN_HUME.session_variables.name_request_line =
+            "Whenever you're ready, ask me anything.";
+          window.MAXWELLIAN_HUME.session_variables.library_prep = "identity-pack-plus-maxwellian-library";
+          window.MAXWELLIAN_HUME.session_variables.library_authority = "Maxwellian Library";
+          window.MAXWELLIAN_HUME.session_variables.bio_source =
+            "SpeakWithClerkOnBoard + CLERK_IDENTITY_PACK";
+          window.MAXWELLIAN_HUME.session_variables.must_know_bio = "true";
+          window.MAXWELLIAN_HUME.session_variables.page_aware = "false";
+          window.MAXWELLIAN_HUME.session_variables.content_aware = "library-only";
+          window.MAXWELLIAN_HUME.session_variables.research_hold_line = "Hold on while I check the Maxwellian Library.";
+        }
+        try {
+          window.MAXWELLIAN_HUME.opening_line = openingLine;
+          window.MAXWELLIAN_HUME.engagement_protocol = "First turn: recite full Clerk identity monologue. Then answer questions from Maxwellian Library. Not page-aware. Research hold if needed.";
+        } catch (e) {}
+
+        const launcher = await waitFor(() => {
+          if (typeof window.launchClerkWithPageContext === "function") return window.launchClerkWithPageContext;
+          if (typeof window.launchClerk === "function") return window.launchClerk;
+          if (typeof window.openClerkVoiceModal === "function") return window.openClerkVoiceModal;
+          return null;
+        }, 8000);
+
+        if (!launcher) {
+          console.error("Clerk voice launcher unavailable.");
+          return;
+        }
+
+        try {
+          const result = launcher({
+            characterId: "clerk-maxwell",
+            contextSource: "maxwellian-library-session",
+            // Keep keys for launcher compatibility, but payload forbids page awareness.
+            pageKey: "clerk-session",
+            entryPoint: "cp-clerk-meet",
+            uiMode: "modal",
+            disablePageContext: true,
+            includePageContext: false,
+            contextPayload: {
+              organization: "Unity Energy",
+              public_guide: "Clerk Maxwell",
+              page_aware: false,
+              content_aware: "library-only",
+              identity_pack: "CLERK_IDENTITY_PACK",
+              library_authority: "Maxwellian Library",
+              research_hold_line: "Hold on while I check the Maxwellian Library.",
+              opening_expectation: openingLine
+            }
+          });
+          if (result && typeof result.then === "function") {
+            await result;
+          }
+          setSpeaking(false);
+        } catch (err) {
+          console.error("Clerk auto-launch failed", err);
+          setSpeaking(true);
+        }
+      };
+
+      
+      // CLERK_BUBBLE_SPEAK_SYNC
+      // Orb/bars animate only while Clerk is actively speaking.
+      window.setUnityClerkSpeaking = setSpeaking;
+      window.stopUnityClerkBubble = function () {
+        setSpeaking(false);
+        document.body.classList.remove("clerk-is-speaking");
+      };
+      window.startUnityClerkBubble = function () {
+        setSpeaking(true);
+        document.body.classList.add("clerk-is-speaking");
+      };
+
+      // Default frozen.
+      setSpeaking(false);
+
+      // Listen for widget speech/close signals.
+      window.addEventListener("message", function (event) {
+        const data = event && event.data;
+        if (!data || typeof data !== "object") return;
+        const t = String(data.type || "").toLowerCase();
+        if (!t) return;
+        const blob = JSON.stringify(data).toLowerCase();
+        if (
+          blob.includes("hold on while i check the maxwellian library") ||
+          blob.includes("checking the library") ||
+          (t.includes("assistant") && blob.includes("researching"))
+        ) {
+          enterLibraryResearchHold("message-cue");
+        }
+        if (t === "transcript_message" || t === "assistant_message" || t === "audio_start" || t.includes("assistant_speak") || t.includes("tts_start")) {
+          // Animate while Clerk output is flowing.
+          if (data.payload && (data.payload.role === "user" || data.payload.speaker === "user")) {
+            // user speech: keep orb calm/frozen
+            setSpeaking(false);
+            document.body.classList.remove("clerk-is-speaking");
+          } else {
+            setSpeaking(true);
+            document.body.classList.add("clerk-is-speaking");
+            if (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME._cp_research_hold_active) {
+              exitLibraryResearchHold();
+            } else {
+              setStartButtonLabel("Pause Clerk", "close-ready");
+            }
+          }
+          return;
+        }
+        if (t === "audio_end" || t === "assistant_end" || t.includes("tts_end") || t === "collapse_widget") {
+          setSpeaking(false);
+          document.body.classList.remove("clerk-is-speaking");
+          return;
+        }
+      });
+
+      // If modal closes, freeze bubble.
+      document.addEventListener("click", function (e) {
+        const t = e.target;
+        if (!t) return;
+        if (t.id === "clerkVoiceCloseBtn" || (t.classList && t.classList.contains("clerk-voice-close"))) {
+          setSpeaking(false);
+          document.body.classList.remove("clerk-is-speaking");
+        }
+      }, true);
+
+      window.setTimeout(() => {
+        void launchClerk();
+      }, 200);
+      
+      // CLERK_SOFT_RESET_AFTER_STOP
+      // Pause Clerk ends audio; soft re-arm so Waiting works without Back.
+      const softRearmClerk = async function () {
+        try {
+          if (typeof window.stopUnityClerkBubble === "function") window.stopUnityClerkBubble();
+        } catch (e) {}
+        try { document.body.classList.remove("clerk-is-speaking"); } catch (e) {}
+        try {
+          const b = document.getElementById("clerkVoiceStartBtn");
+          if (b) {
+            b.disabled = false;
+            b.removeAttribute("disabled");
+            b.hidden = false;
+            b.style.display = "flex";
+            b.style.visibility = "visible";
+            b.style.opacity = "1";
+            b.style.pointerEvents = "auto";
+            b.setAttribute("data-clerk-state", "waiting");
+            b.setAttribute("data-claire-state", "waiting");
+            b.textContent = "Clerk is ready";
+          }
+        } catch (e) {}
+        // Re-run the same prep as first load so next SELECT has a live session path.
+        try {
+          await launchClerk();
+        } catch (e) {
+          console.warn("Clerk soft re-arm failed", e);
+        }
+      };
+      window.addEventListener("clerkStopListeningReset", function () {
+        window.setTimeout(function () { void softRearmClerk(); }, 60);
+      });
+      window.addEventListener("claireStopListeningReset", function () {
+        window.setTimeout(function () { void softRearmClerk(); }, 60);
+      });
+      window.addEventListener("clerkVoiceModalClosed", function () {
+        // If stop left us on Waiting, keep orb frozen and control ready.
+        try {
+          if (typeof window.stopUnityClerkBubble === "function") window.stopUnityClerkBubble();
+        } catch (e) {}
+      });
+
+      // CLERK_FORCE_ENABLE_WAITING
+      window.setTimeout(function () {
+        try {
+          const b = document.getElementById("clerkVoiceStartBtn");
+          if (!b) return;
+          const st = String(b.getAttribute("data-clerk-state") || b.getAttribute("data-claire-state") || "");
+          const label = String(b.textContent || "").trim().toLowerCase();
+          if (st === "close-ready" || st === "connecting" || st === "researching" || label === "pause clerk" || label === "stop-listening" || label === "researching") return;
+          b.disabled = false;
+          b.removeAttribute("disabled");
+          b.hidden = false;
+          b.style.display = "flex";
+          b.style.visibility = "visible";
+          b.style.opacity = "1";
+          b.style.pointerEvents = "auto";
+          b.setAttribute("data-clerk-state", "waiting");
+          b.setAttribute("data-claire-state", "waiting");
+          b.textContent = "Clerk is ready";
+        } catch (e) {}
+      }, 800);
+    })();
+  </script>
+</body>
+</html>

@@ -389,7 +389,7 @@ a {
 }
 .cp-r1-audio-controls {
   position: absolute;
-  left: 24.9%;
+  left: calc(24.9% + 50px);
   top: calc(34% + 34px);
   width: 17.2%;
   height: 38%;
@@ -452,7 +452,7 @@ a {
 }
 .cp-r1-why-wave {
   position: absolute;
-  left: calc(43.0% - 10px);
+  left: calc(43.0% - 10px + 50px);
   top: calc(35% + 20px);
   width: 23.5%;
   height: 25%;
@@ -808,11 +808,11 @@ a {
   }
   .cp-r1-audio-controls {
     top: calc(27% + 34px);
-    left: 23.8%;
+    left: calc(23.8% + 50px);
     width: 21%;
   }
   .cp-r1-why-wave {
-    left: calc(45.8% - 10px);
+    left: calc(45.8% - 10px + 50px);
     top: calc(31% + 8px);
     width: 26.5%;
   }

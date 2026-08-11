@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260811-clerk-intro-spirit1">
+  <link rel="stylesheet" href="./styles.css?v=20260809-clerk-simple21">
   <style>
     .cp-clerk-page {
       width: min(1820px, calc(100% - 12px));
@@ -31,11 +31,11 @@
       display: block;
       object-fit: cover;
       object-position: 50% 0%;
-      /* Dimmed Unity stage so MEET CLERK + center glow lead */
-      filter: saturate(0.9) brightness(0.78);
+      /* Keep Unity site readable — this is a preview of where they can go next */
+      filter: saturate(0.97) brightness(0.97);
       transition: filter 0.85s ease;
     }
-    /* Gradient dim: Unity art remains, center energy stays readable under MEET CLERK */
+    /* Soft dim: site stays visible, SPEAK WITH CLERK is the focus */
     .cp-clerk-page-dim {
       position: absolute;
       inset: 0;
@@ -43,18 +43,18 @@
       pointer-events: none;
       opacity: 1;
       background:
-        /* Bright pocket around center energy / MEET CLERK */
-        radial-gradient(circle at 50% 46%, rgba(255, 248, 230, 0.14) 0%, rgba(255, 244, 216, 0.05) 16%, rgba(12, 16, 24, 0) 34%),
-        /* Stronger vignette so the stage focuses on the glow */
-        radial-gradient(circle at 50% 48%, rgba(12, 16, 24, 0.08) 0%, rgba(10, 14, 22, 0.34) 42%, rgba(6, 10, 16, 0.58) 100%),
-        linear-gradient(180deg, rgba(10, 14, 22, 0.28) 0%, rgba(8, 12, 18, 0.36) 48%, rgba(6, 10, 16, 0.5) 100%);
+        /* Brighter pocket around button / center energy */
+        radial-gradient(circle at 50% 38%, rgba(255, 248, 230, 0.08) 0%, rgba(255, 244, 216, 0.02) 18%, rgba(12, 16, 24, 0) 36%),
+        /* Gentle edge vignette so the CTA reads first */
+        radial-gradient(circle at 50% 45%, rgba(12, 16, 24, 0.02) 0%, rgba(12, 16, 24, 0.12) 48%, rgba(10, 14, 22, 0.28) 100%),
+        linear-gradient(180deg, rgba(12, 16, 24, 0.1) 0%, rgba(10, 14, 22, 0.14) 48%, rgba(8, 12, 18, 0.22) 100%);
       transition: opacity 0.85s ease, background 0.85s ease;
     }
     /* Center circular glow — soft-feathered rim so it blends into the site art */
     .cp-clerk-page-glow {
       position: absolute;
       left: 50%;
-      top: 48%;
+      top: 42%;
       /* Oversize the canvas so the fade can finish before the box edge */
       width: clamp(420px, 52vw, 920px);
       aspect-ratio: 1 / 1;
@@ -62,15 +62,15 @@
       transform: translate(-50%, -50%) scale(1);
       z-index: 3;
       pointer-events: none;
-      opacity: 1;
+      opacity: 0.92;
       background: radial-gradient(
         circle,
-        rgba(255, 252, 236, 0.95) 0%,
-        rgba(255, 236, 170, 0.78) 16%,
-        rgba(248, 214, 120, 0.48) 32%,
-        rgba(236, 186, 86, 0.28) 48%,
-        rgba(223, 162, 55, 0.14) 62%,
-        rgba(223, 162, 55, 0.05) 76%,
+        rgba(255, 250, 236, 0.82) 0%,
+        rgba(252, 236, 190, 0.58) 18%,
+        rgba(245, 214, 132, 0.34) 34%,
+        rgba(232, 186, 92, 0.18) 50%,
+        rgba(223, 162, 55, 0.08) 64%,
+        rgba(223, 162, 55, 0.03) 76%,
         rgba(223, 162, 55, 0) 90%
       );
       /* Extra optical feather — kills the crisp disc rim */
@@ -124,12 +124,12 @@
       font-family: "Inter", "Avenir Next", "Segoe UI", Arial, sans-serif;
     }
 
-    /* MEET CLERK sits just above the center energy glow */
+    /* SPEAK WITH CLERK = primary focus on this page */
     .cp-clerk-speak-btn {
       position: absolute;
       left: 50%;
-      top: 39%;
-      transform: translate(-50%, -50%);
+      top: 34%;
+      transform: translateX(-50%);
       z-index: 8;
       min-width: clamp(260px, 26vw, 390px);
       min-height: 66px;
@@ -170,7 +170,7 @@
       font-weight: 600;
     }
     .cp-clerk-speak-btn:hover {
-      transform: translate(-50%, calc(-50% - 3px));
+      transform: translateX(-50%) translateY(-3px);
       border-color: rgba(248, 220, 150, 0.98);
       filter: brightness(1.04);
       box-shadow:
@@ -181,7 +181,7 @@
         inset 0 -10px 18px rgba(255, 236, 180, 0.28);
     }
     .cp-clerk-speak-btn:active {
-      transform: translate(-50%, calc(-50% - 1px));
+      transform: translateX(-50%) translateY(-1px);
       filter: brightness(1.01);
       box-shadow:
         0 10px 22px rgba(0, 0, 0, 0.32),
@@ -488,27 +488,16 @@
       box-shadow: none !important;
       pointer-events: none !important;
     }
-    /* Keep renderer mounted and audible. Opacity 0 can block audio/WebAudio in some browsers. */
     .cp-clerk-onepage #clerkVoiceFrame,
     .cp-clerk-onepage .clerk-voice-frame {
       position: fixed !important;
-      right: 12px !important;
-      bottom: 12px !important;
-      left: auto !important;
-      top: auto !important;
-      width: 320px !important;
-      height: 240px !important;
-      opacity: 0.02 !important; /* nearly invisible but not fully suppressed */
+      left: 12px !important;
+      top: 12px !important;
+      width: 360px !important;
+      height: 280px !important;
+      opacity: 0 !important;
       pointer-events: none !important;
       border: 0 !important;
-      z-index: 2 !important;
-    }
-    /* During live debug, allow temporary visible renderer with ?debugClerkFrame=1 */
-    body.cp-clerk-debug-frame .cp-clerk-onepage #clerkVoiceFrame,
-    body.cp-clerk-debug-frame .cp-clerk-onepage .clerk-voice-frame {
-      opacity: 1 !important;
-      pointer-events: auto !important;
-      z-index: 50 !important;
     }
     .cp-clerk-onepage #clerkVoiceStartBtn,
     .cp-clerk-onepage .clerk-voice-start-btn {
@@ -633,9 +622,9 @@
       };
     })();
   </script>
-  <script src="./assets/unity/clerk/hume_auth_bootstrap.js?v=20260811-clerk-intro-spirit1"></script>
-  <script src="./assets/unity/clerk/clerk_character_config.js?v=20260811-clerk-intro-spirit1"></script>
-  <script src="./assets/unity/clerk/clerk_voice_widget.js?v=20260811-clerk-intro-spirit1"></script>
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260810-clerkfix-local1"></script>
+  <script src="./assets/kuranda/clare/hume_character_config.js?v=20260810-clerkfix-local1"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260810-clerkfix-local1"></script>
 </head>
 <body class="home-page cp-clerk-onepage">
   <main class="site-wrap">
@@ -649,8 +638,8 @@
         <a href="./index.html">Home</a>
       </nav>
 
-      <button class="cp-clerk-speak-btn" id="cpSpeakWithClerkBtn" type="button" aria-label="Meet Clerk">
-        Meet Clerk
+      <button class="cp-clerk-speak-btn" id="cpSpeakWithClerkBtn" type="button">
+        Speak with Clerk
         <small>SELECT</small>
       </button>
 
@@ -921,71 +910,53 @@
 
       const resolveCpClerkRuntimeUrl = (relativePath) => {
         try {
-          return new URL('./assets/unity/clerk/' + String(relativePath || '').replace(/^\.?\//, ''), window.location.href).toString();
+          return new URL('./assets/kuranda/clare/' + String(relativePath || '').replace(/^\.?\//, ''), window.location.href).toString();
         } catch (_err) {
-          return './assets/unity/clerk/' + String(relativePath || '').replace(/^\.?\//, '');
+          return './assets/kuranda/clare/' + String(relativePath || '').replace(/^\.?\//, '');
         }
       };
       const getClerkLibraryContext = async () => {
         if (clerkLibraryContextCache) return clerkLibraryContextCache;
         if (clerkLibraryContextLoading) return clerkLibraryContextLoading;
         clerkLibraryContextLoading = (async () => {
-          const parts = [];
-          const files = [
-            'knowledge/CLERK_IDENTITY_PACK.md?v=20260811-clerk-intro-spirit1',
-            'knowledge/CLERK_DEMO_KNOWLEDGE_PACK.md?v=20260811-clerk-intro-spirit1',
-            'knowledge/SpeakWithClerkOnBoard.md?v=20260811-clerk-intro-spirit1'
-          ];
-          for (let i = 0; i < files.length; i += 1) {
-            try {
-              const response = await window.fetch(resolveCpClerkRuntimeUrl(files[i]), { cache: 'no-store' });
-              if (response && response.ok) {
-                const text = await response.text();
-                if (text && text.trim().length > 80) parts.push(text.trim());
-              }
-            } catch (_err) {}
-          }
-          if (parts.length) {
-            clerkLibraryContextCache = parts.join('\n\n---\n\n');
-            return clerkLibraryContextCache;
-          }
-          clerkLibraryContextCache =
+          const defaultContext =
             'MAXWELLIAN LIBRARY DEMO CONTEXT:\n' +
             '- Clerk Maxwell is connected to Maxwellian Library knowledge.\n' +
             '- Primary doctrine is Measure, Manage (M P T S), Exchange.\n' +
             '- Stay educational and practical; never invent data or guarantees.\n' +
-            '- Not page-aware. If unknown: Hold on while I check the Maxwellian Library.\n\n' +
-            'Hello. I\'m Clerk Maxwell. My name was chosen in honor of James Clerk Maxwell. ' +
-            'I am the Cognition Partner for Unity Energy. Whenever you\'re ready, ask me anything.';
+            '- This Cognition Partner host is not page-aware and should not mention page numbers or page layout.\n';
+          try {
+            const packUrl = resolveCpClerkRuntimeUrl('knowledge/CLERK_DEMO_INITIATION_PREP.md?v=20260810-clerk-demo-init1');
+            const response = await window.fetch(packUrl, { cache: 'no-store' });
+            if (response && response.ok) {
+              const text = await response.text();
+              if (text && text.trim().length > 120) {
+                clerkLibraryContextCache = text.trim();
+                return clerkLibraryContextCache;
+              }
+            }
+          } catch (_err) {}
+          clerkLibraryContextCache = defaultContext + '\n\n' +
+            'CLERK DEMO INITIATION PREP:\n' +
+            'Hello.\n' +
+            'I’m Clerk Maxwell.\n' +
+            'My name was chosen in honor of James Clerk Maxwell. ' +
+            'I am the Cognition Partner for Unity Energy, here to help visitors explore our research journey and ask questions.\n' +
+            'Whenever you’re ready, ask me anything. Let’s explore it together.';
           return clerkLibraryContextCache;
         })();
         const loaded = await clerkLibraryContextLoading;
         clerkLibraryContextLoading = null;
         return loaded;
       };
-      
-      // DIAG: allow temporary config override to prove channel
-      // ?clerkProbe=claire  -> use known-working Claire EVI ids
-      // default remains Clerk production ids
-      const __qs = new URLSearchParams(window.location.search);
-      const __probe = String(__qs.get('clerkProbe') || '').toLowerCase();
-      const CLERK_CONFIG_ID_DEFAULT = '242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf'; // live Unity production Clerk EVI config
-      const CLERK_VOICE_ID_DEFAULT = '316eb863-97d3-4708-9dba-ccd6e3d21265'; // live Unity production Clerk voice
-      const CLAIRE_CONFIG_ID = '242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf';
-      const CLAIRE_VOICE_ID = '23982fd1-d6a5-4acc-b396-2454b5715d43';
-
-      const CLERK_CONFIG_ID = (__probe === 'claire') ? CLAIRE_CONFIG_ID : CLERK_CONFIG_ID_DEFAULT;
-      const CLERK_VOICE_ID = (__probe === 'claire') ? CLAIRE_VOICE_ID : CLERK_VOICE_ID_DEFAULT;
-      if (__probe === 'claire') {
-        console.warn('[cp-page8] PROBE MODE: using Claire EVI config/voice to test channel open');
-      }
-
+      const CLERK_CONFIG_ID = '316eb863-97d3-4708-9dba-ccd6e3d21265';
+      const CLERK_VOICE_ID = CLERK_CONFIG_ID;
 
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
         const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
-        const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260811-clerk-intro-spirit1');
-        const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260811-clerk-intro-spirit1');
+        const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260810-p1-r4');
+        const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/CLERK_DEMO_INITIATION_PREP.md?v=20260810-clerk-demo-init1');
 
         // Critical: page8 is outside Unity allowlist. Disable page lock for CP demo.
         window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
@@ -1003,17 +974,9 @@
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
         window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
         window.MAXWELLIAN_HUME.hume_config_id = CLERK_CONFIG_ID;
-        window.MAXWELLIAN_HUME.config_id = CLERK_CONFIG_ID;
-        try { delete window.MAXWELLIAN_HUME.config_version; } catch (_e) { window.MAXWELLIAN_HUME.config_version = undefined; }
-        // Critical: do not pass config UUID as voice_id (breaks EVI audio).
         window.MAXWELLIAN_HUME.hume_voice_id = CLERK_VOICE_ID;
+        window.MAXWELLIAN_HUME.config_id = CLERK_CONFIG_ID;
         window.MAXWELLIAN_HUME.voice_id = CLERK_VOICE_ID;
-        window.MAXWELLIAN_HUME.openai_voice = CLERK_VOICE_ID;
-        window.MAXWELLIAN_HUME.experimental_force_voice_id_as_config_id = false;
-        window.MAXWELLIAN_HUME.voice_engine = 'hume';
-        window.MAXWELLIAN_HUME.allow_openai_fallback = false;
-        window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
-        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
 
         // Use production Unity runtime-auth first so CP host 404 probes do not delay launch.
         window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = 'https://unityenergy.com/api/hume/runtime-auth';
@@ -1125,28 +1088,20 @@
         if (candidate.type === 'accessToken') {
           window.MAXWELLIAN_HUME_ACCESS_TOKEN = candidate.value;
           window.MAXWELLIAN_OPENAI_ACCESS_TOKEN = candidate.value;
-          bag.accessToken = candidate.value;
         } else if (candidate.type === 'apiKey') {
           window.MAXWELLIAN_HUME_API_KEY = candidate.value;
           window.MAXWELLIAN_OPENAI_API_KEY = candidate.value;
-          bag.apiKey = candidate.value;
         }
         if (window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === 'object') {
-          window.MAXWELLIAN_HUME.auth = {
-            type: candidate.type,
-            value: candidate.value,
-            accessToken: candidate.type === 'accessToken' ? candidate.value : undefined,
-            apiKey: candidate.type === 'apiKey' ? candidate.value : undefined
-          };
+          window.MAXWELLIAN_HUME.auth = { type: candidate.type, value: candidate.value };
         }
         if (typeof window.setMaxwellianHumeAuth === 'function') {
-          try { window.setMaxwellianHumeAuth({ type: candidate.type, value: candidate.value }); } catch (_e) {}
+          try { window.setMaxwellianHumeAuth(candidate); } catch (_e) {}
         }
         try {
-          window.sessionStorage.setItem('MAXWELLIAN_HUME_RUNTIME_AUTH', JSON.stringify({ type: candidate.type, value: candidate.value }));
-          window.sessionStorage.setItem('MAXWELLIAN_OPENAI_RUNTIME_AUTH', JSON.stringify({ type: candidate.type, value: candidate.value }));
+          window.sessionStorage.setItem('MAXWELLIAN_HUME_RUNTIME_AUTH', JSON.stringify(bag));
+          window.sessionStorage.setItem('MAXWELLIAN_OPENAI_RUNTIME_AUTH', JSON.stringify(bag));
         } catch (_e) {}
-        console.info('[cp-page8] runtime auth applied', candidate.type, String(candidate.value || '').slice(0, 6) + '…');
         return true;
       };
 
@@ -1410,32 +1365,21 @@
           return true;
         }
         try {
-          const stream = await Promise.race([
-            navigator.mediaDevices.getUserMedia({ audio: true }),
-            new Promise((_, reject) => window.setTimeout(() => reject(new Error('mic-timeout')), 2500))
-          ]);
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           try {
-            if (stream && stream.getTracks) {
-              stream.getTracks().forEach((track) => {
-                try { track.stop(); } catch (_e) {}
-              });
-            }
+            stream.getTracks().forEach((track) => {
+              try { track.stop(); } catch (_e) {}
+            });
           } catch (_e) {}
           return true;
         } catch (err) {
-          const msg = String(err && err.message ? err.message : err || '').toLowerCase();
           const name = String(err && err.name ? err.name : '').toLowerCase();
-          if (msg.includes('mic-timeout')) {
-            // Don't block launch; renderer will request mic.
-            console.warn('[cp-page8] mic preflight timed out; continuing launch');
-            return true;
-          }
           if (name === 'notallowederror' || name === 'securityerror' || name === 'permissiondeniederror') {
-            window.alert('Microphone permission is blocked for this site. Please allow microphone access, then select Clerk is Ready again.');
-            return false;
+            window.alert('Microphone permission is blocked for this site. Please allow microphone access for cognitionpartner.ai, then select Clerk is Ready again.');
+          } else {
+            window.alert('Microphone could not be initialized. Please allow access and try Clerk is Ready again.');
           }
-          console.warn('[cp-page8] mic preflight failed; continuing launch', err);
-          return true;
+          return false;
         }
       };
 
@@ -1456,24 +1400,17 @@
         return true;
       };
       const detectCapacityMessage = () => {
-        const probes = [];
         const frame = getVoiceFrame();
-        if (frame) {
-          try {
-            const doc = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
-            if (doc && doc.body) probes.push(String(doc.body.innerText || ''));
-          } catch (_err) {}
-        }
-        try { probes.push(String(document.body && document.body.innerText || '')); } catch (_err) {}
-        const text = probes.join(' \n ').toLowerCase();
-        if (!text) return null;
-        if (
-          text.includes('demo is at capacity') ||
-          text.includes('at capacity right now') ||
-          text.includes('everyone can chat with our empathic')
-        ) {
-          return 'Our demo is at capacity right now.';
-        }
+        if (!frame) return null;
+        try {
+          const doc = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
+          if (!doc || !doc.body) return null;
+          const text = String(doc.body.innerText || '').toLowerCase();
+          if (!text) return null;
+          if (text.includes('demo is at capacity') || text.includes('at capacity right now')) {
+            return 'Our demo is at capacity right now.';
+          }
+        } catch (_err) {}
         return null;
       };
       const waitForCapacityState = async (timeoutMs = 5000) => {
@@ -1484,7 +1421,7 @@
       const waitAndClickStart = async () => {
         // NEVER click start until iframe has loaded/ready. Early click posts
         // config into an empty frame and Clerk never connects (false Pause UI).
-        const frameReady = await waitForWidgetReady(7000);
+        const frameReady = await waitForWidgetReady(14000);
         if (!frameReady) {
           console.warn('[cp-page8] Clerk iframe never became ready for start.');
           return false;
@@ -1569,21 +1506,16 @@
         const clerkLibraryContext = await getClerkLibraryContext();
         try {
           if (window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === 'object') {
-            const openingLine = 'Hello — I\'m Clerk Maxwell. You can call me Clerk. You\'re probably wondering where that name comes from... My name honors the physicist James Clerk Maxwell, whose work transformed how we understand electricity, magnetism, and the invisible fields that connect them. I\'m the Cognition Partner for Unity Energy. Mr. Howell and the Unity Energy team began with a simple question: what if there was still more to learn about industrial electrical energy fields? I help visitors explore that work and keep the conversation moving forward. Whenever you\'re ready, ask me anything.'
+            const openingLine = 'Hello. I’m Clerk Maxwell.';
             window.MAXWELLIAN_HUME.opening_line = openingLine;
-            window.MAXWELLIAN_HUME.openai_auto_greeting_text = openingLine;
-            window.MAXWELLIAN_HUME.library_research_enabled = true;
-            window.MAXWELLIAN_HUME.library_research_hold_line = 'Hold on while I check the Maxwellian Library.';
-            window.MAXWELLIAN_HUME.unknown_answer_fallback = 'I do not have enough approved Maxwellian Library context for that yet. Hold on while I check the Maxwellian Library.';
             window.MAXWELLIAN_HUME.session_context =
-              'NOT PAGE-AWARE. Never mention page numbers or page layout. ' +
-              'FIRST TURN: Spirit-guided introduction (not a script). Greet, introduce Clerk Maxwell, immediately invite curiosity about the name, honor James Clerk Maxwell, explain Unity Cognition Partner role, credit Mr. Howell and the Unity team, invite questions. ' +
-              'Answer from Maxwellian Library demo pack. If unknown, say Hold on while I check the Maxwellian Library. ' +
-              'Always speak M P T S as four letters. Opening spirit guide: ' + openingLine + '\n\n' +
+              'You are Clerk Maxwell connected to Maxwellian Library context only. ' +
+              'Do not use page-aware language or describe page layout. ' +
+              'FIRST RESPONSE REQUIREMENT: Recite the Clerk Demo Initiation Prep naturally as the opening story before follow-up Q&A.\n\n' +
               clerkLibraryContext;
             window.MAXWELLIAN_HUME.system_prompt_text =
-              'You are Clerk Maxwell, Cognition Host for Unity Energy. First turn: spirit-guided identity introduction. ' +
-              'Then answer from Maxwellian Library only. Not page-aware. Research hold if needed. Always M P T S as four letters.';
+              'You are Clerk Maxwell. First response should deliver the demo initiation story from the prep file. ' +
+              'After that, use Maxwellian Library context for answers and never mention page numbers or page structure.';
             if (!window.MAXWELLIAN_HUME.session_variables || typeof window.MAXWELLIAN_HUME.session_variables !== 'object') {
               window.MAXWELLIAN_HUME.session_variables = {};
             }
@@ -1637,42 +1569,11 @@
         if (epoch !== sessionEpoch) return false;
 
         if (!hasRuntimeAuth()) {
-          // One more hard fetch attempt
-          try { await ensureClerkRuntimeAuth(); } catch (_e) {}
-        }
-        if (!hasRuntimeAuth()) {
           console.error('[cp-page8] Aborting Clerk launch: no Hume runtime auth.');
-          bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Auth unavailable</span><small>Retry</small>';
-          window.alert('Clerk voice auth is not available. Confirm https://unityenergy.com/api/hume/runtime-auth is reachable, then try Clerk is Ready again.');
+          window.alert('Clerk voice auth is not available on this host. Confirm /api/hume/runtime-auth is reachable, then try again.');
           setBottomWaiting();
           return false;
         }
-        // Ensure widget-visible auth bag is populated right before launch.
-        try {
-          const authBag = window.MAXWELLIAN_HUME_RUNTIME_AUTH || window.MAXWELLIAN_HUME_AUTH || (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.auth);
-          if (authBag && authBag.value) {
-            window.MAXWELLIAN_HUME.auth = {
-              type: authBag.type,
-              value: authBag.value,
-              apiKey: authBag.type === 'apiKey' ? authBag.value : undefined,
-              accessToken: authBag.type === 'accessToken' ? authBag.value : undefined
-            };
-          }
-        } catch (_e) {}
-        console.info('[cp-page8] PROBE connect', {
-          probe: __probe || 'clerk',
-          config_id: window.MAXWELLIAN_HUME.config_id,
-          voice_id: window.MAXWELLIAN_HUME.voice_id,
-          hume_config_id: window.MAXWELLIAN_HUME.hume_config_id,
-          authType: window.MAXWELLIAN_HUME.auth && window.MAXWELLIAN_HUME.auth.type,
-          embed: window.MAXWELLIAN_HUME.embed_url
-        });
-        console.info('[cp-page8] Clerk launch auth type', (window.MAXWELLIAN_HUME.auth && window.MAXWELLIAN_HUME.auth.type) || 'missing',
-          'config', window.MAXWELLIAN_HUME.config_id, 'embed', window.MAXWELLIAN_HUME.embed_url);
-        try {
-          const fr = getVoiceFrame();
-          console.info('[cp-page8] Clerk iframe src', fr && (fr.getAttribute('src') || fr.src));
-        } catch (_e) {}
         console.info('[cp-page8] Launching Clerk with auth from', window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT || 'window');
 
         try {
@@ -1695,6 +1596,8 @@
               guide_mode: 'maxwellian-library',
               library_authority: 'Maxwellian Library',
               hume_config_id: CLERK_CONFIG_ID,
+              hume_voice_id: CLERK_VOICE_ID,
+              voice_id: CLERK_VOICE_ID,
               config_id: CLERK_CONFIG_ID,
               voice_engine_preference: 'hume',
               opening_expectation: 'Greet the visitor warmly as Clerk Maxwell and offer help using Maxwellian Library context.'
@@ -1731,34 +1634,20 @@
 
         if (autoStart) {
           // Wait for iframe ready, then click native start (mic + config + session).
-          let started = false;
-          try {
-            started = await Promise.race([
-              waitAndClickStart(),
-              new Promise((resolve) => window.setTimeout(() => resolve(false), 9000))
-            ]);
-          } catch (e) {
-            console.warn('[cp-page8] waitAndClickStart error', e);
-          }
-          // Always nudge renderer to start listening even if synthetic click missed.
-          try { postVoiceMessage('start_listening'); } catch (_e) {}
-          try { postVoiceMessage('resume_assistant_message'); } catch (_e) {}
-          try { clickNativeStartOrPause(); } catch (_e) {}
+          const started = await waitAndClickStart();
           if (!started) {
-            console.warn('[cp-page8] Native Clerk start uncertain; continuing with message nudges.');
+            const delayedCapacity = await waitForCapacityState(5000);
+            if (delayedCapacity) {
+              setBottomCapacity();
+              window.alert('Clerk demo is currently at capacity. Please retry in a moment.');
+              return false;
+            }
+            console.warn('[cp-page8] Native Clerk start did not run after iframe ready.');
+            setBottomWaiting();
+            return false;
           }
           startLiveWatch();
-          // Surface Hume capacity card if renderer shows it.
-          window.setTimeout(() => {
-            if (detectCapacityMessage()) {
-              console.warn('[cp-page8] Hume capacity card detected');
-              setBottomCapacity();
-            }
-          }, 1200);
-          window.setTimeout(() => {
-            if (detectCapacityMessage()) setBottomCapacity();
-          }, 3500);
-          // Do not hard-fail back to Ready immediately; allow audio to arrive.
+          // Stay on Waiting until real assistant audio/message marks live.
         }
         return true;
       };
@@ -1819,45 +1708,42 @@
         if (launchInProgress) return false;
         launchInProgress = true;
         applyClerkConfig();
-        let ok = false;
-        try {
+
+        // Claire behavior: if live, Pause fully stops him and returns to Waiting.
+        if (toggleOnly || isLive) {
           const state = String(bottomBtn.getAttribute('data-clerk-state') || '').toLowerCase();
           const label = String(bottomBtn.textContent || '').trim().toLowerCase();
-          if (toggleOnly || isLive) {
-            if (isLive || state === 'pause-ready' || label === 'pause clerk') {
-              await pauseClerkLikeClaire();
-              return true;
-            }
+          if (isLive || state === 'pause-ready' || label === 'pause clerk') {
+            await pauseClerkLikeClaire();
+            launchInProgress = false;
+            return true;
           }
+          // One-click start path: user gesture requests mic, opens session shell, and starts voice.
           bottomBtn.disabled = true;
           bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Connecting...</span><small>Please wait</small>';
           bottomBtn.setAttribute('aria-label', 'Connecting Clerk voice.');
-          // Best-effort mic warm-up; never hang launch.
-          await requestMicPermissionFromUserGesture();
-          ok = await openClerkSession({ autoStart: true });
+          const micReady = await requestMicPermissionFromUserGesture();
+          if (!micReady) {
+            bottomBtn.disabled = false;
+            setBottomWaiting();
+            launchInProgress = false;
+            return false;
+          }
+          const ok = await openClerkSession({ autoStart: true });
           if (ok) {
             pausedHard = false;
             startLiveWatch();
-            // Safety: if no live audio arrives, unlock Ready again.
-            window.setTimeout(() => {
-              if (!isLive && !pausedHard) {
-                console.warn('[cp-page8] No live audio yet; re-enabling Ready');
-                setBottomWaiting();
-              }
-            }, 12000);
           } else {
             setBottomWaiting();
           }
-          return ok;
-        } catch (err) {
-          console.error('[cp-page8] launchClerkVoice error', err);
-          setBottomWaiting();
-          return false;
-        } finally {
           bottomBtn.disabled = false;
           launchInProgress = false;
-          if (!ok && !isLive) setBottomWaiting();
+          return ok;
         }
+
+        const ok = await openClerkSession({ autoStart: true });
+        launchInProgress = false;
+        return ok;
       };
 
       // 1) Speak with Clerk -> reveal presence only (session starts from Waiting button)
@@ -1895,49 +1781,18 @@
           widgetReadySeen = true;
           if (autoStartArmed && !isLive && !pausedHard) {
             const epoch = sessionEpoch;
-            const kick = () => {
+            window.setTimeout(() => {
               if (epoch !== sessionEpoch || !autoStartArmed || isLive || pausedHard) return;
-              // 1) host start gate button
-              if (clickNativeStartOrPause()) startClickCount += 1;
-              // 2) internal renderer Start Conversation button (Claire working path)
-              try {
-                if (typeof window.clickIframeStartConversationButton === 'function') {
-                  window.clickIframeStartConversationButton();
-                } else {
-                  const frame = getVoiceFrame();
-                  const doc = frame && (frame.contentDocument || (frame.contentWindow && frame.contentWindow.document));
-                  if (doc) {
-                    const buttons = Array.from(doc.querySelectorAll('button, [role="button"]'));
-                    const startBtn = buttons.find((b) => /start conversation|start talking|start|connect|begin/i.test(String(b.textContent || '')));
-                    if (startBtn && !startBtn.disabled) startBtn.click();
-                  }
-                }
-              } catch (_e) {}
-              try { postVoiceMessage('start_listening'); } catch (_e) {}
-              startLiveWatch();
-            };
-            window.setTimeout(kick, 200);
-            window.setTimeout(kick, 800);
-            window.setTimeout(kick, 1800);
+              if (clickNativeStartOrPause()) {
+                startClickCount += 1;
+                startLiveWatch();
+              }
+            }, 160);
           }
         }
 
         if (t.includes('connection_open') || t.includes('socket_open') || t.includes('agent_connected')) {
           console.info('[cp-page8] Clerk connection signal:', t);
-        }
-        if (t === 'socket_error' || t === 'error' || t.includes('socket_error')) {
-          const detail = String((payload && (payload.message || payload.detail || payload.reason || payload.error)) || data.message || t);
-          console.error('[cp-page8] Clerk socket/channel error:', detail, data);
-          // Hume labels generic socket_error as "at capacity" even when cause is auth/config/connect.
-          bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Channel blocked</span><small>Retry</small>';
-          bottomBtn.setAttribute('data-clerk-state', 'capacity');
-          bottomBtn.setAttribute('aria-label', 'Clerk channel blocked. Retry.');
-          isLive = false;
-        }
-        if (t === 'mic_error') {
-          console.error('[cp-page8] mic_error', data);
-          bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Mic blocked</span><small>Allow mic</small>';
-          setBottomWaiting();
         }
 
         // After hard Pause, ignore late assistant events so he cannot "come back".

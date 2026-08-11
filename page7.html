@@ -86,6 +86,9 @@
         window.MAXWELLIAN_HUME.content_awareness_scope_lock = false;
         window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
         window.MAXWELLIAN_HUME.session_context_char_limit = 24000;
+        window.MAXWELLIAN_HUME.library_research_enabled = true;
+        window.MAXWELLIAN_HUME.library_research_status_label = "Researching";
+        window.MAXWELLIAN_HUME.library_research_hold_line = "Hold on while I check the Kuranda Library.";
         // Hard-disable page/pattern context injection for Claire.
         try {
           window.MAXWELLIAN_HUME.disable_page_context = true;
@@ -133,7 +136,7 @@
 
         const operatingLine =
           "NOT PAGE-AWARE. Never mention page numbers or page 7. " +
-          "FIRST TURN: Recite Claire bio monologue word-for-word (Dr. Claire Charcot, Jean-Martin Charcot, vibratory chairs, Delton Hyatt). " +
+          "FIRST TURN: Spirit-guided introduction (not a rigid script). Keep Claire's moves: warm greeting, introduce Dr. Claire Charcot / Claire, immediately invite curiosity about who this character is / the name, then Charcot inspiration, Delton Hyatt, Kuranda Cognition Host role, invite questions. " +
           "Do not ask for name in first turn. End with: Now, how might I answer your questions? " +
           "Monologue: " + openingLine;
 
@@ -159,7 +162,10 @@
         }
         try {
           window.MAXWELLIAN_HUME.opening_line = openingLine;
-          window.MAXWELLIAN_HUME.engagement_protocol = "First turn: recite full Claire bio monologue. Then answer questions. Not page-aware.";
+          try {
+          window.MAXWELLIAN_HUME.unknown_answer_fallback = "I do not have enough approved Kuranda Library context for that yet. Hold on while I check the Kuranda Library.";
+        } catch (e) {}
+        window.MAXWELLIAN_HUME.engagement_protocol = "First turn: spirit-guided Claire identity introduction (not a rigid script). Name-curiosity hook, then answer questions. Not page-aware.";
         } catch (e) {}
 
         const launcher = await waitFor(() => {
