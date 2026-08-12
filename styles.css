@@ -770,33 +770,7 @@ a {
     width: clamp(58px, 5.8vw, 120px);
     left: calc(clamp(29px, 2.2vw, 46px) - 20px);
   }
-  .cp-r1-play-card {
-    height: 33%;
-    bottom: 3.6%;
-  }
-  .cp-r1-headphone-glyph-wrap {
-    width: 7.5%;
-  }
-  .cp-r1-cplisten-glyph-wrap {
-    width: 4.234%;
-  }
-  .cp-r1-listen-copy {
-    width: 18%;
-  }
-  .cp-r1-audio-controls {
-    top: calc(31% + 34px - 30px - 30px + 3px);
-  }
-  .cp-r1-why-wave {
-    transform: translateY(-50%);
-    top: 50%;
-    width: 25%;
-    height: 80%;
-  }
-  .cp-r1-play-card--next-only .cp-r1-page-nav {
-    top: 50%;
-    transform: translateY(-50%);
-    width: 14%;
-  }
+  /* Do NOT inflate play-card height on tablet — dock handled below */
   .cp-r1-page5-experience-link {
     top: 64.7%;
     height: 5.0%;
@@ -854,38 +828,6 @@ a {
   .cp-r1-top-item.is-active::after {
     width: clamp(45px, 4.9vw, 95px);
     left: calc(clamp(22px, 1.9vw, 34px) - 20px);
-  }
-  .cp-r1-play-card {
-    height: 37%;
-    bottom: 2.6%;
-  }
-  .cp-r1-headphone-glyph-wrap {
-    width: 8.2%;
-    left: 2.4%;
-  }
-  .cp-r1-cplisten-glyph-wrap {
-    width: 4.838%;
-    left: calc(2.4% + 86px - 30px);
-  }
-  .cp-r1-listen-copy {
-    left: calc(2.4% + 146px - 30px);
-    width: 20%;
-  }
-  .cp-r1-audio-controls {
-    top: calc(27% + 34px - 30px - 30px + 3px);
-    left: calc(23.8% + 50px - 30px - 30px - 50px + 15px);
-    width: 21%;
-  }
-  .cp-r1-why-wave {
-    transform: translateY(-50%);
-    left: calc(45.8% - 10px + 50px - 30px);
-    top: 50%;
-    width: 26.5%;
-    height: 82%;
-  }
-  .cp-r1-play-card--next-only .cp-r1-page-nav {
-    right: 8.8%;
-    width: 16%;
   }
   .cp-r1-page5-experience-link {
     top: 64.7%;
@@ -3312,37 +3254,226 @@ body.cp-page1 .cp-r1-play-card.cp-r1-media-card {
   height: 10.56%;
 }
 
-@media (max-width: 1100px) {
+/*
+ * Tablet / phone: pin bottom dock to the viewport bottom (safe-area),
+ * stop percentage-height ballooning, and use an in-bar flex row so
+ * Why It Matters stays with the speaker and Understanding stays capped.
+ */
+@media (max-width: 1180px) {
+  :root {
+    --cp-dock-pad: max(8px, env(safe-area-inset-bottom, 0px));
+    --cp-logo-h: clamp(48px, 7.2vh, 64px);
+    --cp-media-h: clamp(72px, 10.5vh, 92px);
+  }
+
+  .cp-r1-play-card,
+  .cp-r1-media-card,
+  .cp-r1-play-card.cp-r1-media-card,
+  body.cp-page1 .cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card.cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card {
+    left: 2%;
+    width: 96%;
+    /* media sits on top of logo strip when present */
+    bottom: calc(var(--cp-dock-pad) + var(--cp-logo-h));
+    height: var(--cp-media-h);
+    max-height: 96px;
+    overflow: hidden;
+  }
+
+  /* page 1 has no solid logo strip — park media on the dock pad */
+  body.cp-page1 .cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card.cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card {
+    bottom: var(--cp-dock-pad);
+  }
+
+  .cp-r1-bottom-logo-card:not(.cp-r1-bottom-logo-card--hero) {
+    left: 2%;
+    width: 96%;
+    bottom: var(--cp-dock-pad);
+    --cp-bottom-logo-h: var(--cp-logo-h);
+    height: var(--cp-logo-h);
+    z-index: 6;
+  }
+
+  /* In-bar flex row — kills nested absolute px collisions on iPad */
   .cp-r1-media-card,
   .cp-r1-play-card.cp-r1-media-card {
-    left: 1.8%;
-    width: 96.4%;
-    height: 20%;
-    bottom: 2.6%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: clamp(6px, 1vw, 14px);
+    padding: 0 clamp(10px, 1.4vw, 18px);
+    box-sizing: border-box;
   }
-  .cp-r1-bottom-logo-card {
-    left: 1.8%;
-    width: 96.4%;
-    --cp-bottom-logo-h: calc(clamp(40px, 6%, 54px) + 50px);
-    height: var(--cp-bottom-logo-h);
+
+  .cp-r1-media-card .cp-r1-brand-logo-hit,
+  .cp-r1-media-card .cp-r1-brand-name-hit {
+    display: none;
+  }
+
+  .cp-r1-media-card .cp-r1-cplisten-glyph-wrap,
+  .cp-r1-media-card .cp-r1-listen-copy,
+  .cp-r1-media-card .cp-r1-audio-controls,
+  .cp-r1-media-card .cp-r1-why-wave,
+  .cp-r1-media-card .cp-r1-page-nav {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    height: auto !important;
+    max-height: none;
+    margin: 0;
+    flex: 0 0 auto;
+  }
+
+  .cp-r1-media-card .cp-r1-cplisten-glyph-wrap {
+    width: clamp(28px, 4.2vw, 40px);
+    height: clamp(28px, 4.2vw, 40px) !important;
+    flex-shrink: 0;
+  }
+
+  .cp-r1-media-card .cp-r1-listen-copy {
+    width: auto;
+    max-width: 18ch;
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .cp-r1-media-card .cp-r1-listen-copy-title {
+    font-size: clamp(11px, 1.15vw, 15px);
+    margin-bottom: 2px;
+    background: transparent;
+  }
+
+  .cp-r1-media-card .cp-r1-listen-copy-body {
+    font-size: clamp(9px, 0.95vw, 12px);
+    line-height: 1.15;
+  }
+
+  .cp-r1-media-card .cp-r1-audio-controls {
+    width: auto;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: clamp(8px, 1.2vw, 14px);
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .cp-r1-media-card .cp-r1-audio-btn {
+    width: clamp(34px, 4vw, 44px);
+    height: clamp(34px, 4vw, 44px);
+    min-width: 34px;
+    min-height: 34px;
+    font-size: clamp(14px, 1.5vw, 20px);
+  }
+
+  .cp-r1-media-card .cp-r1-audio-label {
+    font-size: clamp(8px, 0.85vw, 11px);
+  }
+
+  .cp-r1-media-card .cp-r1-why-wave {
+    flex: 1 1 auto;
+    width: auto !important;
+    min-width: 140px;
+    max-width: min(42%, 360px);
+    height: clamp(48px, 62%, 64px) !important;
+    min-height: 48px !important;
+    max-height: 64px !important;
+    padding: 4px 3% 6px;
+    gap: 2px;
+  }
+
+  .cp-r1-media-card .cp-r1-why-wave-label {
+    font-size: clamp(11px, 1.2vw, 16px);
+    letter-spacing: 0.1em;
+  }
+
+  .cp-r1-media-card .cp-r1-why-wave-canvas {
+    width: 90%;
+    height: 40%;
+    min-height: 12px;
+  }
+
+  .cp-r1-media-card .cp-r1-page-nav {
+    width: auto !important;
+    min-width: 7.5rem;
+    margin-left: auto; /* pin prev/next to the right end of the bar */
+    height: auto !important;
+  }
+
+  .cp-r1-media-card .cp-r1-prev-link {
+    transform: none !important;
+  }
+
+  .cp-r1-media-card .cp-r1-prev-link:active {
+    transform: translateY(1px) !important;
+  }
+
+  .cp-r1-media-card .cp-r1-page-nav::after {
+    left: 50%;
+  }
+
+  .cp-r1-play-card:not(.cp-r1-play-card--next-only) .cp-r1-page-nav {
+    transform: none !important;
   }
 }
+
 @media (max-width: 760px) {
+  :root {
+    --cp-logo-h: clamp(42px, 7.5vh, 56px);
+    --cp-media-h: clamp(68px, 12vh, 86px);
+  }
+
+  .cp-r1-play-card,
   .cp-r1-media-card,
-  .cp-r1-play-card.cp-r1-media-card {
+  .cp-r1-play-card.cp-r1-media-card,
+  body.cp-page1 .cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card.cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card {
     left: 1.4%;
     width: 97.2%;
-    height: 22%;
-    bottom: 2.2%;
   }
-  .cp-r1-bottom-logo-card {
+
+  body.cp-page1 .cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card.cp-r1-media-card,
+  body.cp-page1 .cp-r1-play-card {
+    bottom: var(--cp-dock-pad);
+  }
+
+  .cp-r1-bottom-logo-card:not(.cp-r1-bottom-logo-card--hero) {
     left: 1.4%;
     width: 97.2%;
     justify-content: center;
-    --cp-bottom-logo-h: calc(clamp(38px, 7%, 50px) + 50px);
-    height: var(--cp-bottom-logo-h);
   }
+
   .cp-r1-bottom-logo-card .cp-r1-brand-lockup-tagline {
     display: none;
+  }
+
+  .cp-r1-media-card .cp-r1-listen-copy-body {
+    display: none; /* keep title + speaker; free width on phone */
+  }
+
+  .cp-r1-media-card .cp-r1-audio-label {
+    display: none;
+  }
+
+  .cp-r1-media-card .cp-r1-why-wave {
+    min-width: 110px;
+    max-width: 38%;
+  }
+
+  .cp-r1-media-card .cp-r1-page-nav {
+    min-width: 5.5rem;
+  }
+
+  .cp-r1-media-card .cp-r1-prev-link,
+  .cp-r1-media-card .cp-r1-next-link {
+    font-size: clamp(11px, 2.8vw, 14px);
   }
 }
