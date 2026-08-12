@@ -1,1 +1,4 @@
 .DS_Store
+
+# local sync safety snapshots
+.sync_backups/

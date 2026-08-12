@@ -275,10 +275,10 @@ a {
 }
 .cp-r1-play-card {
   position: absolute;
-  left: 1.6%;
-  bottom: 4.5%;
-  width: 96.8%;
-  height: 30%;
+  left: 3.2%;
+  bottom: calc(1.0% + 150px) /* unified top edge: page1 up 50 + match 2-5 */;
+  width: 93.6% /* match top card */; /* match top card width */
+  height: 10.56% /* unified panel height across pages 1-5 */;
   z-index: 7;
   pointer-events: none;
 }
@@ -288,24 +288,78 @@ a {
   width: 14.2%;
   height: 5.0%;
   z-index: 6;
-  border-radius: 12px;
+  border-radius: 999px;
   pointer-events: auto;
-  background: rgba(8, 20, 40, 0.14);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 8px rgba(5, 12, 22, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(5px, 0.4vw, 8px);
+  box-sizing: border-box;
+  padding: 0 clamp(6px, 0.45vw, 10px); /* tighter so larger type fills pill */
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: filter 140ms ease, transform 120ms ease, box-shadow 140ms ease;
 }
+.cp-r1-page5-experience-label {
+  font-size: clamp(12px, 0.936vw, 18px); /* +20% */
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}
+.cp-r1-page5-experience-chevron {
+  font-size: 1.45em; /* scales with larger label */
+  font-weight: 400;
+  line-height: 1;
+  transform: translateY(-0.5px);
+}
+/* Gold filled CTA — Experience Clerk */
 .cp-r1-page5-experience-clerk {
   left: 26.5%;
+  color: rgba(28, 18, 6, 0.96);
+  border-color: rgba(210, 168, 92, 0.95);
+  background: linear-gradient(
+    180deg,
+    rgba(232, 196, 122, 0.98) 0%,
+    rgba(198, 148, 74, 0.96) 48%,
+    rgba(168, 120, 52, 0.98) 100%
+  );
 }
+.cp-r1-page5-experience-clerk .cp-r1-page5-experience-label,
+.cp-r1-page5-experience-clerk .cp-r1-page5-experience-chevron {
+  color: rgba(28, 18, 6, 0.96);
+  text-shadow: 0 1px 0 rgba(255, 236, 190, 0.28);
+}
+/* Green filled CTA — Experience Claire */
 .cp-r1-page5-experience-claire {
   left: 67.7%;
-  border-color: rgba(142, 205, 111, 0.62);
+  color: rgba(236, 248, 232, 0.98);
+  border-color: rgba(142, 205, 111, 0.88);
+  background: linear-gradient(
+    180deg,
+    rgba(110, 168, 86, 0.98) 0%,
+    rgba(78, 132, 58, 0.96) 48%,
+    rgba(56, 104, 42, 0.98) 100%
+  );
+}
+.cp-r1-page5-experience-claire .cp-r1-page5-experience-label,
+.cp-r1-page5-experience-claire .cp-r1-page5-experience-chevron {
+  color: rgba(236, 248, 232, 0.98);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
 }
 .cp-r1-page5-experience-link:hover {
-  border-color: rgba(var(--cp-accent-gold-rgb), 0.9);
-  background: rgba(10, 24, 46, 0.4);
+  filter: brightness(1.08);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
-.cp-r1-page5-experience-claire:hover {
-  border-color: rgba(167, 232, 131, 0.9);
+.cp-r1-page5-experience-link:active {
+  transform: translateY(1px);
+  filter: brightness(0.98);
 }
 .cp-r1-page5-experience-link:focus-visible {
   outline: 2px solid rgba(125, 211, 252, 0.98);
@@ -329,8 +383,8 @@ a {
 }
 .cp-r1-cplisten-glyph-wrap {
   position: absolute;
-  left: calc(8.2% + 0px);
-  top: calc(37.5% + 15px);
+  left: calc(8.2% + 0px - 30px - 30px);
+  top: calc(37.5% + 15px - 30px);
   width: 3.629%;
   height: 22.680%;
   display: grid;
@@ -345,8 +399,8 @@ a {
 }
 .cp-r1-listen-copy {
   position: absolute;
-  left: calc(5.9% + 135px);
-  top: calc(29.5% + 50px);
+  left: calc(5.9% + 135px - 30px - 30px);
+  top: calc(29.5% + 50px - 30px - 30px);
   width: 16.8%;
   z-index: 2;
   color: rgba(238, 240, 244, 0.94);
@@ -389,8 +443,8 @@ a {
 }
 .cp-r1-audio-controls {
   position: absolute;
-  left: calc(24.9% + 50px);
-  top: calc(34% + 34px);
+  left: calc(24.9% + 50px - 30px - 30px - 50px + 15px);
+  top: calc(34% + 34px - 30px - 30px + 3px);
   width: 17.2%;
   height: 38%;
   z-index: 2;
@@ -452,55 +506,62 @@ a {
 }
 .cp-r1-why-wave {
   position: absolute;
-  left: calc(43.0% - 10px + 50px);
-  top: calc(35% + 20px);
-  width: 23.5%;
-  height: 25%;
+  left: calc(43.0% - 10px + 50px - 30px);
+  top: 50%;
+  width: 23.5%; /* original width — taller, not wider */
+  height: 78%;
   z-index: 2;
   overflow: hidden;
   border-radius: 999px;
   border: 2.5px solid rgba(var(--cp-accent-gold-rgb), 0.95);
   background: rgba(7, 19, 37, 0.58);
-  transform: scale(0.85);
+  transform: translateY(-50%);
   transform-origin: center center;
+
+  min-height: 72px;
+  max-height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 5% 12px;
+  box-sizing: border-box;
 }
 .cp-r1-why-wave-label {
-  position: absolute;
-  top: 21%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  flex: 0 0 auto;
   color: rgba(var(--cp-accent-gold-rgb), 0.86);
-  font-size: clamp(16px, 1.45vw, 30px);
+  font-size: clamp(14.4px, 1.305vw, 27px); /* -10% from original */
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
   z-index: 2;
+  line-height: 1.05;
 }
 .cp-r1-why-wave-canvas {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: 18%;
-  width: 84%;
-  height: 22%;
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  width: 88%;
+  height: 48%;
+  min-height: 22px;
   display: block;
   opacity: 0.98;
   z-index: 1;
+  flex: 0 0 auto;
 }
 .cp-r1-why-wave-track {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: 18%;
-  width: 84%;
-  height: 22%;
-  background: linear-gradient(to right, transparent 0%, rgba(var(--cp-accent-gold-rgb), 0.64) 12%, rgba(246, 223, 162, 0.92) 50%, rgba(var(--cp-accent-gold-rgb), 0.64) 88%, transparent 100%) center / 100% 1px no-repeat;
-  opacity: 0.95;
-  z-index: 1;
+  /* Idle bottom synth removed — label + center voice wave only */
+  display: none !important;
 }
 .cp-r1-why-wave.has-live-wave .cp-r1-why-wave-track {
-  display: none;
+  display: none !important;
 }
 .cp-r1-why-wave-track::before,
 .cp-r1-why-wave-track::after {
@@ -567,27 +628,28 @@ a {
 .cp-r1-page-nav {
   position: absolute;
   right: 10.0%;
-  top: 46%;
-  width: 9.2%;
-  height: 16%;
+  top: 50%; /* vertically center in media controls card */
+  width: 10.12%; /* ~+10% hit area */
+  height: 22%;
   z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8%;
   pointer-events: auto;
   align-items: center;
+  transform: translateY(-50%);
 }
 .cp-r1-play-card:not(.cp-r1-play-card--next-only) .cp-r1-page-nav {
-  transform: translateX(+10px);
+  transform: translateY(-50%) translateX(+10px);
 }
 .cp-r1-page-nav::after {
   content: "";
   position: absolute;
   left: 25%;
-  top: 10%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 90%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 2.2px; /* ~+10% */
+  height: 72%;
   background: rgba(var(--cp-accent-gold-rgb), 0.95);
   border-radius: 999px;
   pointer-events: none;
@@ -596,13 +658,13 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(6px, 0.45vw, 10px);
+  gap: clamp(6.6px, 0.495vw, 11px);
   width: 100%;
   height: 100%;
   border: none;
   background: transparent;
   color: rgba(230, 233, 236, 0.62);
-  font-size: clamp(12px, 0.95vw, 18px);
+  font-size: clamp(13.2px, 1.045vw, 19.8px); /* +10% */
   font-weight: 400;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -612,7 +674,7 @@ a {
 }
 .cp-r1-prev-link::before {
   content: "‹";
-  font-size: 1.604em;
+  font-size: 1.764em; /* +10% from 1.604em */
   font-weight: 340;
   line-height: 1;
   transform: translateY(-1px);
@@ -636,13 +698,13 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(6px, 0.45vw, 10px);
+  gap: clamp(6.6px, 0.495vw, 11px);
   width: 100%;
   height: 100%;
   border: none;
   background: transparent;
   color: rgba(230, 233, 236, 0.66);
-  font-size: clamp(12px, 0.95vw, 18px);
+  font-size: clamp(13.2px, 1.045vw, 19.8px); /* +10% */
   font-weight: 400;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -654,7 +716,7 @@ a {
 }
 .cp-r1-next-link::after {
   content: "›";
-  font-size: 1.604em;
+  font-size: 1.764em; /* +10% from 1.604em */
   font-weight: 340;
   line-height: 1;
   transform: translateY(-1px);
@@ -722,14 +784,17 @@ a {
     width: 18%;
   }
   .cp-r1-audio-controls {
-    top: calc(31% + 34px);
+    top: calc(31% + 34px - 30px - 30px + 3px);
   }
   .cp-r1-why-wave {
-    top: calc(31% + 6px);
+    transform: translateY(-50%);
+    top: 50%;
     width: 25%;
+    height: 80%;
   }
   .cp-r1-play-card--next-only .cp-r1-page-nav {
-    top: 44%;
+    top: 50%;
+    transform: translateY(-50%);
     width: 14%;
   }
   .cp-r1-page5-experience-link {
@@ -800,21 +865,23 @@ a {
   }
   .cp-r1-cplisten-glyph-wrap {
     width: 4.838%;
-    left: calc(2.4% + 86px);
+    left: calc(2.4% + 86px - 30px);
   }
   .cp-r1-listen-copy {
-    left: calc(2.4% + 146px);
+    left: calc(2.4% + 146px - 30px);
     width: 20%;
   }
   .cp-r1-audio-controls {
-    top: calc(27% + 34px);
-    left: calc(23.8% + 50px);
+    top: calc(27% + 34px - 30px - 30px + 3px);
+    left: calc(23.8% + 50px - 30px - 30px - 50px + 15px);
     width: 21%;
   }
   .cp-r1-why-wave {
-    left: calc(45.8% - 10px + 50px);
-    top: calc(31% + 8px);
+    transform: translateY(-50%);
+    left: calc(45.8% - 10px + 50px - 30px);
+    top: 50%;
     width: 26.5%;
+    height: 82%;
   }
   .cp-r1-play-card--next-only .cp-r1-page-nav {
     right: 8.8%;
@@ -2945,11 +3012,11 @@ body.lead-form-open {
 }
 
 
-/* Page 1 only — large stacked logo on the man's back, above lowered media bar */
+/* Page 1 only — large stacked logo on the man's back, above media bar */
 body.cp-page1 .cp-r1-play-card {
-  /* Remove blank lower band and park media bar lower */
-  bottom: 0.4%;
-  height: 28%;
+  /* Same bottom panel geometry as pages 2-5 (unified top edge) */
+  bottom: calc(1.0% + 150px);
+  height: 10.56%;
 }
 body.cp-page1 .cp-r1-brand-lockup--bottom,
 body.cp-page1 .cp-r1-brand-lockup--above-banner,
@@ -2964,7 +3031,7 @@ body.cp-page1 .cp-r1-brand-lockup--hero {
   left: auto;
   right: calc(18.5% - 50px); /* +50px to the right */
   top: auto;
-  bottom: calc(28% + 0.4% - 32px); /* was +18px; moved down 50px */
+  bottom: calc(28% + 0.4% - 32px + 150px); /* follow media bar up 150 */ /* was +100; +50 with panel */
   transform: none;
   z-index: 9;
   pointer-events: auto;
@@ -3040,3 +3107,242 @@ body.cp-page1 .cp-r1-brand-lockup--bottom .cp-r1-brand-lockup-tagline {
 /* Keep top-left lockup on page1 as well unless we later remove it */
 
 /* Keep top lockup on page1 for now; new upper logo comes next */
+
+
+/* Top platform card — logo + home + pages 1-5 bound as one scalable strip */
+.cp-r1-top-card {
+  position: absolute;
+  top: 3.2%;
+  left: 3.2%;
+  width: 93.6%;
+  height: clamp(64px, 9.2%, 96px);
+  z-index: 8;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.92fr) minmax(0, 2.35fr);
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 22px);
+  padding: 0 clamp(12px, 1.4vw, 22px);
+  box-sizing: border-box;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(8, 16, 30, 0.92) 0%, rgba(6, 12, 24, 0.88) 100%);
+  border: 1px solid rgba(216, 182, 112, 0.28);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+.cp-r1-top-card .cp-r1-brand-lockup--top {
+  position: relative;
+  top: auto;
+  left: auto;
+  gap: clamp(3.43px, 0.247vw, 5.49px);
+  z-index: 1;
+  filter: none;
+  min-width: 0;
+}
+.cp-r1-top-card .cp-r1-top-nav {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  min-width: 0;
+  gap: clamp(4px, 0.6vw, 10px);
+}
+.cp-r1-top-card .cp-r1-top-nav > .cp-r1-top-item:nth-child(3),
+.cp-r1-top-card .cp-r1-top-nav > .cp-r1-top-item:nth-child(4),
+.cp-r1-top-card .cp-r1-top-nav > .cp-r1-top-item:nth-child(5),
+.cp-r1-top-card .cp-r1-top-nav > .cp-r1-top-item:nth-child(6) {
+  transform: none;
+}
+.cp-r1-top-card .cp-r1-top-item.is-active::after,
+.cp-r1-top-card .cp-r1-top-item:hover::after {
+  left: clamp(28px, 2.2vw, 46px);
+  bottom: 8%;
+  width: clamp(64px, 5.6vw, 120px);
+}
+@media (max-width: 1100px) {
+  .cp-r1-top-card {
+    top: 2.6%;
+    left: 2.4%;
+    width: 95.2%;
+    height: clamp(58px, 10%, 86px);
+    grid-template-columns: minmax(150px, 0.85fr) minmax(0, 2.4fr);
+    gap: 10px;
+    padding-inline: 12px;
+  }
+  .cp-r1-top-card .cp-r1-brand-lockup--top .cp-r1-brand-lockup-wordmark {
+    font-size: clamp(14px, 1.5vw, 20px);
+  }
+  .cp-r1-top-card .cp-r1-top-label {
+    font-size: clamp(10px, 1.1vw, 15px);
+  }
+}
+@media (max-width: 760px) {
+  .cp-r1-top-card {
+    top: 1.8%;
+    left: 1.8%;
+    width: 96.4%;
+    height: auto;
+    min-height: 56px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 6px;
+    padding: 8px 10px 10px;
+  }
+  .cp-r1-top-card .cp-r1-top-nav {
+    grid-template-columns: 0.55fr repeat(5, 1fr);
+    height: 42px;
+  }
+  .cp-r1-top-card .cp-r1-top-label br {
+    display: none;
+  }
+  .cp-r1-top-card .cp-r1-top-label {
+    white-space: normal;
+    font-size: 9px;
+    line-height: 1.05;
+  }
+  .cp-r1-top-card .cp-r1-top-number {
+    font-size: 16px;
+  }
+  .cp-r1-top-card .cp-r1-brand-lockup--top .cp-r1-brand-lockup-logo {
+    width: clamp(36px, 8vw, 48px);
+  }
+}
+
+
+/* Bottom platform cards — media controls strip + logo strip */
+.cp-r1-media-card,
+.cp-r1-play-card.cp-r1-media-card {
+  /* Same width as top card strip; unified top edge on pages 1-5 */
+  left: 3.2%;
+  width: 93.6%;
+  bottom: calc(1.0% + 150px) /* page1 up 50px; pages 2-5 matched */;
+  height: 10.56% /* unified panel height */;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(8, 16, 30, 0.94) 0%, rgba(6, 12, 24, 0.92) 100%);
+  border: 1px solid rgba(216, 182, 112, 0.28);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* Children stay positioned inside the media card */
+.cp-r1-media-card .cp-r1-cplisten-glyph-wrap,
+.cp-r1-media-card .cp-r1-listen-copy,
+.cp-r1-media-card .cp-r1-audio-controls,
+.cp-r1-media-card .cp-r1-why-wave,
+.cp-r1-media-card .cp-r1-page-nav,
+.cp-r1-media-card .cp-r1-brand-logo-hit,
+.cp-r1-media-card .cp-r1-brand-name-hit {
+  /* ensure hit targets remain usable on the card */
+  pointer-events: auto;
+}
+
+/* Full-width logo strip under media card (pages 2-5) */
+.cp-r1-bottom-logo-card {
+  position: absolute;
+  left: 3.2%;
+  width: 93.6%; /* match top card */
+  /* Top edge stays on audio/media bottom; bottom edge down 50px */
+  --cp-bottom-logo-h: calc(clamp(40px, 5.2%, 54px) + 50px);
+  bottom: calc((1.0% + 150px) - var(--cp-bottom-logo-h));
+  height: var(--cp-bottom-logo-h);
+  z-index: 6; /* under media card (z7) so edges stack cleanly */
+  display: flex;
+  align-items: center; /* vertically center Cognition Partner lockup */
+  justify-content: flex-end;
+  padding: 0 clamp(14px, 1.6vw, 28px);
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(8, 16, 30, 0.9) 0%, rgba(6, 12, 24, 0.88) 100%);
+  border: 0; /* no border on lower logo card */
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+.cp-r1-bottom-logo-card .cp-r1-brand-lockup--bottom {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  top: auto;
+  gap: clamp(3.43px, 0.281vw, 5.83px);
+  filter: none;
+  z-index: 1;
+  align-self: center;
+}
+
+/* Page 1 hero logo remains a free stacked mark (not the thin strip) */
+.cp-r1-bottom-logo-card--hero {
+  left: auto;
+  right: calc(18.5% - 50px);
+  bottom: calc(28% + 0.4% - 32px);
+  width: auto;
+  height: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  justify-content: center;
+  pointer-events: none;
+}
+.cp-r1-bottom-logo-card--hero .cp-r1-brand-lockup--bottom,
+.cp-r1-bottom-logo-card--hero .cp-r1-brand-lockup--hero {
+  pointer-events: auto;
+  position: relative;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  top: auto;
+  transform: none;
+}
+
+/* Page 1 media card — same top edge / geometry as pages 2-5 */
+body.cp-page1 .cp-r1-media-card,
+body.cp-page1 .cp-r1-play-card.cp-r1-media-card {
+  left: 3.2%;
+  width: 93.6%;
+  bottom: calc(1.0% + 150px) /* up 50px from prior page1; shared across 1-5 */;
+  height: 10.56%;
+}
+
+@media (max-width: 1100px) {
+  .cp-r1-media-card,
+  .cp-r1-play-card.cp-r1-media-card {
+    left: 1.8%;
+    width: 96.4%;
+    height: 20%;
+    bottom: 2.6%;
+  }
+  .cp-r1-bottom-logo-card {
+    left: 1.8%;
+    width: 96.4%;
+    --cp-bottom-logo-h: calc(clamp(40px, 6%, 54px) + 50px);
+    height: var(--cp-bottom-logo-h);
+  }
+}
+@media (max-width: 760px) {
+  .cp-r1-media-card,
+  .cp-r1-play-card.cp-r1-media-card {
+    left: 1.4%;
+    width: 97.2%;
+    height: 22%;
+    bottom: 2.2%;
+  }
+  .cp-r1-bottom-logo-card {
+    left: 1.4%;
+    width: 97.2%;
+    justify-content: center;
+    --cp-bottom-logo-h: calc(clamp(38px, 7%, 50px) + 50px);
+    height: var(--cp-bottom-logo-h);
+  }
+  .cp-r1-bottom-logo-card .cp-r1-brand-lockup-tagline {
+    display: none;
+  }
+}
