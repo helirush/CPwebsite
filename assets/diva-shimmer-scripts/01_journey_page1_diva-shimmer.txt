@@ -1,0 +1,18 @@
+Diva / Shimmer narration script
+Page 01 — 01 · YOUR PARTNER
+Section: JOURNEY
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: assets/audio/*-script.txt
+Audio target: assets/audio/CognitionPartner_page1r1.mp3
+---
+
+Hi. My name is Diva, and I’ll be your narrator on this journey as you understand what we do here at Cognition Partner.
+
+Every great achievement begins with a question.
+
+For thousands of years, we’ve relied on books, teachers, mentors, and experience to help us grow. Today, something new is possible.
+
+A Cognition Partner isn’t here to replace your thinking. It’s here to help your thinking continue—so each insight becomes the foundation for the next.
+
+This is where that journey begins.

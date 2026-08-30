@@ -1,0 +1,14 @@
+Diva / Shimmer narration script
+Page 11 — Possibility 1 — Partner
+Section: POSSIBILITIES
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: operator-updated page11 copy
+Audio target: assets/audio/CognitionPartner_page11r1.mp3
+---
+
+This is where cognition becomes personal.
+
+Your Partner reasons with you over time—not as a collection of disconnected conversations, but as a relationship with continuity. Your discoveries, decisions, questions, and unfinished thinking become part of a Living Library you can return to.
+
+You remain the traveler. Your Partner helps you continue from where you left off.

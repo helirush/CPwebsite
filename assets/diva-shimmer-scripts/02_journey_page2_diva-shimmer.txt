@@ -1,0 +1,16 @@
+Diva / Shimmer narration script
+Page 02 — 02 · CONTINUOUS REASONING
+Section: JOURNEY
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: assets/audio/*-script.txt
+Audio target: assets/audio/CognitionPartner_page2r1.mp3
+---
+
+Our best ideas rarely come from a single conversation.
+
+They emerge over time, as questions lead to new questions and each insight becomes the foundation for the next.
+
+Continuous Conversational Reasoning preserves that momentum, allowing your understanding to grow naturally instead of continually starting over.
+
+Because the most valuable discoveries are rarely found in a single moment.

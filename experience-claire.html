@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cognition Partner — Kuranda Page 2 / Claire Trial</title>
+  <link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/x-icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="192x192" href="cp-thk-icon-192.png?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="512x512" href="cp-thk-icon-512.png?cp_icon=20260722a">
+  <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
+  <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
+  <meta name="theme-color" content="#2f5e4f">
+  <link rel="stylesheet" href="./styles.css?v=20260828-why-listen-gap-force20-1" />
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260813-0213"></script>
+  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260813-0213"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260813-0213"></script>
+</head>
+<body class="home-page page6-kuranda-voice-page">
+  <main class="site-wrap">
+    <section class="page-card">
+      <img class="page-image" src="./assets/kuranda_p2.png?v=20260830-two-step-hosts-1" alt="Kuranda page 2 with Claire voice experience" />
+      <div class="page5-kuranda-nav" aria-label="Page navigation controls">
+        <a class="page5-kuranda-nav-link" id="page7-return-link" href="./experience-claire-entry.html?v=20260830-two-step-hosts-1" aria-label="Return to Kuranda page 1">Back</a>
+        <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
+      </div>
+                  <div class="kuranda-speaking-bubble" id="kuranda-speaking-bubble" aria-hidden="true">
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-speaking-ring" aria-hidden="true"></span>
+        <span class="kuranda-orb-core" aria-hidden="true"></span>
+        <div class="kuranda-speaking-inner">
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+          <span class="kuranda-speaking-bar"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const returnLink = document.getElementById("page7-return-link");
+      const bubbleEl = document.getElementById("kuranda-speaking-bubble");
+      if (!returnLink || !bubbleEl) return;
+
+      const setSpeaking = (on) => {
+        bubbleEl.classList.toggle("is-speaking", Boolean(on));
+      };
+
+      const waitFor = async (testFn, timeoutMs = 10000) => {
+        const start = Date.now();
+        while (Date.now() - start < timeoutMs) {
+          const value = testFn();
+          if (value) return value;
+          await new Promise((r) => setTimeout(r, 40));
+        }
+        return null;
+      };
+
+      const launchClaire = async () => {
+        setSpeaking(false);
+
+        const cfgReady = await waitFor(
+          () => window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === "object",
+          8000
+        );
+        if (!cfgReady) {
+          console.error("Claire character config missing after package load.");
+          return;
+        }
+
+        // Claire identity only. Not page-aware. Not Clerk content-aware.
+        window.MAXWELLIAN_HUME.character_name = "Claire";
+        window.MAXWELLIAN_HUME.character_id = "claire-charcot";
+        window.MAXWELLIAN_HUME.default_character_id = "claire-charcot";
+        window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
+        window.MAXWELLIAN_HUME.default_context_source = "kuranda-claire";
+        window.MAXWELLIAN_HUME.content_awareness_mode = false;
+        window.MAXWELLIAN_HUME.content_awareness_scope_lock = false;
+        window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
+        window.MAXWELLIAN_HUME.session_context_char_limit = 24000;
+        window.MAXWELLIAN_HUME.library_research_enabled = true;
+        window.MAXWELLIAN_HUME.library_research_status_label = "Researching";
+        window.MAXWELLIAN_HUME.library_research_hold_line = "Hold on while I check the Kuranda Library.";
+        // Hard-disable page/pattern context injection for Claire.
+        try {
+          window.MAXWELLIAN_HUME.disable_page_context = true;
+          window.MAXWELLIAN_HUME.page_context_enabled = false;
+          window.MAXWELLIAN_HUME.prefetch_active_page_context = false;
+          window.MAXWELLIAN_HUME.include_page_context = false;
+          window.MAXWELLIAN_HUME.content_awareness_page_source_files = {};
+        } catch (e) {}
+
+        // Load Claire identity + Kuranda library pack (host-level context, not page-aware).
+        let claireIdentityPack = "";
+        let claireKnowledgePack = "";
+        try {
+          const packUrl = "./assets/kuranda/clare/knowledge/CLAIRE_IDENTITY_PACK.md?v=20260813-0213";
+          const resp = await fetch(packUrl, { cache: "no-store" });
+          if (resp && resp.ok) claireIdentityPack = await resp.text();
+        } catch (e) {
+          console.warn("Claire identity pack fetch failed; using compact fallback.", e);
+        }
+        try {
+          const knowledgeUrl = "./assets/kuranda/clare/knowledge/CLAIRE_DEMO_KNOWLEDGE_PACK.md?v=20260810-claire-library1";
+          const knowledgeResp = await fetch(knowledgeUrl, { cache: "no-store" });
+          if (knowledgeResp && knowledgeResp.ok) claireKnowledgePack = await knowledgeResp.text();
+        } catch (e) {
+          console.warn("Claire knowledge pack fetch failed; using compact fallback.", e);
+        }
+        if (!claireIdentityPack || claireIdentityPack.length < 200) {
+          claireIdentityPack =
+            "You are Claire with Kuranda Mind & Body, public guide only. " +
+            "Everyday name Claire. Formal only if asked: Dr. Claire Charcot, PhD (Charcot=Charco). " +
+            "Delton Hyatt is authority; Isaiah is private partner. " +
+            "Not page-aware. Not demo-aware. Know who you are from onboard/bio. " +
+            "No diagnosis/cure promises. " +
+            "First turn monologue required (bio history). May I ask who I'm speaking with—just your first name so we can talk? We can get more details later if you'd like to learn more.";
+        }
+        if (!claireKnowledgePack || claireKnowledgePack.length < 200) {
+          claireKnowledgePack =
+            "KURANDA LIBRARY DEMO CONTEXT:\n" +
+            "- Claire is connected to Kuranda Library material for grounded discussion.\n" +
+            "- Discuss evolving research on vibration, sensory regulation, and well-being with safety guardrails.\n" +
+            "- Never promise cures or diagnosis, and never mention page numbers or page layout.\n";
+        }
+
+        const openingLine = "Hello, how are you today? My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute, and as your Cognition Host during your visit. Before we begin, a little context. My identity was inspired by the French neurologist Jean-Martin Charcot, whose careful observations helped shape modern neurology. He noticed that many people with Parkinson's felt calmer after travel over rough roads or rails, and he wondered whether vibration itself might influence the nervous system—work that led to one of the earliest therapeutic vibratory chairs. More than a century later, our founder, Mr. Hyatt, began asking similar questions—not only as a researcher, but from lived experience. His search is personal: what helps, why it helps, and how modern tools can reveal patterns earlier generations could not see. My role is to stand with Kuranda as Cognition Host—to study our knowledge carefully, help you understand our work, and carry forward that same spirit of observation. Now, how might I answer your questions?";
+
+        const operatingLine =
+          "NOT PAGE-AWARE. Never mention page numbers or page 7. " +
+          "FIRST TURN: Recite Claire bio monologue word-for-word. " +
+          "Refer to our founder as Mr. Hyatt. " +
+          "Do not ask for name in first turn. End with: Now, how might I answer your questions? " +
+          "Monologue: " + openingLine;
+
+        // Session context = identity pack + Kuranda library pack.
+        window.MAXWELLIAN_HUME.session_context =
+          operatingLine +
+          "\n\n--- CLAIRE IDENTITY PACK ---\n" + claireIdentityPack +
+          "\n\n--- KURANDA LIBRARY PACK ---\n" + claireKnowledgePack;
+        window.MAXWELLIAN_HUME.system_prompt_text =
+          "You are Claire connected to Kuranda Library context. " + operatingLine + " Opening line: " + openingLine;
+        if (window.MAXWELLIAN_HUME.session_variables) {
+          window.MAXWELLIAN_HUME.session_variables.character_name = "Claire";
+          window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
+          window.MAXWELLIAN_HUME.session_variables.name_request_line =
+            "May I ask who I'm speaking with—just your first name so we can talk?";
+          window.MAXWELLIAN_HUME.session_variables.library_prep = "identity-pack-plus-kuranda-library";
+          window.MAXWELLIAN_HUME.session_variables.library_authority = "Kuranda Library";
+          window.MAXWELLIAN_HUME.session_variables.bio_source =
+            "SpeakWithClaireOnBoard + Internal Identity Narrative";
+          window.MAXWELLIAN_HUME.session_variables.must_know_bio = "true";
+          window.MAXWELLIAN_HUME.session_variables.page_aware = "false";
+          window.MAXWELLIAN_HUME.session_variables.content_aware = "false";
+        }
+        try {
+          window.MAXWELLIAN_HUME.opening_line = openingLine;
+          try {
+          window.MAXWELLIAN_HUME.unknown_answer_fallback = "I do not have enough approved Kuranda Library context for that yet. Hold on while I check the Kuranda Library.";
+        } catch (e) {}
+        window.MAXWELLIAN_HUME.engagement_protocol = "First turn: spirit-guided Claire identity introduction (not a rigid script). Name-curiosity hook, then answer questions. Not page-aware.";
+        } catch (e) {}
+
+        const launcher = await waitFor(() => {
+          if (typeof window.launchClerkWithPageContext === "function") return window.launchClerkWithPageContext;
+          if (typeof window.launchClerk === "function") return window.launchClerk;
+          if (typeof window.openClerkVoiceModal === "function") return window.openClerkVoiceModal;
+          return null;
+        }, 8000);
+
+        if (!launcher) {
+          console.error("Claire voice launcher unavailable.");
+          return;
+        }
+
+        try {
+          const result = launcher({
+            characterId: "claire-charcot",
+            contextSource: "kuranda-claire",
+            // Keep keys for launcher compatibility, but payload forbids page awareness.
+            pageKey: "claire-session",
+            entryPoint: "kuranda-claire-meet",
+            uiMode: "modal",
+            disablePageContext: true,
+            includePageContext: false,
+            contextPayload: {
+              organization: "Kuranda Mind & Body",
+              public_guide: "Claire",
+              page_aware: false,
+              content_aware: false,
+              identity_pack: "CLAIRE_IDENTITY_PACK",
+              opening_expectation: openingLine
+            }
+          });
+          if (result && typeof result.then === "function") {
+            await result;
+          }
+          setSpeaking(false);
+        } catch (err) {
+          console.error("Claire auto-launch failed", err);
+          setSpeaking(true);
+        }
+      };
+
+      
+      // CLAIRE_BUBBLE_SPEAK_SYNC
+      // Orb/bars animate only while Claire is actively speaking.
+      window.setKurandaClaireSpeaking = setSpeaking;
+      window.stopKurandaClaireBubble = function () {
+        setSpeaking(false);
+        document.body.classList.remove("claire-is-speaking");
+      };
+      window.startKurandaClaireBubble = function () {
+        setSpeaking(true);
+        document.body.classList.add("claire-is-speaking");
+      };
+
+      // Default frozen.
+      setSpeaking(false);
+
+      // Listen for widget speech/close signals.
+      window.addEventListener("message", function (event) {
+        const data = event && event.data;
+        if (!data || typeof data !== "object") return;
+        const t = String(data.type || "").toLowerCase();
+        if (!t) return;
+        if (t === "transcript_message" || t === "assistant_message" || t === "audio_start" || t.includes("assistant_speak") || t.includes("tts_start")) {
+          // Animate while Claire output is flowing.
+          if (data.payload && (data.payload.role === "user" || data.payload.speaker === "user")) {
+            // user speech: keep orb calm/frozen
+            setSpeaking(false);
+            document.body.classList.remove("claire-is-speaking");
+          } else {
+            setSpeaking(true);
+            document.body.classList.add("claire-is-speaking");
+          }
+          return;
+        }
+        if (t === "audio_end" || t === "assistant_end" || t.includes("tts_end") || t === "collapse_widget") {
+          setSpeaking(false);
+          document.body.classList.remove("claire-is-speaking");
+          return;
+        }
+      });
+
+      // If modal closes, freeze bubble.
+      document.addEventListener("click", function (e) {
+        const t = e.target;
+        if (!t) return;
+        if (t.id === "clerkVoiceCloseBtn" || (t.classList && t.classList.contains("clerk-voice-close"))) {
+          setSpeaking(false);
+          document.body.classList.remove("claire-is-speaking");
+        }
+      }, true);
+
+      window.setTimeout(() => {
+        void launchClaire();
+      }, 200);
+      
+      // CLAIRE_SOFT_RESET_AFTER_STOP
+      // Pause Claire ends audio; soft re-arm so Waiting works without Back.
+      const softRearmClaire = async function () {
+        try {
+          if (typeof window.stopKurandaClaireBubble === "function") window.stopKurandaClaireBubble();
+        } catch (e) {}
+        try { document.body.classList.remove("claire-is-speaking"); } catch (e) {}
+        try {
+          const b = document.getElementById("clerkVoiceStartBtn");
+          if (b) {
+            b.disabled = false;
+            b.removeAttribute("disabled");
+            b.hidden = false;
+            b.style.display = "flex";
+            b.style.visibility = "visible";
+            b.style.opacity = "1";
+            b.style.pointerEvents = "auto";
+            b.setAttribute("data-claire-state", "waiting");
+            b.textContent = "Claire is ready";
+          }
+        } catch (e) {}
+        // Re-run the same prep as first load so next SELECT has a live session path.
+        try {
+          await launchClaire();
+        } catch (e) {
+          console.warn("Claire soft re-arm failed", e);
+        }
+      };
+      window.addEventListener("claireStopListeningReset", function () {
+        window.setTimeout(function () { void softRearmClaire(); }, 60);
+      });
+      window.addEventListener("clerkVoiceModalClosed", function () {
+        // If stop left us on Waiting, keep orb frozen and control ready.
+        try {
+          if (typeof window.stopKurandaClaireBubble === "function") window.stopKurandaClaireBubble();
+        } catch (e) {}
+      });
+
+      // CLAIRE_FORCE_ENABLE_WAITING
+      window.setTimeout(function () {
+        try {
+          const b = document.getElementById("clerkVoiceStartBtn");
+          if (!b) return;
+          const st = String(b.getAttribute("data-claire-state") || "");
+          const label = String(b.textContent || "").trim().toLowerCase();
+          if (st === "close-ready" || st === "connecting" || label === "pause claire" || label === "stop-listening") return;
+          b.disabled = false;
+          b.removeAttribute("disabled");
+          b.hidden = false;
+          b.style.display = "flex";
+          b.style.visibility = "visible";
+          b.style.opacity = "1";
+          b.style.pointerEvents = "auto";
+          b.setAttribute("data-claire-state", "waiting");
+          b.textContent = "Claire is ready";
+        } catch (e) {}
+      }, 800);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cognition Partner — Kuranda Page 1</title>
+  <link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/x-icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="192x192" href="cp-thk-icon-192.png?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="512x512" href="cp-thk-icon-512.png?cp_icon=20260722a">
+  <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
+  <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
+  <meta name="theme-color" content="#2f5e4f">
+  <link rel="stylesheet" href="./styles.css?v=20260828-why-listen-gap-force20-1" />
+</head>
+<body class="home-page page5-kuranda-page">
+  <main class="site-wrap">
+    <section class="page-card">
+      <img class="page-image" src="./assets/kuranda_p1.png?v=20260830-two-step-hosts-1" alt="Kuranda Mind and Body Institute page 1" />
+      <div class="page5-kuranda-nav" aria-label="Page navigation controls">
+        <a class="page5-kuranda-nav-link" href="./page12.html?v=20260824-p12-r6-3" aria-label="Return to Partner + Host (page 12)">Back</a>
+        <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
+      </div>
+      <button class="kuranda-meet-claire-button" id="meet-claire-button" type="button" aria-label="Meet Claire voice experience">
+        <span class="kuranda-meet-claire-label">MEET CLAIRE</span>
+        <span class="kuranda-meet-claire-arrow" aria-hidden="true">→</span>
+      </button>
+    </section>
+  </main>
+  <script src="../../UnityEnergy/founder_share_panel.js?v=20260805a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260805a';"></script>
+  <script>
+    (() => {
+      const meetClaireButton = document.getElementById("meet-claire-button");
+      if (!meetClaireButton) return;
+
+      const configCandidates = [
+        "./assets/kuranda/clare/clare_hume_config.json?v=20260804-0058",
+        "../../../../Kuranda/Claire/clare_hume_config.json?v=20260804-0058"
+      ];
+
+      let fileConfig = null;
+      let fileConfigLoaded = false;
+
+      const normalizeConfig = (rawConfig = {}) => {
+        const demoPageUrl =
+          typeof rawConfig.demo_page_url === "string" && rawConfig.demo_page_url.trim()
+            ? rawConfig.demo_page_url.trim()
+            : "./experience-claire.html?v=20260830-two-step-hosts-1";
+        return { demoPageUrl };
+      };
+
+      const loadFileConfig = async ({ forceReload = false } = {}) => {
+        if (forceReload) {
+          fileConfig = null;
+          fileConfigLoaded = false;
+        }
+        if (fileConfigLoaded) return fileConfig;
+        fileConfigLoaded = true;
+        for (const candidateUrl of configCandidates) {
+          try {
+            const response = await fetch(candidateUrl, { cache: "no-store" });
+            if (!response.ok) continue;
+            const payload = await response.json();
+            fileConfig = normalizeConfig(payload);
+            break;
+          } catch (_) {}
+        }
+        return fileConfig;
+      };
+
+      const resolveLaunchConfig = async ({ forceReload = false } = {}) => {
+        const loadedFileConfig = await loadFileConfig({ forceReload });
+        if (loadedFileConfig) return loadedFileConfig;
+        return normalizeConfig(window.CLAIRE_HUME_CONFIG || {});
+      };
+
+      // MEET CLAIRE is the only start control. It opens Kuranda page 2 / Claire trial.
+      meetClaireButton.addEventListener("click", async () => {
+        const config = await resolveLaunchConfig({ forceReload: true });
+        window.location.href = config.demoPageUrl || "./experience-claire.html?v=20260830-two-step-hosts-1";
+      });
+    })();
+  </script>
+</body>
+</html>

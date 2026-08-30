@@ -1,0 +1,16 @@
+Diva / Shimmer narration script
+Page 10 — 10 · YOUR COGNITION SYSTEM
+Section: JOURNEY
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: operator-updated page10 copy
+Audio target: assets/audio/CognitionPartner_page10r1.mp3
+---
+
+A Cognition Partner doesn't have to take the same form for everyone.
+
+It can begin as a private relationship, extend your knowledge through a trusted Host, or grow into a Cognition Team working across an organization.
+
+Each begins with the same foundation: a Partner, a Living Library, and understanding that grows through experience.
+
+Start where you are. The system can grow with you.

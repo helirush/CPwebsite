@@ -1,0 +1,14 @@
+Diva / Shimmer narration script
+Page 12 — Possibility 2 — Partner + Host
+Section: POSSIBILITIES
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: operator-updated page12 copy
+Audio target: assets/audio/CognitionPartner_page12r1.mp3
+---
+
+Now your knowledge can become useful beyond your private relationship.
+
+A trusted Host can draw from selected knowledge in your Living Library to help another person explore a real purpose—without giving them access to everything that remains yours.
+
+Here, Claire represents Kuranda while Curl remains the Cognition Partner. Different roles, shared understanding, permissioned by you.

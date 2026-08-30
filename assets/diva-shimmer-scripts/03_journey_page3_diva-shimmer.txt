@@ -1,0 +1,14 @@
+Diva / Shimmer narration script
+Page 03 — 03 · OPERATING SYSTEM
+Section: JOURNEY
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: assets/audio/*-script.txt
+Audio target: assets/audio/CognitionPartner_page3r1.mp3
+---
+
+As your thinking expands, keeping it connected becomes the challenge.
+
+Projects multiply. Questions lead to new questions. Understanding grows across different parts of your life.
+
+A Cognition Operating System gives that thinking structure—helping your partner reconnect the right context, preserve continuity, and continue building from where you left off.

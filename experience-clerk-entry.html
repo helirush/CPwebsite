@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cognition Partner — Unity Energy Page 1</title>
+  <link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/x-icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="192x192" href="cp-thk-icon-192.png?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="512x512" href="cp-thk-icon-512.png?cp_icon=20260722a">
+  <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
+  <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
+  <meta name="theme-color" content="#2f5e4f">
+  <link rel="stylesheet" href="./styles.css?v=20260828-why-listen-gap-force20-1" />
+  <style>
+    /* Reuse Kuranda entry chrome classes for Unity intro */
+    body.page5-kuranda-page .kuranda-meet-claire-button {
+      /* keep existing styles from styles.css if present; minor label width safety */
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="home-page page5-kuranda-page">
+  <main class="site-wrap">
+    <section class="page-card">
+      <img class="page-image" src="./assets/unityenergy_p1.png?v=20260830-two-step-hosts-1" alt="Unity Energy page 1" />
+      <div class="page5-kuranda-nav" aria-label="Page navigation controls">
+        <a class="page5-kuranda-nav-link" href="./page13.html?v=20260830-p13-1" aria-label="Return to Cognition Team (page 13)">Back</a>
+        <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
+      </div>
+      <button class="kuranda-meet-claire-button" id="meet-clerk-button" type="button" aria-label="Meet Clerk voice experience">
+        <span class="kuranda-meet-claire-label">MEET CLERK</span>
+        <span class="kuranda-meet-claire-arrow" aria-hidden="true">→</span>
+      </button>
+    </section>
+  </main>
+  <script src="../../UnityEnergy/founder_share_panel.js?v=20260805a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260805a';"></script>
+  <script>
+    (() => {
+      const meetBtn = document.getElementById('meet-clerk-button');
+      if (!meetBtn) return;
+      // MEET CLERK opens Unity Clerk trial (step 2)
+      meetBtn.addEventListener('click', () => {
+        window.location.href = './experience-clerk.html?v=20260830-two-step-hosts-1';
+      });
+    })();
+  </script>
+</body>
+</html>

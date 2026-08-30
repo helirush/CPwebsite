@@ -1,0 +1,16 @@
+Diva / Shimmer narration script
+Page 08 — 08 · WHAT SHOULD CONTINUE
+Section: JOURNEY
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: assets/audio/*-script.txt
+Audio target: assets/audio/CognitionPartner_page8r1.mp3
+---
+
+What should continue?
+
+A lifetime of understanding does not have to disappear.
+
+Your experiences, your lessons, your discoveries, and your story can be preserved in your Living Library—ready for the people you care about, now and for generations ahead.
+
+Knowledge becomes a gift. Wisdom becomes a legacy.

@@ -19,81 +19,551 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260812-ipad-dock-pin">
+  
+
+  <link rel="stylesheet" href="./styles.css?v=20260829-curl-rgb-gradient-rings-1">
+
+
+
+<!-- CP_R2_JOURNEY_10_LIVE: final authority after styles.css -->
+<style id="cp-journey-10-live">
+  :root { --cp-r2-steps: 10; }
+  html body .cp-r2-top-main {
+    grid-template-columns: minmax(0, 1.35fr) auto !important;
+    column-gap: 8px !important;
+  }
+  html body .cp-r2-journey {
+    margin-left: -18px !important;
+    width: calc(100% + 28px) !important;
+    max-width: none !important;
+    padding-inline: 0 4px !important;
+  }
+  html body .cp-r2-journey-track {
+    --cp-r2-steps: 10 !important;
+    display: grid !important;
+    grid-template-columns: repeat(10, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 64px !important;
+  }
+  html body .cp-r2-journey-track[data-active="1"] { --cp-r2-active: 1 !important; }
+  html body .cp-r2-journey-track[data-active="2"] { --cp-r2-active: 2 !important; }
+  html body .cp-r2-journey-track[data-active="3"] { --cp-r2-active: 3 !important; }
+  html body .cp-r2-journey-track[data-active="4"] { --cp-r2-active: 4 !important; }
+  html body .cp-r2-journey-track[data-active="5"] { --cp-r2-active: 5 !important; }
+  html body .cp-r2-journey-track[data-active="6"] { --cp-r2-active: 6 !important; }
+  html body .cp-r2-journey-track[data-active="7"] { --cp-r2-active: 7 !important; }
+  html body .cp-r2-journey-track[data-active="8"] { --cp-r2-active: 8 !important; }
+  html body .cp-r2-journey-track[data-active="9"] { --cp-r2-active: 9 !important; }
+  html body .cp-r2-journey-track[data-active="10"] { --cp-r2-active: 10 !important; }
+
+  html body .cp-r2-journey-line,
+  html body .cp-r2-journey-line-progress {
+    z-index: 0 !important;
+    top: 18px !important;
+    height: 2px !important;
+  }
+  html body .cp-r2-journey-step { z-index: 2 !important; opacity: 1 !important; }
+  html body .cp-r2-journey-dot {
+    z-index: 3 !important;
+    width: 26px !important;
+    height: 26px !important;
+    display: grid !important;
+    place-items: center !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: #fffaf0 !important;
+    border: 2px solid #c49230 !important;
+    box-shadow: none !important;
+  }
+  html body .cp-r2-journey-num {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    color: #4a3410 !important;
+    -webkit-text-fill-color: #4a3410 !important;
+  }
+  html body .cp-r2-journey-step.is-complete .cp-r2-journey-dot,
+  html body .cp-r2-journey-step:not(.is-active):not(.is-future) .cp-r2-journey-dot {
+    background: #f3d59a !important;
+    border-color: #b88420 !important;
+    opacity: 1 !important;
+  }
+  html body .cp-r2-journey-step.is-complete .cp-r2-journey-num,
+  html body .cp-r2-journey-step:not(.is-active):not(.is-future) .cp-r2-journey-num {
+    color: #2c1c08 !important;
+    -webkit-text-fill-color: #2c1c08 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-weight: 800 !important;
+  }
+  html body .cp-r2-journey-step.is-active .cp-r2-journey-dot {
+    width: 30px !important;
+    height: 30px !important;
+    background: #ffd240 !important;
+    border-color: #ffe68c !important;
+    box-shadow: 0 0 0 3px rgba(255,210,64,0.25), 0 0 16px rgba(255,200,50,0.65) !important;
+  }
+  html body .cp-r2-journey-step.is-active .cp-r2-journey-num {
+    color: #141008 !important;
+    -webkit-text-fill-color: #141008 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+  }
+  html body .cp-r2-journey-step.is-future .cp-r2-journey-dot {
+    background: #fffdf8 !important;
+    border-color: #d2a040 !important;
+    opacity: 0.95 !important;
+  }
+  html body .cp-r2-journey-step.is-future .cp-r2-journey-num {
+    color: #8a6828 !important;
+    -webkit-text-fill-color: #8a6828 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  html body .cp-r2-journey-step-label {
+    top: calc(26px + 6px) !important;
+    font-size: 9px !important;
+  }
+  html body .cp-r2-journey-step.is-active .cp-r2-journey-step-label {
+    top: calc(30px + 6px) !important;
+  }
+  html body .cp-r2-utility-nav { gap: 10px !important; margin-right: 4px !important; align-items: center !important; }
+  html body .cp-r2-utility-link { font-size: 11px !important; letter-spacing: 0.06em !important; }
+  /* CP_JOURNEY_ACTIVE_UP_HOVER_LIVE */
+
+  /* Selected bullet: lift number/dot UP (was reading ~1px down when enlarged) */
+  html body .cp-r2-journey-step.is-active .cp-r2-journey-dot {
+    transform: translateY(-2px) !important;
+  }
+  html body .cp-r2-journey-step.is-active .cp-r2-journey-num {
+    transform: translateY(0) !important;
+  }
+  /* Hover tint: soft cream/orange on header palette (name already shows) */
+  html body .cp-r2-journey-step:not(.is-active):not(.is-future):hover .cp-r2-journey-dot,
+  html body .cp-r2-journey-step:not(.is-active):not(.is-future):focus-visible .cp-r2-journey-dot {
+    background: #f7e7c4 !important; /* light cream-orange */
+    border-color: #c49230 !important;
+    box-shadow: 0 0 0 2px rgba(232, 196, 122, 0.35) !important;
+    transform: translateY(-1px) scale(1.04) !important;
+  }
+  html body .cp-r2-journey-step:not(.is-active):not(.is-future):hover .cp-r2-journey-num,
+  html body .cp-r2-journey-step:not(.is-active):not(.is-future):focus-visible .cp-r2-journey-num {
+    color: #3a2810 !important;
+    -webkit-text-fill-color: #3a2810 !important;
+  }
+  /* Active + hover: keep lift, slightly warmer cream rim */
+  html body .cp-r2-journey-step.is-active:hover .cp-r2-journey-dot,
+  html body .cp-r2-journey-step.is-active:focus-visible .cp-r2-journey-dot {
+    background: #ffe08a !important;
+    border-color: #ffe68c !important;
+    transform: translateY(-2px) scale(1.03) !important;
+  }
+
+  /* /CP_JOURNEY_ACTIVE_UP_HOVER_LIVE */
+</style>
+
+
+
+<!-- CP_PAGE_VISIBLE_GUARD: keep canvas visible; allow Curl modal when active -->
+  <style id="cp-page-visible-guard">
+    html, body {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      background: #0f1115 !important;
+      overflow: hidden !important;
+      pointer-events: auto !important;
+    }
+    body > * { visibility: visible !important; }
+    .site-wrap, .page-card, .cp-r1-card, .page-image, .cp-r1-image, main {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+    .site-wrap { display: grid !important; height: 100dvh !important; }
+    .page-card, .cp-r1-card { height: 100% !important; min-height: 60vh !important; }
+    .page-image, .cp-r1-image { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block !important; }
+    /* Keep overlays hidden ONLY while Curl is idle. When host is active, allow modal. */
+    body:not(.curl-host-active) #clerkVoiceModal,
+    body:not(.curl-host-active) .clerk-voice-modal,
+    body:not(.curl-host-active) #clerkVoiceBackdrop,
+    body:not(.curl-host-active) .clerk-voice-backdrop,
+    body:not(.curl-host-active) #clerkFloatingLauncher,
+    body:not(.curl-host-active) .clerk-floating-launcher,
+    body:not(.curl-host-active) [class*="floating-launcher"] {
+      display: none !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      z-index: -1 !important;
+    }
+    body.curl-host-active #clerkVoiceModal,
+    body.curl-host-active .clerk-voice-modal {
+      display: block !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+    body.curl-host-active #clerkVoiceBackdrop,
+    body.curl-host-active .clerk-voice-backdrop {
+      display: block !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9998 !important;
+    }
+    /* Curl host always clickable on journey pages */
+    body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
+    body[class*="cp-page"] .cp-r2-media-card--cream > .cp-r2-purpose-host {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+  </style>
+
+<!-- CP_CURL_TEXT_LIVE: edit these vars; this tag loads AFTER styles.css -->
+  <style id="cp-curl-text-live">
+    :root {
+      --cp-curl-text-x: -40px;
+      --cp-curl-text-y: 0px;
+      --cp-curl-l1-size: 12px;
+      --cp-curl-l1-weight: 600;
+      --cp-curl-l1-x: 0px;
+      --cp-curl-l1-y: 0px;
+      --cp-curl-l2-size: 28.8px;
+      --cp-curl-l2-weight: 900;
+      --cp-curl-l2-x: 0px;
+      --cp-curl-l2-y: 0px;
+      --cp-curl-l3-size: 12px;
+      --cp-curl-l3-weight: 600;
+      --cp-curl-l3-x: 0px;
+      --cp-curl-l3-y: 0px;
+      --cp-curl-l4-size: 12px;
+      --cp-curl-l4-weight: 500;
+      --cp-curl-l4-x: 0px;
+      --cp-curl-l4-y: 0px;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-copy {
+      position: relative !important;
+      left: var(--cp-curl-text-x) !important;
+      top: var(--cp-curl-text-y) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+      transform: none !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-kicker {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l1-x) !important;
+      top: var(--cp-curl-l1-y) !important;
+      font-size: var(--cp-curl-l1-size) !important;
+      font-weight: var(--cp-curl-l1-weight) !important;
+      line-height: 1.15 !important;
+      text-transform: uppercase !important;
+      color: rgba(42,40,36,0.92) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-name,
+    html body.cp-page1 .cp-r2-media-card--cream .cp-r2-purpose-name {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l2-x) !important;
+      top: var(--cp-curl-l2-y) !important;
+      font-size: var(--cp-curl-l2-size) !important;
+      font-weight: var(--cp-curl-l2-weight) !important;
+      line-height: 1.1 !important;
+      text-transform: uppercase !important;
+      color: rgba(196,140,48,0.98) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-name-brand {
+      font-size: inherit !important;
+      font-weight: inherit !important;
+      color: inherit !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-role,
+    html body.cp-page1 .cp-r2-media-card--cream .cp-r2-purpose-role {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l3-x) !important;
+      top: var(--cp-curl-l3-y) !important;
+      font-size: var(--cp-curl-l3-size) !important;
+      font-weight: var(--cp-curl-l3-weight) !important;
+      color: rgba(48,46,42,0.9) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-hint,
+    html body.cp-page1 .cp-r2-media-card--cream .cp-r2-purpose-hint {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l4-x) !important;
+      top: var(--cp-curl-l4-y) !important;
+      font-size: var(--cp-curl-l4-size) !important;
+      font-weight: var(--cp-curl-l4-weight) !important;
+      color: rgba(70,68,62,0.82) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+  </style>
+
+<!-- CP_CURL_ORB_LIVE: dial face orb scale/brightness here (after styles.css) -->
+  <!-- CP_CURL_ORB_LIVE: face orb only (plate uses --cp-curl-plate-scale separately) -->
+  <style id="cp-curl-orb-live">
+/* Edit these dials — master CSS at end of styles.css reads them */
+:root {
+  --cp-curl-orb-x: -50px;
+  --cp-curl-orb-y: -7px;
+  --cp-curl-orb-size-px: 156px;
+  --cp-curl-plate-px: 162px;
+  --cp-curl-plate-y: 0px;
+  --cp-curl-orb-nudge-x: 0px;
+  --cp-curl-orb-nudge-y: 0px;
+  --cp-curl-brightness: 1.06;
+  --cp-curl-contrast: 0.78;
+  --cp-curl-saturate: 1.28;
+  --cp-curl-hue: -8deg;
+  --cp-curl-rest-period: 2.8s;
+}
+</style>
+
+
+<style id="cp-curl-plate-px-lock">
+/* Same dials mirrored for quick head edits (must match cp-curl-orb-live) */
+:root {
+  --cp-curl-plate-px: 162px;
+  --cp-curl-orb-size-px: 156px;
+  --cp-curl-orb-y: -7px;
+  --cp-curl-contrast: 0.78;
+}
+</style>
+
+<style id="cp-upper-card-y-live">
+:root { --cp-upper-card-content-y: -25px; /* upper cream contents only; - = up */ }
+</style>
+<!-- CP_HEADER_BAR_Y_LIVE: entire cream header bar; final authority -->
+<style id="cp-header-bar-y-live">
+  :root { --cp-header-bar-y: -20px; /* whole header bar; - = up */ }
+  html body[class*="cp-page"] .cp-r1-top-card.cp-r2-top-card,
+  html body .cp-r1-top-card.cp-r2-top-card,
+  html body[class*="cp-page"] .cp-r1-top-card,
+  .cp-r1-top-card.cp-r2-top-card {
+    /* Prefer top shift so child transforms are unaffected; keep translate as backup */
+    top: calc(3.2% + var(--cp-header-bar-y, -20px)) !important;
+    transform: translateY(0px) !important;
+  }
+  @media (max-width: 1100px) {
+    html body[class*="cp-page"] .cp-r1-top-card.cp-r2-top-card,
+    html body .cp-r1-top-card.cp-r2-top-card,
+    html body[class*="cp-page"] .cp-r1-top-card {
+      top: calc(2.6% + var(--cp-header-bar-y, -20px)) !important;
+    }
+  }
+  @media (max-width: 760px) {
+    html body[class*="cp-page"] .cp-r1-top-card.cp-r2-top-card,
+    html body .cp-r1-top-card.cp-r2-top-card,
+    html body[class*="cp-page"] .cp-r1-top-card {
+      top: calc(1.8% + var(--cp-header-bar-y, -20px)) !important;
+    }
+  }
+</style>
+<!-- CP_CURL_WHITE_PLATE_FORCE: plate circle only -->
+<style id="cp-curl-white-plate-force">
+  :root { --cp-curl-plate-px: 162px; }
+  html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-wrap,
+  html body[class*="cp-page"] .cp-r2-purpose-host .cp-r2-purpose-orb-wrap {
+    width: 162px !important;
+    height: 162px !important;
+    min-width: 162px !important;
+    min-height: 162px !important;
+  }
+  html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-plate,
+  html body[class*="cp-page"] .cp-r2-purpose-host .cp-r2-purpose-orb-plate {
+    width: 162px !important;
+    height: 162px !important;
+    min-width: 162px !important;
+    min-height: 162px !important;
+    max-width: 162px !important;
+    max-height: 162px !important;
+    transform: translate(-50%, calc(-50% + var(--cp-curl-plate-y, 0px))) !important;
+  }
+</style>
+<!-- CP_JOURNEY_NUDGE_LIVE: journey track only L20 D8 -->
+<style id="cp-journey-nudge-live">
+  :root { --cp-journey-nudge-x: -20px; --cp-journey-nudge-y: 8px; }
+  html body .cp-r2-journey,
+  html body[class*="cp-page"] .cp-r2-journey {
+    position: relative !important;
+    transform: translate(var(--cp-journey-nudge-x), var(--cp-journey-nudge-y)) !important;
+  }
+</style>
 </head>
 <body class="home-page cp-page1">
   <main class="site-wrap cp-r1-wrap">
     <section class="page-card cp-r1-card">
-      <img class="page-image cp-r1-image" src="./assets/CognitionPartner_p1r2.png?cp_bg=20260812-p1-r2" alt="Cognition Partner page 1 revision 2" />
-            <div class="cp-r1-top-card" aria-label="Cognition Partner top navigation">
-        <a class="cp-r1-brand-lockup cp-r1-brand-lockup--top" href="./index.html" aria-label="Cognition Partner home">
-        <img class="cp-r1-brand-lockup-logo" src="./CPlogo_60715.png?v=20260810-p1-r4" alt="" aria-hidden="true" />
-        <span class="cp-r1-brand-lockup-wordmark">COGNITION<br>PARTNER<span class="cp-r1-brand-lockup-tm">™</span></span>
-      </a>
-        <nav class="cp-r1-top-nav" aria-label="Cognition Partner pages">
-        <a class="cp-r1-top-home" href="./index.html" aria-label="Home">
-          <img class="cp-r1-top-home-icon" src="./assets/cphome.svg" alt="" aria-hidden="true" />
+      <img class="page-image cp-r1-image" src="./assets/CognitionPartner_p1r6.png?cp_bg=20260820-p1-r6" alt="Cognition Partner page 1 revision 6" />
+      <div class="cp-r1-top-card cp-r2-top-card" aria-label="Cognition Partner top navigation">
+        <a class="cp-r1-brand-lockup cp-r1-brand-lockup--top cp-r2-brand-lockup" href="./index.html" aria-label="Cognition Partner home">
+          <img class="cp-r1-brand-lockup-logo" src="./CP_fatLOGOclear_60716.png?v=20260817-header-logo-dark" alt="" aria-hidden="true" />
+          <span class="cp-r1-brand-lockup-copy">
+            <span class="cp-r1-brand-lockup-wordmark">COGNITION PARTNER<span class="cp-r1-brand-lockup-tm">™</span></span>
+            <span class="cp-r1-brand-lockup-tagline">Your Partner. Your Journey. Your Life.</span>
+          </span>
         </a>
-        <a class="cp-r1-top-item is-active" href="./index.html?v=20260810-p1-r4" aria-label="Go to page 1: Who is your partner">
-          <span class="cp-r1-top-number">1</span>
-          <span class="cp-r1-top-label">WHO IS YOUR<br>PARTNER?</span>
-        </a>
-        <a class="cp-r1-top-item" href="./page2.html?v=20260810-p2-r2" aria-label="Go to page 2: Continuous reasoning">
-          <span class="cp-r1-top-number">2</span>
-          <span class="cp-r1-top-label">CONTINUOUS<br>REASONING</span>
-        </a>
-        <a class="cp-r1-top-item" href="./page3.html?v=20260812-p3-r2b" aria-label="Go to page 3: Operating system">
-          <span class="cp-r1-top-number">3</span>
-          <span class="cp-r1-top-label">OPERATING<br>SYSTEM</span>
-        </a>
-        <a class="cp-r1-top-item" href="./page4.html" aria-label="Go to page 4: Living library">
-          <span class="cp-r1-top-number">4</span>
-          <span class="cp-r1-top-label">LIVING<br>LIBRARY</span>
-        </a>
-        <a class="cp-r1-top-item" href="./page5.html?v=20260810-logo-match-p5" aria-label="Go to page 5: Use cases">
-          <span class="cp-r1-top-number">5</span>
-          <span class="cp-r1-top-label">USE<br>CASES</span>
-        </a>
-      </nav>
+        <div class="cp-r2-top-main">
+          <nav class="cp-r2-journey" aria-label="The Journey">
+            <div class="cp-r2-journey-heading">THE JOURNEY</div>
+            <div class="cp-r2-journey-track" data-active="1">
+              <span class="cp-r2-journey-line" aria-hidden="true"></span>
+              <span class="cp-r2-journey-line-progress" aria-hidden="true"></span>
+              <a class="cp-r2-journey-step is-active" href="./index.html?v=20260817-journey-numbered-r1" aria-label="Go to step 01: Your Partner" aria-current="step" data-step="1">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">1</span></span>
+                <span class="cp-r2-journey-step-label">01 · YOUR PARTNER</span>
+              </a>
+              <a class="cp-r2-journey-step" href="./page2.html?v=20260817-journey-numbered-r1" aria-label="Go to step 02: Continuous Reasoning" data-step="2">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">2</span></span>
+                <span class="cp-r2-journey-step-label">02 · CONTINUOUS REASONING</span>
+              </a>
+              <a class="cp-r2-journey-step" href="./page3.html?v=20260817-journey-numbered-r1" aria-label="Go to step 03: Operating System" data-step="3">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">3</span></span>
+                <span class="cp-r2-journey-step-label">03 · OPERATING SYSTEM</span>
+              </a>
+              <a class="cp-r2-journey-step" href="./page4.html?v=20260828-p4-r6-1" aria-label="Go to step 04: Living Library" data-step="4">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">4</span></span>
+                <span class="cp-r2-journey-step-label">04 · LIVING LIBRARY</span>
+              </a>
+              <a class="cp-r2-journey-step" href="./page5.html?v=20260828-p5-r6-1" aria-label="Go to step 05: Partner Growth" data-step="5">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">5</span></span>
+                <span class="cp-r2-journey-step-label">05 · PARTNER GROWTH</span>
+              </a>
+              <a class="cp-r2-journey-step" href="./page6.html?v=20260828-p6-r6-1" aria-label="Go to step 06: What's Calling" data-step="6">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">6</span></span>
+                <span class="cp-r2-journey-step-label">06 · WHAT'S CALLING</span>
+              </a>
+              <a class="cp-r2-journey-step" href="./page7.html?v=20260830-p7-2" aria-label="Go to step 07: Your Knowledge" data-step="7">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">7</span></span>
+                <span class="cp-r2-journey-step-label">07 · YOUR KNOWLEDGE</span>
+              </a>
+              <a class="cp-r2-journey-step" href="./page8.html?v=20260830-p8-2" aria-label="Go to step 08: What Should Continue" data-step="8">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">8</span></span>
+                <span class="cp-r2-journey-step-label">08 · WHAT SHOULD CONTINUE</span>
+              </a>
+                                        <a class="cp-r2-journey-step" href="./page9.html?v=20260830-p9-1" aria-label="Go to step 09: The Journey Is Yours" data-step="9">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">9</span></span>
+                <span class="cp-r2-journey-step-label">09 · THE JOURNEY IS YOURS</span>
+              </a>
+                            <a class="cp-r2-journey-step" href="./page10.html?v=20260830-p10-hits-noborder-1" aria-label="Go to step 10: Your Cognition System" data-step="10">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">10</span></span>
+                <span class="cp-r2-journey-step-label">10 · YOUR COGNITION SYSTEM</span>
+              </a>
+            </div>
+          </nav>
+          <nav class="cp-r2-utility-nav" aria-label="Possibilities and About">
+            <div class="cp-r2-possibilities" aria-label="Possibilities">
+              <div class="cp-r2-possibilities-heading">POSSIBILITIES</div>
+              <div class="cp-r2-possibilities-track">
+                <a class="cp-r2-possibilities-step" href="./page11.html?v=20260826-p11-r6-1" aria-label="Possibility 1 — Partner" data-pos="1">
+                  <span class="cp-r2-possibilities-dot" aria-hidden="true"><span class="cp-r2-possibilities-num">1</span></span>
+                  <span class="cp-r2-possibilities-step-label">01 · PARTNER</span>
+                </a>
+                <a class="cp-r2-possibilities-step" href="./page12.html?v=20260824-p12-r6-3" aria-label="Possibility 2 — Partner + Host" data-pos="2">
+                  <span class="cp-r2-possibilities-dot" aria-hidden="true"><span class="cp-r2-possibilities-num">2</span></span>
+                  <span class="cp-r2-possibilities-step-label">02 · PARTNER + HOST</span>
+                </a>
+                <a class="cp-r2-possibilities-step" href="./page13.html?v=20260830-p13-1" aria-label="Possibility 3 — Cognition Team" data-pos="3">
+                  <span class="cp-r2-possibilities-dot" aria-hidden="true"><span class="cp-r2-possibilities-num">3</span></span>
+                  <span class="cp-r2-possibilities-step-label">03 · COGNITION TEAM</span>
+                </a>
+              </div>
+            </div>
+            <span class="cp-r2-utility-divider" aria-hidden="true"></span>
+            <a class="cp-r2-utility-link" href="./about.html?v=20260828-about-down150-1" aria-label="About Cognition Partner">ABOUT</a>
+          </nav>
+        </div>
       </div>
 
-      <section class="cp-r1-play-card cp-r1-media-card" aria-label="Cognition Partner playback card">
-        <div class="cp-r1-cplisten-glyph-wrap" aria-hidden="true">
-          <img class="cp-r1-cplisten-glyph" src="./assets/cplisten.svg?cp_listen=20260810-media-up10-speaker20" alt="" />
-        </div>
-        <div class="cp-r1-listen-copy" aria-hidden="true">
-          <div class="cp-r1-listen-copy-title">WHY IT MATTERS</div>
-          <div class="cp-r1-listen-copy-body">20 seconds of reflection<br>on this page.</div>
-        </div>
-        <a class="cp-r1-brand-logo-hit" href="./index.html" aria-label="Cognition Partner home"></a>
-        <a class="cp-r1-brand-name-hit" href="./index.html" aria-label="Cognition Partner home"></a>
+      <section class="cp-r1-play-card cp-r1-media-card cp-r2-media-card cp-r2-media-card--cream" aria-label="Cognition Partner playback and Purpose host card">
+        <div class="cp-r2-footer-left">
+          <div class="cp-r2-footer-why" aria-hidden="true">
+            <div class="cp-r1-cplisten-glyph-wrap">
+              <img class="cp-r1-cplisten-glyph" src="./assets/cplisten.svg?cp_listen=20260817-speaker-big-r1" alt="" />
+            </div>
+            <div class="cp-r1-listen-copy">
+              <div class="cp-r1-listen-copy-title">WHY IT MATTERS</div>
+              <div class="cp-r1-listen-copy-body">20 seconds<br>of reflection on this page.</div>
+            </div>
+          </div>
+          <span class="cp-r2-footer-vbar" aria-hidden="true"></span>
+          <button id="cpR1PlayButton" type="button" class="cp-r2-transport-control cp-r2-listen" aria-label="Listen to Why it matters narration">
+            <span class="cp-r2-transport-icon cp-r2-listen-icon" aria-hidden="true">▶</span>
+            <span class="cp-r2-transport-label">LISTEN</span>
+          </button>
 
-        <div class="cp-r1-audio-controls" role="group" aria-label="Why it matters narration controls">
-          <div class="cp-r1-audio-control">
-            <button id="cpR1PlayButton" type="button" class="cp-r1-audio-btn cp-r1-play" aria-label="Play Why it matters narration"></button>
-            <span class="cp-r1-audio-label">Play</span>
-          </div>
-          <div class="cp-r1-audio-control">
-            <button id="cpR1PauseButton" type="button" class="cp-r1-audio-btn cp-r1-pause" aria-label="Pause Why it matters narration"></button>
-            <span class="cp-r1-audio-label">Pause</span>
-          </div>
-          <div class="cp-r1-audio-control">
-            <button id="cpR1RestartButton" type="button" class="cp-r1-audio-btn cp-r1-restart" aria-label="Restart Why it matters narration"></button>
-            <span class="cp-r1-audio-label">Restart</span>
+          <div class="cp-r2-audio-scrub" id="cpR1AudioScrub" data-audio="cpR1NarrationAudio">
+            <div class="cp-r2-audio-scrub-title" aria-hidden="true">U&nbsp;&nbsp;N&nbsp;&nbsp;D&nbsp;&nbsp;E&nbsp;&nbsp;R&nbsp;&nbsp;S&nbsp;&nbsp;T&nbsp;&nbsp;A&nbsp;&nbsp;N&nbsp;&nbsp;D&nbsp;&nbsp;I&nbsp;&nbsp;N&nbsp;&nbsp;G</div>
+            <canvas class="cp-r2-audio-scrub-wave" id="cpR1AudioScrubWave" width="280" height="40" aria-hidden="true"></canvas>
+            <div class="cp-r2-audio-scrub-row">
+              <input class="cp-r2-audio-scrub-range" id="cpR1AudioScrubRange" type="range" min="0" max="1000" value="0" step="1" aria-label="Narration position" />
+              <span class="cp-r2-audio-scrub-time" id="cpR1AudioScrubTime">0:00 / 0:20</span>
+            </div>
           </div>
         </div>
 
-        <div class="cp-r1-why-wave" id="cpR1WhyWave" aria-hidden="true">
-          <div class="cp-r1-why-wave-label">UNDERSTANDING</div>
+        <div class="cp-r2-footer-transport" role="group" aria-label="Page navigation">
+          <a class="cp-r2-transport-control cp-r2-prev is-disabled" href="./index.html" aria-label="Previous page" aria-disabled="true" tabindex="-1">
+            <span class="cp-r2-transport-icon" aria-hidden="true">←</span>
+            <span class="cp-r2-transport-label">PREVIOUS</span>
+            <span class="cp-r2-transport-sublabel" aria-hidden="true">&nbsp;</span>
+          </a>
+          <a class="cp-r2-transport-control cp-r2-next" href="./page2.html" aria-label="Next page — THINK TOGETHER">
+            <span class="cp-r2-transport-icon" aria-hidden="true">→</span>
+            <span class="cp-r2-transport-label">NEXT</span>
+            <span class="cp-r2-transport-sublabel">THINK TOGETHER</span>
+          </a>
+          </div>
+
+        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Speak with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
+          <span class="cp-r2-purpose-orb-wrap" aria-hidden="true">
+            <span class="cp-r2-purpose-orb-plate" aria-hidden="true"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--1"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--2"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--3"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--4"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--5"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--6"></span>
+            <span class="cp-r2-purpose-glitter"></span>
+            <img class="cp-r2-purpose-orb" src="./assets/curl/curl_orb_live_20260820-172503_1d0b8b7e31.png" alt="" />
+          </span>
+          <span class="cp-r2-purpose-copy">
+            <span class="cp-r2-purpose-kicker">MEET WITH</span>
+            <span class="cp-r2-purpose-name"><span class="cp-r2-purpose-name-brand">CURL.</span></span>
+            <span class="cp-r2-purpose-role">Curl Maxwell · Cognition Host</span>
+            <span class="cp-r2-purpose-hint">Tap or speak anytime.</span>
+          </span>
+        </button>
+
+        <!-- Keep wave node for existing narration JS (off-layout via CSS) -->
+        <div class="cp-r1-why-wave" id="cpR1WhyWave" hidden aria-hidden="true">
           <canvas id="cpR1WhyWaveCanvas" class="cp-r1-why-wave-canvas"></canvas>
-          <div class="cp-r1-why-wave-track"></div>
-        </div>
-
-        <div class="cp-r1-page-nav" aria-label="Page navigation">
-          <a class="cp-r1-prev-link" href="./index.html?v=20260810-p1-r4" aria-label="Previous: page 1" aria-hidden="true" tabindex="-1" style="visibility: hidden; pointer-events: none;"></a>
-          <a class="cp-r1-next-link" href="./page2.html?v=20260810-p2-r2" aria-label="Next: page 2"></a>
         </div>
       </section>
+
+      <div class="cp-r2-footer-motto-band" aria-hidden="false">
+        <p class="cp-r2-footer-motto" aria-label="Explore. Understand. Create. Leave a legacy.">
+          <span>EXPLORE.</span>
+          <span>UNDERSTAND.</span>
+          <span>CREATE.</span>
+          <span>LEAVE A LEGACY.</span>
+        </p>
+      </div>
 
       
             <div class="cp-r1-bottom-logo-card cp-r1-bottom-logo-card--hero" aria-label="Cognition Partner brand">
@@ -108,7 +578,11 @@
       </div>
 
 
-      <audio id="cpR1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1r1.mp3">
+      
+      <!-- Hidden legacy controls retained for narration script compatibility -->
+      <button id="cpR1PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
+      <button id="cpR1RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
+      <audio id="cpR1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1r1.mp3?v=20260822-diva-intro-p1-1">
         Your browser does not support audio playback.
       </audio>
     </section>
@@ -296,23 +770,367 @@
         }
       };
 
+      const syncListenUi = () => {
+        const playing = !audioEl.paused && !audioEl.ended;
+        playBtn.classList.toggle('is-playing', playing);
+        const icon = playBtn.querySelector('.cp-r2-listen-icon');
+        const label = playBtn.querySelector('.cp-r2-transport-label');
+        if (icon) icon.textContent = playing ? '❚❚' : '▶';
+        if (label) label.textContent = playing ? 'PAUSE' : 'LISTEN';
+        playBtn.setAttribute('aria-label', playing ? 'Pause Why it matters narration' : 'Listen to Why it matters narration');
+      };
+
       playBtn.addEventListener('click', async () => {
         await ensureAudioAnalyser();
+        if (!audioEl.paused && !audioEl.ended) {
+          audioEl.pause();
+          syncListenUi();
+          return;
+        }
         playNarration();
       });
 
-      pauseBtn.addEventListener('click', () => {
-        audioEl.pause();
-      });
+      if (pauseBtn) {
+        pauseBtn.addEventListener('click', () => {
+          audioEl.pause();
+        });
+      }
 
-      restartBtn.addEventListener('click', async () => {
-        await ensureAudioAnalyser();
-        playNarration({ restart: true });
-      });
+      if (restartBtn) {
+        restartBtn.addEventListener('click', async () => {
+          await ensureAudioAnalyser();
+          playNarration({ restart: true });
+        });
+      }
+
+      const purposeBtn = document.getElementById('cpPurposeHostButton');
+      if (false && purposeBtn) { // disabled: curl_host_controller.js owns Curl activation
+        // Curl Maxwell — Cognition Host (UI label: PURPOSE / Hello I'm Curl)
+        // Flow (Claire model):
+        //  1) Tap orb -> selected glow + open runtime + show "Curl is ready / SELECT" under orb
+        //  2) Tap SELECT (widget start btn) -> mic/session start + speaking rings
+        const CURL_PKG = './assets/cognition/curl';
+        const CURL_V = '20260817-curl-setup-1';
+
+        const waitFor = async (testFn, timeoutMs = 10000) => {
+          const start = Date.now();
+          while (Date.now() - start < timeoutMs) {
+            const value = testFn();
+            if (value) return value;
+            await new Promise((r) => setTimeout(r, 40));
+          }
+          return null;
+        };
+
+        const pagePathKey = () => {
+          const file = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/i, '') || 'index';
+          return 'cp-' + file;
+        };
+
+        const setPurposeState = (state) => {
+          purposeBtn.dataset.purposeState = state;
+          purposeBtn.classList.toggle('is-selected', state === 'selected' || state === 'speaking');
+          purposeBtn.classList.toggle('is-armed', state === 'selected' || state === 'speaking');
+          purposeBtn.classList.toggle('is-speaking', state === 'speaking');
+          document.body.classList.toggle('curl-host-active', state === 'selected' || state === 'speaking');
+          purposeBtn.setAttribute('aria-pressed', state === 'idle' ? 'false' : 'true');
+          const label =
+            state === 'speaking'
+              ? 'Curl Maxwell is speaking — use Pause Curl or tap orb to end'
+              : state === 'selected'
+                ? 'Curl is ready — tap SELECT under the orb to begin'
+                : 'Speak with Curl Maxwell, your Cognition Host';
+          purposeBtn.setAttribute('aria-label', label);
+          console.info('[Curl/Purpose] state:', state);
+        };
+
+        const styleCurlStartButton = (btn) => {
+          if (!btn) return;
+          btn.classList.add('clerk-voice-start-btn');
+          btn.dataset.curlState = btn.dataset.curlState || 'waiting';
+          const txt = (btn.textContent || '').trim();
+          // Normalize green-widget labels to Curl host copy
+          if (!txt || /ready|waiting|select|start|claire/i.test(txt)) {
+            if (!/pause|stop|listening/i.test(txt)) {
+              btn.textContent = 'Curl is ready';
+              btn.dataset.curlState = 'waiting';
+            }
+          }
+          if (/pause|stop/i.test(txt)) {
+            btn.dataset.curlState = 'stop';
+          }
+        };
+
+        const bindCurlSpeakingSignals = () => {
+          if (purposeBtn.dataset.curlSignalsBound === '1') return;
+          purposeBtn.dataset.curlSignalsBound = '1';
+
+          const markSpeaking = () => {
+            setPurposeState('speaking');
+            const btn = document.getElementById('clerkVoiceStartBtn');
+            if (btn) {
+              btn.dataset.curlState = 'speaking';
+              if (!/pause|stop/i.test(btn.textContent || '')) {
+                btn.textContent = 'Pause Curl';
+              }
+            }
+          };
+          const markReady = () => {
+            if ((purposeBtn.dataset.purposeState || '') === 'idle') return;
+            setPurposeState('selected');
+            const btn = document.getElementById('clerkVoiceStartBtn');
+            if (btn) {
+              btn.dataset.curlState = 'waiting';
+              btn.textContent = 'Curl is ready';
+            }
+          };
+
+          window.addEventListener('clerk-voice-audio-start', markSpeaking);
+          window.addEventListener('hume-audio-start', markSpeaking);
+          window.addEventListener('clerk-voice-audio-stop', markReady);
+          window.addEventListener('hume-audio-stop', markReady);
+
+          // Keep the under-orb button styled if widget re-renders it
+          const mo = new MutationObserver(() => {
+            const btn = document.getElementById('clerkVoiceStartBtn');
+            if (btn) styleCurlStartButton(btn);
+          });
+          mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+          purposeBtn._curlMo = mo;
+
+          const poll = window.setInterval(() => {
+            const st = purposeBtn.dataset.purposeState || 'idle';
+            if (st === 'idle') return;
+            const btn = document.getElementById('clerkVoiceStartBtn');
+            if (btn) styleCurlStartButton(btn);
+            const speakingCue =
+              document.querySelector('.clerk-voice-status.is-speaking, [data-hume-state="speaking"]') ||
+              window.__CURL_FORCE_SPEAKING__ === true ||
+              (btn && /pause|stop|listening/i.test(btn.textContent || ''));
+            if (speakingCue) markSpeaking();
+          }, 500);
+          purposeBtn.dataset.curlSpeakPoll = String(poll);
+        };
+
+        const prepareCurlRuntime = async () => {
+          const cfgReady = await waitFor(
+            () => window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === 'object',
+            8000
+          );
+          if (!cfgReady) {
+            console.error('[Curl] character config missing after package load.');
+            return false;
+          }
+
+          window.MAXWELLIAN_HUME.character_name = 'Curl Maxwell';
+          window.MAXWELLIAN_HUME.character_id = 'curl-maxwell';
+          window.MAXWELLIAN_HUME.default_character_id = 'curl-maxwell';
+          window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
+          window.MAXWELLIAN_HUME.auto_launch_on_load = false;
+          window.MAXWELLIAN_HUME.default_context_source = 'cognition-curl';
+          window.MAXWELLIAN_HUME.content_awareness_mode = true;
+          window.MAXWELLIAN_HUME.content_awareness_scope_lock = true;
+          window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
+          window.MAXWELLIAN_HUME.session_context_char_limit = 24000;
+          window.MAXWELLIAN_HUME.library_research_enabled = true;
+          window.MAXWELLIAN_HUME.library_research_status_label = 'Researching';
+          window.MAXWELLIAN_HUME.library_research_hold_line = 'Hold on while I check the Cognition Partner Library.';
+          window.MAXWELLIAN_HUME.disable_page_context = false;
+          window.MAXWELLIAN_HUME.page_context_enabled = true;
+          window.MAXWELLIAN_HUME.prefetch_active_page_context = true;
+          window.MAXWELLIAN_HUME.include_page_context = true;
+          // Prefer waiting label used by widget chrome
+          try {
+            window.MAXWELLIAN_HUME.start_button_waiting_label = 'Curl is ready';
+            window.MAXWELLIAN_HUME.start_button_close_label = 'Pause Curl';
+            window.MAXWELLIAN_HUME.status_ready = 'Curl is ready';
+          } catch (e) {}
+
+          let curlIdentityPack = '';
+          let curlKnowledgePack = '';
+          let curlOnboard = '';
+          try {
+            const idResp = await fetch(CURL_PKG + '/knowledge/CURL_IDENTITY_PACK.md?v=' + CURL_V, { cache: 'no-store' });
+            if (idResp && idResp.ok) curlIdentityPack = await idResp.text();
+          } catch (e) { console.warn('[Curl] identity pack fetch failed', e); }
+          try {
+            const kResp = await fetch(CURL_PKG + '/knowledge/CURL_DEMO_KNOWLEDGE_PACK.md?v=' + CURL_V, { cache: 'no-store' });
+            if (kResp && kResp.ok) curlKnowledgePack = await kResp.text();
+          } catch (e) { console.warn('[Curl] knowledge pack fetch failed', e); }
+          try {
+            const oResp = await fetch(CURL_PKG + '/knowledge/SpeakWithCurlOnBoard.md?v=' + CURL_V, { cache: 'no-store' });
+            if (oResp && oResp.ok) curlOnboard = await oResp.text();
+          } catch (e) { console.warn('[Curl] onboard fetch failed', e); }
+
+          if (!curlIdentityPack || curlIdentityPack.length < 80) {
+            curlIdentityPack =
+              'You are Curl Maxwell, Ms. Curl Maxwell, Cognition Host for Cognition Partner. ' +
+              'Page-aware. Maxwellian family. UI host label PURPOSE. Not Claire. Not Clerk.';
+          }
+          if (!curlKnowledgePack || curlKnowledgePack.length < 80) {
+            curlKnowledgePack =
+              'COGNITION PARTNER LIBRARY (scaffold): help visitors understand the journey pages and continuous reasoning partnership.';
+          }
+
+          const pagePath = (location.pathname.split('/').pop() || 'index.html') + location.search;
+          const openingLine =
+            "Hello — I am Curl Maxwell, your Cognition Host. I am here with you on this page of Cognition Partner. What would you like to understand or think through together?";
+
+          const operatingLine =
+            'You are Curl Maxwell (Ms. Curl Maxwell), Cognition Host for Cognition Partner. ' +
+            'PAGE-AWARE: use active page context and approved library packs. ' +
+            'UI surface label is PURPOSE. Do not claim to be Claire, Clerk, or a clinical guide. ' +
+            'If voice IDs are not configured yet, stay ready and explain setup is completing. ' +
+            'Active page: ' + pagePath + '. ';
+
+          window.MAXWELLIAN_HUME.session_context =
+            operatingLine +
+            '\n\n--- CURL ONBOARD ---\n' + curlOnboard +
+            '\n\n--- CURL IDENTITY PACK ---\n' + curlIdentityPack +
+            '\n\n--- COGNITION PARTNER LIBRARY PACK ---\n' + curlKnowledgePack;
+          window.MAXWELLIAN_HUME.system_prompt_text =
+            'You are Curl Maxwell, Cognition Host. ' + operatingLine + ' Opening line: ' + openingLine;
+          if (window.MAXWELLIAN_HUME.session_variables) {
+            window.MAXWELLIAN_HUME.session_variables.character_name = 'Curl Maxwell';
+            window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
+            window.MAXWELLIAN_HUME.session_variables.library_authority = 'Cognition Partner Library';
+            window.MAXWELLIAN_HUME.session_variables.page_aware = 'true';
+            window.MAXWELLIAN_HUME.session_variables.host_ui_label = 'PURPOSE';
+            window.MAXWELLIAN_HUME.session_variables.setup_status = 'awaiting-voice-id-and-full-rules';
+          }
+          try {
+            window.MAXWELLIAN_HUME.opening_line = openingLine;
+            window.MAXWELLIAN_HUME.unknown_answer_fallback =
+              'I do not have enough approved Cognition Partner Library context for that yet. Hold on while I check what is available.';
+            window.MAXWELLIAN_HUME.engagement_protocol =
+              'Curl Maxwell Cognition Host: greet, stay page-aware, help continuous reasoning, invite think-together.';
+          } catch (e) {}
+
+          const hasVoice =
+            Boolean(window.MAXWELLIAN_HUME.voice_id || window.MAXWELLIAN_HUME.hume_voice_id) &&
+            Boolean(window.MAXWELLIAN_HUME.config_id || window.MAXWELLIAN_HUME.hume_config_id);
+          purposeBtn.dataset.curlVoiceReady = hasVoice ? 'true' : 'false';
+          if (!hasVoice) {
+            console.warn('[Curl] Hume voice_id/config_id still pending. UI/mic path will arm; live voice needs IDs.');
+          }
+          return true;
+        };
+
+        const ensureStartButtonVisible = async () => {
+          const btn = await waitFor(() => document.getElementById('clerkVoiceStartBtn'), 8000);
+          if (!btn) {
+            console.warn('[Curl] start button not found after launch');
+            return null;
+          }
+          styleCurlStartButton(btn);
+          btn.textContent = 'Curl is ready';
+          btn.dataset.curlState = 'waiting';
+          // Claire model: first click may only open shell; second click starts mic.
+          // We keep SELECT under orb for that second engagement.
+          if (!btn.dataset.curlClickHooked) {
+            btn.dataset.curlClickHooked = '1';
+            btn.addEventListener('click', () => {
+              // After SELECT, expect speaking; rings follow audio-start signal.
+              btn.dataset.curlState = 'connecting';
+              // optimistic arm
+              setTimeout(() => {
+                if ((purposeBtn.dataset.purposeState || '') === 'selected') {
+                  // still selected — keep ready label until audio proves speak
+                  styleCurlStartButton(btn);
+                }
+              }, 50);
+            }, true);
+          }
+          return btn;
+        };
+
+        const launchCurl = async () => {
+          setPurposeState('selected');
+          const ready = await prepareCurlRuntime();
+          if (!ready) return;
+
+          bindCurlSpeakingSignals();
+
+          const launcher = await waitFor(() => {
+            if (typeof window.launchClerkWithPageContext === 'function') return window.launchClerkWithPageContext;
+            if (typeof window.launchClerk === 'function') return window.launchClerk;
+            if (typeof window.openClerkVoiceModal === 'function') return window.openClerkVoiceModal;
+            return null;
+          }, 8000);
+
+          if (!launcher) {
+            console.error('[Curl] voice launcher unavailable — widget may not have loaded.');
+            purposeBtn.title = 'Curl runtime loaded, but voice launcher is unavailable. Check console.';
+            return;
+          }
+
+          try {
+            const result = launcher({
+              characterId: 'curl-maxwell',
+              contextSource: 'cognition-curl',
+              pageKey: pagePathKey(),
+              entryPoint: 'purpose-footer-host',
+              uiMode: 'modal',
+              disablePageContext: false,
+              includePageContext: true,
+              contextPayload: {
+                organization: 'Cognition Partner',
+                public_guide: 'Curl Maxwell',
+                host_ui_label: 'PURPOSE',
+                page_aware: true,
+                content_aware: true,
+                identity_pack: 'CURL_IDENTITY_PACK',
+                setup_status: purposeBtn.dataset.curlVoiceReady === 'true' ? 'voice-ready' : 'awaiting-voice-id'
+              }
+            });
+            if (result && typeof result.then === 'function') await result;
+            console.info('[Curl] launch invoked from PURPOSE host — waiting under-orb SELECT');
+          } catch (e) {
+            console.error('[Curl] launch failed', e);
+          }
+
+          // Park / restyle the widget start control under the orb
+          await ensureStartButtonVisible();
+        };
+
+        const endCurl = () => {
+          setPurposeState('idle');
+          try {
+            if (typeof window.closeClerkVoiceModal === 'function') window.closeClerkVoiceModal();
+            if (typeof window.stopClerkVoice === 'function') window.stopClerkVoice();
+          } catch (e) {}
+          const btn = document.getElementById('clerkVoiceStartBtn');
+          if (btn) {
+            btn.dataset.curlState = 'waiting';
+          }
+        };
+
+        purposeBtn.addEventListener('click', async () => {
+          const cur = purposeBtn.dataset.purposeState || 'idle';
+          if (cur === 'idle') {
+            await launchCurl();
+            return;
+          }
+          if (cur === 'selected') {
+            // Second orb tap while waiting: try to click under-orb SELECT for user
+            const btn = document.getElementById('clerkVoiceStartBtn');
+            if (btn) {
+              styleCurlStartButton(btn);
+              try { btn.click(); } catch (e) {}
+              return;
+            }
+            await launchCurl();
+            return;
+          }
+          // speaking -> idle
+          endCurl();
+        });
+      }
 
       audioEl.addEventListener('playing', async () => {
         await ensureAudioAnalyser();
         setWaveState('playing');
+        syncListenUi();
         startWaveLoop();
       });
 
@@ -320,22 +1138,215 @@
         if (!audioEl.ended) {
           setWaveState('paused');
         }
+        syncListenUi();
       });
 
       audioEl.addEventListener('ended', () => {
         try { audioEl.currentTime = 0; } catch (_) {}
         setWaveState('paused');
+        syncListenUi();
       });
 
       audioEl.addEventListener('error', () => {
         setWaveState('paused');
+        syncListenUi();
       });
 
       setWaveState('paused');
+      syncListenUi();
       startWaveLoop();
       window.addEventListener('resize', ensureWaveCanvasSize, { passive: true });
+    
+      // --- Rev2 audio scrubber (waveform + seek + time) ---
+      (() => {
+        const scrub = document.getElementById('cpR1AudioScrub');
+        const canvas = document.getElementById('cpR1AudioScrubWave');
+        const range = document.getElementById('cpR1AudioScrubRange');
+        const timeEl = document.getElementById('cpR1AudioScrubTime');
+        if (!scrub || !canvas || !range || !timeEl || !audioEl) return;
+
+        const ctx = canvas.getContext('2d');
+        let scrubbing = false;
+        let raf = 0;
+
+        const fmt = (sec) => {
+          if (!Number.isFinite(sec) || sec < 0) sec = 0;
+          const s = Math.floor(sec % 60);
+          const m = Math.floor(sec / 60);
+          return m + ':' + String(s).padStart(2, '0');
+        };
+
+        const duration = () => {
+          const d = audioEl.duration;
+          return Number.isFinite(d) && d > 0 ? d : 20;
+        };
+
+        const syncTime = () => {
+          const d = duration();
+          const t = Number.isFinite(audioEl.currentTime) ? audioEl.currentTime : 0;
+          timeEl.textContent = fmt(t) + ' / ' + fmt(d);
+          if (!scrubbing) {
+            range.value = String(Math.round((t / d) * 1000));
+          }
+        };
+
+        const sizeCanvas = () => {
+          const rect = canvas.getBoundingClientRect();
+          const dpr = Math.min(2, window.devicePixelRatio || 1);
+          const w = Math.max(1, Math.floor(rect.width * dpr));
+          const h = Math.max(1, Math.floor(rect.height * dpr));
+          if (canvas.width !== w || canvas.height !== h) {
+            canvas.width = w;
+            canvas.height = h;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          }
+        };
+
+        // Decorative gold bars — peaks rise ABOVE the baseline only (no drop below)
+        const draw = (ts) => {
+          sizeCanvas();
+          const w = canvas.clientWidth || 1;
+          const h = canvas.clientHeight || 1;
+          ctx.clearRect(0, 0, w, h);
+          const playing = !audioEl.paused && !audioEl.ended;
+          const bars = Math.max(36, Math.floor(w / 4.2));
+          // Baseline sits near the bottom of the wave canvas; bars only go up
+          const baseline = h * 0.92;
+          const t = (ts || 0) * 0.0055;
+          const progress = duration() > 0 ? (audioEl.currentTime || 0) / duration() : 0;
+          // Higher scale so peaks/valleys are obvious; idle stays quieter
+          const ampScale = playing ? 0.92 : 0.38;
+          const maxUp = baseline * (playing ? 0.96 : 0.55);
+
+          for (let i = 0; i < bars; i++) {
+            const x = (i + 0.5) * (w / bars);
+            // Wider dynamic range between peaks and valleys
+            const n =
+              Math.sin(i * 0.42 + t) * 0.55 +
+              Math.sin(i * 1.15 - t * 1.7) * 0.38 +
+              Math.sin(i * 2.4 + t * 0.9) * 0.22 +
+              0.28;
+            const env = 0.22 + 0.78 * Math.pow(Math.sin((i / bars) * Math.PI), 0.85);
+            let amp = Math.max(0.08, n * env) * ampScale;
+            if (playing) {
+              amp *= 0.55 + 0.9 * Math.abs(Math.sin(t * 2.4 + i * 0.28));
+              amp *= 0.7 + 0.55 * Math.abs(Math.sin(t * 0.7 + i * 0.09));
+            }
+            // emphasize played region slightly
+            if (i / bars < progress) amp *= 1.18;
+            const bh = Math.max(playing ? 3 : 2, Math.min(maxUp, amp * baseline * 1.15));
+            const bw = Math.max(1.4, (w / bars) * 0.46);
+            ctx.fillStyle = i / bars <= progress
+              ? 'rgba(240, 190, 88, 0.98)'
+              : 'rgba(198, 148, 74, 0.58)';
+            // Draw upward only from the baseline (no mirror below)
+            ctx.fillRect(x - bw / 2, baseline - bh, bw, bh);
+          }
+          raf = requestAnimationFrame(draw);
+        };
+
+        range.addEventListener('pointerdown', () => { scrubbing = true; });
+        range.addEventListener('pointerup', () => { scrubbing = false; syncTime(); });
+        range.addEventListener('input', () => {
+          const d = duration();
+          const t = (Number(range.value) / 1000) * d;
+          if (Number.isFinite(t)) {
+            audioEl.currentTime = t;
+            timeEl.textContent = fmt(t) + ' / ' + fmt(d);
+          }
+        });
+
+        audioEl.addEventListener('timeupdate', syncTime);
+        audioEl.addEventListener('loadedmetadata', syncTime);
+        audioEl.addEventListener('durationchange', syncTime);
+        audioEl.addEventListener('play', () => scrub.classList.add('is-playing'));
+        audioEl.addEventListener('pause', () => scrub.classList.remove('is-playing'));
+        audioEl.addEventListener('ended', () => {
+          scrub.classList.remove('is-playing');
+          syncTime();
+        });
+
+        // Toggle play/pause from Listen button already handled; keep scrub in sync
+        syncTime();
+        raf = requestAnimationFrame(draw);
+        window.addEventListener('resize', () => sizeCanvas());
+      })();
+
+    
+      // Purpose host orb — live Curl activation owned by curl_host_controller.js
+})();
+  </script>
+
+  <!-- Curl Maxwell voice stack (Claire/Clerk-pattern scripts) -->
+
+  <script>
+    // Local static testing: same-origin auth first, Unity fallback second.
+    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "/api/hume/runtime-auth";
+    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "/api/hume/runtime-auth";
+    window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
+    window.__CURL_FORCE_NO_FLOAT__ = true;
+    window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/hume_renderer/";
+    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+    window.MAXWELLIAN_HUME.embed_url = window.__CURL_LOCAL_EMBED__;
+    window.MAXWELLIAN_HUME.renderer_url = window.__CURL_LOCAL_EMBED__;
+    window.MAXWELLIAN_HUME.hume_embed_url = window.__CURL_LOCAL_EMBED__;
+    window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+    (function preloadCurlAuth() {
+      var endpoints = [
+        "/api/hume/runtime-auth",
+        "/api/hume/runtime-auth.json",
+        "https://unityenergy.com/api/hume/runtime-auth",
+        "https://unityenergy.com/api/hume/runtime-auth.json"
+      ];
+      function apply(payload, endpoint) {
+        if (!payload || typeof payload !== "object") return false;
+        var auth = payload.auth || payload.runtime_auth || payload.runtimeAuth || payload;
+        if (!auth || typeof auth !== "object") return false;
+        var type = String(auth.type || "").trim() || "apiKey";
+        var value = String(auth.value || auth.accessToken || auth.apiKey || "").trim();
+        if (!value) return false;
+        var normalized = { type: type, value: value };
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
+        window.MAXWELLIAN_HUME_AUTH = normalized;
+        window.MAXWELLIAN_OPENAI_RUNTIME_AUTH = normalized;
+        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = endpoint || "/api/hume/runtime-auth";
+        window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+        window.MAXWELLIAN_HUME.auth = normalized;
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT;
+        window.MAXWELLIAN_HUME.voice_id = window.MAXWELLIAN_HUME.voice_id || "6b530c02-5a80-4e60-bb68-f2c171c5029f";
+        window.MAXWELLIAN_HUME.config_id = window.MAXWELLIAN_HUME.config_id || "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+        try { sessionStorage.setItem("maxwellian_hume_runtime_auth_v1", JSON.stringify(normalized)); } catch (e) {}
+        console.info("[Curl] runtime auth ready via", endpoint, type);
+        return true;
+      }
+      function tryAt(i) {
+        if (i >= endpoints.length) {
+          console.warn("[Curl] runtime auth preload failed all endpoints");
+          return;
+        }
+        var ep = endpoints[i];
+        fetch(ep, {
+          method: "GET",
+          mode: "cors",
+          credentials: ep.indexOf("http") === 0 ? "omit" : "same-origin",
+          cache: "no-store",
+          headers: { Accept: "application/json" }
+        })
+          .then(function (r) { return r && r.ok ? r.json() : null; })
+          .then(function (payload) {
+            if (!apply(payload, ep)) tryAt(i + 1);
+          })
+          .catch(function () { tryAt(i + 1); });
+      }
+      tryAt(0);
     })();
   </script>
+  <script src="./assets/cognition/curl/hume_auth_bootstrap.js?v=20260829-curl-rgb-gradient-rings-1"></script>
+  <script src="./assets/cognition/curl/curl_character_config.js?v=20260829-curl-rgb-gradient-rings-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20260829-curl-rgb-gradient-rings-1"></script>
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260829-curl-rgb-gradient-rings-1"></script>
+
 </body>
 </html>
 

@@ -1,0 +1,16 @@
+Diva / Shimmer narration script
+Page 05 — 05 · PARTNER GROWTH
+Section: JOURNEY
+Voice: Shimmer (Diva)
+TTS model: tts-1-hd
+Source: assets/audio/*-script.txt
+Audio target: assets/audio/CognitionPartner_page5r1.mp3
+---
+
+Over time, your Partner grows with you.
+
+Every experience. Every question. Every choice.
+
+It learns what matters to you—how you think, what you care about, and the paths you keep returning to.
+
+Patterns emerge. Understanding deepens. Together you build the next chapter of your thinking. Together you become more you.

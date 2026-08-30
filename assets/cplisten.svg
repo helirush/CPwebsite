@@ -1,31 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 120 120">
-  <!-- Generator: Adobe Illustrator 30.7.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 114)  -->
-  <defs>
-    <style>
-      .st0 {
-        stroke-miterlimit: 10;
-      }
-
-      .st0, .st1 {
-        fill: none;
-        stroke: #e4b86a;
-        stroke-width: 2.2px;
-      }
-
-      .st1 {
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-    </style>
-  </defs>
-  <g>
-    <path class="st1" d="M38.6,39.6h13.7v40.7h-13.7c-4,0-7.3-3.3-7.3-7.3v-26.2c0-4,3.3-7.3,7.3-7.3Z"/>
-    <polygon class="st1" points="73.2 92.2 52.3 80.4 52.3 39.6 73.2 27.8 73.2 92.2"/>
-    <g>
-      <path class="st1" d="M77.7,49c6.1,0,11,4.9,11,11s-4.9,11-11,11"/>
-      <path class="st1" d="M77.7,54.8c2.9,0,5.2,2.3,5.2,5.2s-2.3,5.2-5.2,5.2"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Bold speaker + sound waves (no outer ring; CSS supplies the circle) -->
+  <g stroke="#c48c30" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- speaker body -->
+    <path d="M34 46h16v28H34a8 8 0 0 1-8-8V54a8 8 0 0 1 8-8z"/>
+    <!-- cone -->
+    <path d="M50 46l28-16v60l-28-16V46z"/>
+    <!-- sound waves -->
+    <path d="M88 48c8 6 8 18 0 24"/>
+    <path d="M98 38c14 10 14 34 0 44"/>
   </g>
-  <circle class="st0" cx="60" cy="60" r="56.6"/>
 </svg>
