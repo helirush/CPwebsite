@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260831-diva-p1-curl-intro-1">
+  <link rel="stylesheet" href="./styles.css?v=20260831-diva-p1-autostart-1">
 
 
 
@@ -582,7 +582,7 @@
       <!-- Hidden legacy controls retained for narration script compatibility -->
       <button id="cpR1PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
       <button id="cpR1RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
-      <audio id="cpR1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1r1.mp3?v=20260831-diva-p1-curl-intro-1">
+      <audio id="cpR1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1r1.mp3?v=20260831-diva-p1-autostart-1">
         Your browser does not support audio playback.
       </audio>
     </section>
@@ -1156,6 +1156,111 @@
       syncListenUi();
       startWaveLoop();
       window.addEventListener('resize', ensureWaveCanvasSize, { passive: true });
+
+      // CP_R1_DIVA_AUTOSTART_20260831
+      // On landing: Diva begins telling the story. Visitor may pause via LISTEN.
+      // If the browser blocks autoplay, the first click on the page body starts her once.
+      (() => {
+        let gestureArmed = false;
+        const markStarted = () => {
+          audioEl.dataset.cpDivaStarted = '1';
+          try { sessionStorage.setItem('cp_r1_diva_started_v1', '1'); } catch (_) {}
+        };
+        const alreadyStarted = () =>
+          audioEl.dataset.cpDivaStarted === '1' ||
+          (!audioEl.paused && !audioEl.ended && (audioEl.currentTime || 0) > 0.05);
+
+        const tryStartDiva = async ({ fromGesture = false } = {}) => {
+          if (alreadyStarted()) {
+            markStarted();
+            syncListenUi();
+            return true;
+          }
+          try {
+            await ensureAudioAnalyser();
+          } catch (_) {}
+          try {
+            if ((audioEl.currentTime || 0) > 0.2 && audioEl.paused) {
+              // resume rather than restart if partially played
+            } else if ((audioEl.currentTime || 0) < 0.05) {
+              audioEl.currentTime = 0;
+            }
+          } catch (_) {}
+          try {
+            const playPromise = audioEl.play();
+            if (playPromise && typeof playPromise.then === 'function') {
+              await playPromise;
+            }
+            markStarted();
+            syncListenUi();
+            return true;
+          } catch (err) {
+            if (!fromGesture) armGestureStart();
+            return false;
+          }
+        };
+
+        const isControlTarget = (t) => {
+          if (!t || !t.closest) return false;
+          return !!(
+            t.closest('#cpR1PlayButton') ||
+            t.closest('#cpR1PauseButton') ||
+            t.closest('#cpR1RestartButton') ||
+            t.closest('#cpR1AudioScrub') ||
+            t.closest('#cpPurposeHostButton') ||
+            t.closest('#clerkVoiceStartBtn') ||
+            t.closest('a.cp-r2-transport-control') ||
+            t.closest('.cp-r2-journey') ||
+            t.closest('a[href]')
+          );
+        };
+
+        const armGestureStart = () => {
+          if (gestureArmed || alreadyStarted()) return;
+          gestureArmed = true;
+          const onGesture = (ev) => {
+            if (alreadyStarted()) {
+              cleanup();
+              return;
+            }
+            // Let dedicated controls handle themselves (LISTEN still starts/pauses).
+            if (ev && isControlTarget(ev.target)) {
+              // If they used LISTEN, mark started on next tick if playing
+              setTimeout(() => {
+                if (!audioEl.paused) markStarted();
+              }, 0);
+              return;
+            }
+            tryStartDiva({ fromGesture: true });
+            cleanup();
+          };
+          const cleanup = () => {
+            gestureArmed = false;
+            document.removeEventListener('pointerdown', onGesture, true);
+            document.removeEventListener('click', onGesture, true);
+            document.removeEventListener('keydown', onGesture, true);
+          };
+          document.addEventListener('pointerdown', onGesture, true);
+          document.addEventListener('click', onGesture, true);
+          document.addEventListener('keydown', onGesture, true);
+        };
+
+        // Prefer immediate start on arrival.
+        const kick = () => {
+          tryStartDiva().then((ok) => {
+            if (!ok) armGestureStart();
+          });
+        };
+        if (document.readyState === 'complete') {
+          setTimeout(kick, 80);
+        } else {
+          window.addEventListener('load', () => setTimeout(kick, 80), { once: true });
+          setTimeout(kick, 200);
+        }
+
+        // When LISTEN starts playback, count as started.
+        audioEl.addEventListener('playing', () => markStarted(), { once: false });
+      })();
     
       // --- Rev2 audio scrubber (waveform + seek + time) ---
       (() => {
