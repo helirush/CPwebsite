@@ -13035,7 +13035,7 @@ html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose
 /* Fix double SELECT (HTML small + ::after) and park chip under Curl orb.
    Move: left 30px, down 10px from prior fixed anchor. */
 :root {
-  --cp-curl-select-nudge-x: -30px; /* left */
+  --cp-curl-select-nudge-x: -55px; /* left: was -30, +25 more */
   --cp-curl-select-nudge-y: 10px;  /* down */
 }
 
@@ -13051,7 +13051,7 @@ html body.curl-host-active #clerkVoiceStartBtn {
   top: auto !important;
   bottom: clamp(18px, 3.6vh, 42px) !important;
   /* under Curl: left 30px, down 10px */
-  transform: translate(var(--cp-curl-select-nudge-x, -30px), var(--cp-curl-select-nudge-y, 10px)) !important;
+  transform: translate(var(--cp-curl-select-nudge-x, -55px), var(--cp-curl-select-nudge-y, 10px)) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -13123,7 +13123,7 @@ html body[class*="cp-page"].curl-host-active #clerkVoiceStartBtn[data-claire-sta
   html body.curl-host-active #clerkVoiceStartBtn {
     right: 12px !important;
     bottom: max(12px, env(safe-area-inset-bottom, 0px)) !important;
-    transform: translate(var(--cp-curl-select-nudge-x, -30px), var(--cp-curl-select-nudge-y, 10px)) !important;
+    transform: translate(var(--cp-curl-select-nudge-x, -55px), var(--cp-curl-select-nudge-y, 10px)) !important;
     width: min(180px, 54vw) !important;
   }
 }
