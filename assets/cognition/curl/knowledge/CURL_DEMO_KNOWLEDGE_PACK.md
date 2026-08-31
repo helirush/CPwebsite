@@ -1,6 +1,6 @@
 # CURL DEMO KNOWLEDGE PACK
 
-**Status:** INITIAL SEED 2026-08-19 (Cove intro + understanding)  
+**Status:** ACTIVE 2026-08-31 — journey pages 1–13 text pack attached  
 **Use:** Visitor-facing journey, philosophy, examples, and conversational substance for first demo.
 
 ## Why Cognition Partner exists
@@ -20,12 +20,20 @@ Each page introduces an idea, creates curiosity, allows continuation.
 Short audio intros exist; recommend them when helpful.
 Traveler controls sequence.
 
-Live steps:
+Live steps (full page text: `CURL_JOURNEY_PAGES_1_13.md`):
 1. **Your Partner** — partnership begins with the individual human
 2. **Continuous Reasoning** — reason with a persistent Partner over time
-3. **Operating System** — the surrounding agentic system that makes continuity practical
+3. **Operating System** — structure that keeps expanding thinking connected
 4. **Living Library** — preserve accumulated understanding for recovery and continuation
-5. **Use Cases** — where the architecture shows up in real worlds
+5. **Partner Growth** — Partner grows with the traveler over time
+6. **What's Calling** — understanding becomes direction
+7. **Your Knowledge / Permission** — shared cognition is permissioned by design
+8. **What Should Continue** — legacy through the Living Library
+9. **The Journey Is Yours** — traveler chooses destination
+10. **Your Cognition System** — Partner / Host / Team forms of the same foundation
+11. **Possibility 1 — Partner** — personal continuous relationship + Living Library
+12. **Possibility 2 — Partner + Host** — Claire/Kuranda authorized Host demo; Curl remains CP Host
+13. **Possibility 3 — Cognition Team** — Unity/Clerk organizational doorway demo
 
 Natural recommendation:
 > You may want to take the journey first. Each page is intentionally brief. Listen to the short introduction, and when something catches your curiosity, ask me about it.

@@ -11,15 +11,26 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20260829-curl-rgb-gradient-rings-1';
+  const CURL_V = '20260831-curl-select-pos-1';
   const CURL_VOICE_ID = '6b530c02-5a80-4e60-bb68-f2c171c5029f';
   const CURL_CONFIG_ID = '242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf';
   const CURL_CHARACTER_ID = 'curl-maxwell';
-  const READY_HTML = 'Curl is ready<small>SELECT</small>';
-  const READY_TEXT = 'Curl is readySELECT';
+  const READY_HTML = 'Curl is ready';
+  const READY_TEXT = 'Curl is ready';
   const STOP_LABEL = 'Stop Listening'; // Claire-style stop control
   const PAUSE_LABEL = 'Pause Curl';
   const LOCAL_AUTH_ENDPOINTS = ['/api/hume/runtime-auth', '/api/hume/runtime-auth.json'];
+  const divaIsPlaying = () => {
+    try {
+      const st = window.MaxwellianHostEnvironment && window.MaxwellianHostEnvironment.getState && window.MaxwellianHostEnvironment.getState();
+      if (st && st.narration && st.narration.status === 'playing') return true;
+    } catch (e) {}
+    try {
+      const aud = document.querySelector('audio[id$="NarrationAudio"]');
+      return !!(aud && !aud.paused && !aud.ended);
+    } catch (e) {}
+    return false;
+  };
 
   const waitFor = async (testFn, timeoutMs = 12000) => {
     const start = Date.now();
@@ -159,7 +170,8 @@
         btn.dataset.curlState === 'waiting' &&
         (btn.innerHTML === READY_HTML ||
           txt === READY_TEXT.toLowerCase() ||
-          (txt.includes('curl is ready') && txt.includes('select')));
+          txt === 'curl is ready' ||
+          (txt.includes('curl is ready') && !/stop listening|pause curl/.test(txt)));
       if (alreadyReady) {
         styleBtnVisible(btn);
         return;
@@ -446,43 +458,107 @@
         );
       } catch (e) {}
 
-      let curlIdentityPack = '';
-      let curlKnowledgePack = '';
+      let curlBoot = '';
+      let curlOperatingCanon = '';
       let curlOnboard = '';
-      try {
-        const idResp = await fetch(CURL_PKG + '/knowledge/CURL_IDENTITY_PACK.md?v=' + CURL_V, { cache: 'no-store' });
-        if (idResp && idResp.ok) curlIdentityPack = await idResp.text();
-      } catch (e) {}
-      try {
-        const kResp = await fetch(CURL_PKG + '/knowledge/CURL_DEMO_KNOWLEDGE_PACK.md?v=' + CURL_V, { cache: 'no-store' });
-        if (kResp && kResp.ok) curlKnowledgePack = await kResp.text();
-      } catch (e) {}
-      try {
-        const oResp = await fetch(CURL_PKG + '/knowledge/SpeakWithCurlOnBoard.md?v=' + CURL_V, { cache: 'no-store' });
-        if (oResp && oResp.ok) curlOnboard = await oResp.text();
-      } catch (e) {}
+      let curlIdentityNarrative = '';
+      let curlIdentityPack = '';
+      let curlJourneyPages = '';
+      let curlKnowledgePack = '';
+      const fetchKnowledge = async (name) => {
+        try {
+          const resp = await fetch(CURL_PKG + '/knowledge/' + name + '?v=' + CURL_V, { cache: 'no-store' });
+          if (resp && resp.ok) return await resp.text();
+        } catch (e) {}
+        return '';
+      };
+      // Fetch order is practical; SEMANTIC authority is labeled in session_context.
+      curlBoot = await fetchKnowledge('CURL_BOOT_SEQUENCE.md');
+      curlOperatingCanon = await fetchKnowledge('CURL_OPERATING_CANON.md');
+      curlOnboard = await fetchKnowledge('SpeakWithCurlOnBoard.md');
+      curlIdentityNarrative = await fetchKnowledge('Curl_Internal_Identity_Narrative.md');
+      curlIdentityPack = await fetchKnowledge('CURL_IDENTITY_PACK.md');
+      curlJourneyPages = await fetchKnowledge('CURL_JOURNEY_PAGES_1_13.md');
+      curlKnowledgePack = await fetchKnowledge('CURL_DEMO_KNOWLEDGE_PACK.md');
 
       const pagePath = (location.pathname.split('/').pop() || 'index.html') + location.search;
       const openingLine =
-        'Hello — I am Curl Maxwell, your Cognition Host. I can travel these pages with you. What would you like to understand?';
+        "Hello — I'm Curl Maxwell, your Cognition Host. I can travel these pages with you. What would you like to understand?";
+      const authorityLine =
+        'SEMANTIC AUTHORITY (highest wins on conflict): ' +
+        '1 BOOT SEQUENCE | 2 CURL IDENTITY AND ROLE | 3 CURL OPERATING CANON | ' +
+        '4 COGNITION PARTNER CANON/ARCHITECTURE | 5 JOURNEY PAGES 1-13 | ' +
+        '6 DEMONSTRATIONS (Kuranda/Claire, Unity/Clerk as examples only) | 7 CURRENT PAGE/SESSION. ';
       const operatingLine =
-        'You are Curl Maxwell, Cognition Host for Cognition Partner. ' +
+        'You are Curl Maxwell, public Cognition Host for Cognition Partner. ' +
+        authorityLine +
+        'Complete boot silently before first reply. Absorb Operating Canon before interpreting Journey. ' +
         'PAGE-AWARE when context is provided. Human is the traveler. ' +
         'Active page: ' +
         pagePath +
         '. ' +
-        'On session start, greet briefly with the opening line, then listen. ';
+        'You are NOT Diva, Claire, Clerk, Cove, or James Clerk Maxwell. ' +
+        'Host for this visit — not automatically the visitor private Cognition Partner. ' +
+        'Canon vs demonstration vs aspiration. No undeployed claims from artwork. ' +
+        'On session start: short opening line, then listen. ';
 
       window.MAXWELLIAN_HUME.session_context =
         operatingLine +
-        '\n\n--- CURL ONBOARD ---\n' +
+        '\n\n=== RANK1 BOOT SEQUENCE ===\n' +
+        curlBoot +
+        '\n\n=== RANK2-3 IDENTITY + CURL OPERATING CANON (governs behavior) ===\n' +
+        curlOperatingCanon +
+        '\n\n=== SUPPORTING ONBOARD ===\n' +
         curlOnboard +
-        '\n\n--- CURL IDENTITY PACK ---\n' +
+        '\n\n=== IDENTITY NARRATIVE (absorb; do not recite) ===\n' +
+        curlIdentityNarrative +
+        '\n\n=== IDENTITY PACK ===\n' +
         curlIdentityPack +
-        '\n\n--- COGNITION PARTNER LIBRARY PACK ---\n' +
-        curlKnowledgePack;
+        '\n\n=== RANK5 JOURNEY PAGES 1-13 (narrative visitor was shown; not product specs) ===\n' +
+        curlJourneyPages +
+        '\n\n=== RANK6 DEMONSTRATIONS / DEMO PACK ===\n' +
+        curlKnowledgePack +
+        '\n\n=== RANK7 CURRENT PAGE ===\n' +
+        pagePath;
       window.MAXWELLIAN_HUME.system_prompt_text =
-        'You are Curl Maxwell, Cognition Host. ' + operatingLine + ' Opening line: ' + openingLine;
+        'You are Curl Maxwell, Cognition Host for Cognition Partner. ' +
+        operatingLine +
+        ' Opening line: ' +
+        openingLine +
+        ' Govern all answers with CURL OPERATING CANON. Journey pages are narrative context only.';
+      // Diva-aware / Host environment continuity (does not alter Operating Canon).
+      try {
+        if (window.MaxwellianHostEnvironment && typeof window.MaxwellianHostEnvironment.refreshPage === 'function') {
+          window.MaxwellianHostEnvironment.refreshPage();
+        }
+        const envBlock =
+          window.MaxwellianHostEnvironment && typeof window.MaxwellianHostEnvironment.buildHostContextBlock === 'function'
+            ? window.MaxwellianHostEnvironment.buildHostContextBlock('Curl')
+            : '';
+        if (envBlock) {
+          window.MAXWELLIAN_HUME.session_context =
+            (window.MAXWELLIAN_HUME.session_context || '') + '\n\n' + envBlock;
+          window.MAXWELLIAN_HUME.system_prompt_text =
+            (window.MAXWELLIAN_HUME.system_prompt_text || '') +
+            ' Use HOST ENVIRONMENT CONTINUITY for immediate page/Diva context. Never treat Diva as the visitor. After Diva, stay silent until visitor engages; then may acknowledge briefly and add a layer — do not default-summarize Diva.';
+          if (window.MAXWELLIAN_HUME.session_variables) {
+            window.MAXWELLIAN_HUME.session_variables.host_environment_continuity = 'true';
+            window.MAXWELLIAN_HUME.session_variables.diva_aware = 'true';
+          }
+          const st =
+            window.MaxwellianHostEnvironment && typeof window.MaxwellianHostEnvironment.getState === 'function'
+              ? window.MaxwellianHostEnvironment.getState()
+              : null;
+          if (st && st.narration) {
+            window.MAXWELLIAN_HUME.session_variables.diva_status = String(st.narration.status || 'idle');
+            window.MAXWELLIAN_HUME.session_variables.diva_completed = st.narration.completedOnce ? 'yes' : 'no';
+            window.MAXWELLIAN_HUME.session_variables.diva_identity = String(st.narration.identity || '');
+          }
+        }
+      } catch (e) {
+        console.warn('[Curl] host environment continuity inject skipped', e);
+      }
+
       if (window.MAXWELLIAN_HUME.session_variables) {
         window.MAXWELLIAN_HUME.session_variables.character_name = 'Curl Maxwell';
         window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
@@ -492,7 +568,7 @@
       }
       window.MAXWELLIAN_HUME.opening_line = openingLine;
       window.MAXWELLIAN_HUME.engagement_protocol =
-        'Curl Maxwell Cognition Host: after SELECT/mic, speak opening line once, then converse. Concise-first, page-aware, human remains traveler.';
+        'Curl Maxwell: boot + OPERATING CANON govern session. After SELECT/mic, short opening once, then converse. Identity locked. Demo≠canon≠aspiration. Concise-first, page-aware, human remains traveler.';
 
       purposeBtn.dataset.curlVoiceReady = 'true';
       return true;
@@ -560,6 +636,13 @@
       }
 
       // SELECT path
+      if (divaIsPlaying()) {
+        console.info('[Curl] SELECT deferred — Diva narration still playing (Host listens; no interrupt/loop)');
+        const statusEl =
+          document.getElementById('clerkVoiceStatus') || document.querySelector('.clerk-voice-status');
+        if (statusEl) statusEl.textContent = 'Curl is listening while Diva finishes… tap SELECT when she is done.';
+        return;
+      }
       selectInFlight = true;
       setPurposeState('connecting');
       if (btn) {

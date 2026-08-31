@@ -61,3 +61,25 @@ Curl now:
 3. Voice widget auth candidates prefer Unity first (SELECT path)
 4. Host controller awaits Unity auth before launch
 Unity endpoint verified live earlier.
+
+## BOOT + JOURNEY PAGES 20260831-curl-boot-journey-1
+- Added `knowledge/CURL_BOOT_SEQUENCE.md` (mandatory pre-speech boot)
+- Added `knowledge/CURL_JOURNEY_PAGES_1_13.md` (all 13 Diva page scripts Curl must know)
+- Host controller now injects boot + journey + onboard + identity + demo pack into session_context before launch
+- Character configs point content awareness at CP journey packs (VIBNAVA leftovers removed from allowed list)
+- Cache stamp: `20260831-curl-boot-journey-1`
+
+## OPERATING CANON 20260831-curl-operating-canon-1
+- Added knowledge/CURL_OPERATING_CANON.md (Cove/Mike directive)
+- Boot sequence rewritten with semantic authority hierarchy
+- Host controller injects ranked packs including Operating Canon
+- Character configs de-Claire/de-clinical/de-Unity-identity; CP page profiles
+- QA status: knowledge/CURL_OPERATING_CANON_QA_STATUS.md
+- Do not promote until live conversational QA with auth path
+
+
+## DIVA-AWARE CONTINUITY 20260831-curl-diva-continuity-1
+- Added `assets/cognition/host_environment_continuity.js` (reusable Host principle)
+- Principle doc: `assets/cognition/HOST_ENVIRONMENT_CONTINUITY_PRINCIPLE.md`
+- Curl launch injects environment block; SELECT deferred while Diva playing
+- Operating Canon untouched
