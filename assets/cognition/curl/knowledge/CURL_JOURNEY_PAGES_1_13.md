@@ -27,13 +27,15 @@
 File: `index.html / page 1`
 Script source: `assets/audio/CognitionPartner_page1r1-script.txt`
 
-Hi. My name is Diva, and I’ll be your narrator on this journey as you understand what we do here at Cognition Partner.
+Hello. My name is Diva, and I'll be your narrator on this journey as you understand what we do here at Cognition Partner.
+
+Before we begin, I want you to meet my sister, Curl. Curl is your Cognition Host on these pages. She's here to answer questions about anything I mention, or anything you see on the site. After I finish telling the story—or anytime after you've viewed the pages—you're free to interact with Curl.
 
 Every great achievement begins with a question.
 
-For thousands of years, we’ve relied on books, teachers, mentors, and experience to help us grow. Today, something new is possible.
+For thousands of years, we've relied on books, teachers, mentors, and experience to help us grow. Today, something new is possible.
 
-A Cognition Partner isn’t here to replace your thinking. It’s here to help your thinking continue—so each insight becomes the foundation for the next.
+A Cognition Partner isn't here to replace your thinking. It's here to help your thinking continue—so each insight becomes the foundation for the next.
 
 This is where that journey begins.
 
