@@ -11,7 +11,7 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20260831-curl-select-pos-1';
+  const CURL_V = '20260831-static-voice-no-trap-1';
   const CURL_VOICE_ID = '6b530c02-5a80-4e60-bb68-f2c171c5029f';
   const CURL_CONFIG_ID = '242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf';
   const CURL_CHARACTER_ID = 'curl-maxwell';
@@ -591,21 +591,72 @@
       markReady();
     };
 
+    const hardClearBlockingUi = () => {
+      // Tim QA P0: never leave page trapped behind modal/backdrop
+      try {
+        document.body.classList.remove(
+          'curl-host-active',
+          'curl-is-selected',
+          'curl-is-connecting',
+          'curl-is-speaking'
+        );
+      } catch (e) {}
+      try {
+        document.documentElement.classList.remove('curl-host-active');
+      } catch (e) {}
+      const killers = [
+        '#clerkVoiceBackdrop',
+        '.clerk-voice-backdrop',
+        '#clerkVoiceModal',
+        '.clerk-voice-modal',
+        '#clerkFloatingLauncher',
+        '.clerk-floating-launcher'
+      ];
+      killers.forEach((sel) => {
+        try {
+          document.querySelectorAll(sel).forEach((el) => {
+            el.style.pointerEvents = 'none';
+            el.style.display = 'none';
+            el.setAttribute('aria-hidden', 'true');
+            el.hidden = true;
+          });
+        } catch (e) {}
+      });
+      try {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        document.body.style.pointerEvents = '';
+      } catch (e) {}
+    };
+
     const endCurl = () => {
       if (connectWatchTimer) {
         window.clearTimeout(connectWatchTimer);
         connectWatchTimer = 0;
       }
+      launchInFlight = false;
+      selectInFlight = false;
       setPurposeState('idle');
       try {
         if (typeof window.stopClerkVoice === 'function') window.stopClerkVoice();
       } catch (e) {}
       try {
+        if (typeof window.pauseClerkVoice === 'function') window.pauseClerkVoice();
+      } catch (e) {}
+      try {
         if (typeof window.closeClerkVoiceModal === 'function') window.closeClerkVoiceModal();
       } catch (e) {}
+      hardClearBlockingUi();
+      // second pass after widget teardown races
+      window.setTimeout(hardClearBlockingUi, 50);
+      window.setTimeout(hardClearBlockingUi, 300);
       const btn = getStartBtn();
       if (btn) forceStartButtonReady(btn);
+      console.info('[Curl] endCurl fail-safe cleanup complete');
     };
+
+    window.endCurlHost = endCurl;
+    window.cpCurlFailsafeDismiss = endCurl;
 
     const armSelectWatch = () => {
       if (connectWatchTimer) window.clearTimeout(connectWatchTimer);
@@ -661,7 +712,11 @@
         if (!micOk) {
           setPurposeState('selected');
           forceStartButtonReady(btn);
-          if (statusEl) statusEl.textContent = 'Microphone permission needed to speak with Curl.';
+          if (statusEl) statusEl.textContent = 'Microphone permission needed to speak with Curl. Press Esc or Close Curl to unlock the page.';
+          // Do not trap: keep selected UI but ensure backdrop is not permanently locking
+          window.setTimeout(() => {
+            if ((purposeBtn.dataset.purposeState || '') === 'connecting') endCurl();
+          }, 100);
           return;
         }
         if (statusEl) statusEl.textContent = 'Connecting to Curl…';
@@ -715,9 +770,10 @@
           return null;
         }, 10000);
 
-        if (!launcher) {
+if (!launcher) {
           console.error('[Curl] voice launcher unavailable — widget may not have loaded.');
           purposeBtn.title = 'Curl runtime loaded, but voice launcher is unavailable.';
+          endCurl();
           return;
         }
 
@@ -746,8 +802,12 @@
           });
           if (result && typeof result.then === 'function') await result;
           console.info('[Curl] launch invoked — selected; waiting SELECT');
+          try {
+            if (typeof window.setPanelMode === 'function') window.setPanelMode('docked');
+          } catch (e) {}
         } catch (e) {
           console.error('[Curl] launch failed', e);
+          endCurl();
         }
 
         await ensureStartButtonVisible();
@@ -783,7 +843,7 @@
       }
     };
 
-    purposeBtn.addEventListener('click', async () => {
+purposeBtn.addEventListener('click', async () => {
       const cur = purposeBtn.dataset.purposeState || 'idle';
       if (cur === 'idle') {
         await launchCurl();
@@ -802,12 +862,115 @@
           } catch (e) {}
         }
         stopCurlSession();
+        window.setTimeout(endCurl, 200);
         return;
       }
       endCurl();
     });
 
+    // P0 fail-safe: Esc dismisses host
+    if (purposeBtn.dataset.curlEscBound !== '1') {
+      purposeBtn.dataset.curlEscBound = '1';
+      document.addEventListener(
+        'keydown',
+        (ev) => {
+          if (!ev) return;
+          const key = ev.key || ev.code;
+          if (key !== 'Escape' && key !== 'Esc') return;
+          const st = purposeBtn.dataset.purposeState || 'idle';
+          if (st === 'idle' && !document.body.classList.contains('curl-host-active')) return;
+          try {
+            ev.preventDefault();
+          } catch (e) {}
+          console.info('[Curl] Escape dismiss');
+          endCurl();
+        },
+        true
+      );
+    }
+
+    // P0 fail-safe: click outside modal / on backdrop ends host
+    if (purposeBtn.dataset.curlOutsideBound !== '1') {
+      purposeBtn.dataset.curlOutsideBound = '1';
+      document.addEventListener(
+        'pointerdown',
+        (ev) => {
+          const st = purposeBtn.dataset.purposeState || 'idle';
+          if (st === 'idle' && !document.body.classList.contains('curl-host-active')) return;
+          const t = ev.target;
+          if (!t || !t.closest) return;
+          if (t.closest('#cpPurposeHostButton')) return;
+          if (t.closest('#clerkVoiceStartBtn')) return;
+          if (t.closest('.clerk-voice-start-btn')) return;
+          if (t.closest('#clerkVoiceModal .clerk-voice-panel')) return;
+          if (t.closest('.clerk-voice-modal-panel')) return;
+          if (t.closest('iframe[src*="hume"]')) return;
+          // backdrop or empty page chrome while host active
+          if (
+            t.closest('#clerkVoiceBackdrop') ||
+            t.closest('.clerk-voice-backdrop') ||
+            t.closest('#clerkVoiceModal') ||
+            document.body.classList.contains('curl-host-active')
+          ) {
+            // Only dismiss when clicking backdrop itself or non-interactive page while trapped
+            /* internal decorative backdrop must NOT dismiss or trap */
+            if (t.closest('#clerkVoiceModal') || t.closest('.clerk-voice-modal') || t.closest('#clerkVoiceBackdrop') || t.closest('.clerk-voice-backdrop')) {
+              return;
+            }
+            if (t.closest('#cpCurlFailsafeClose') || t.closest('#cpPurposeHostButton') || t.closest('.cp-r2-listen') || t.closest('.cp-r2-footer-transport') || t.closest('iframe')) {
+              return;
+            }
+            console.info('[Curl] outside-page dismiss');
+            endCurl();
+          }
+        },
+        true
+      );
+    }
+
+    // P0 fail-safe: inject visible Close control near start button when host active
+    const ensureCloseChip = () => {
+      let chip = document.getElementById('cpCurlFailsafeClose');
+      const active = (purposeBtn.dataset.purposeState || 'idle') !== 'idle' || document.body.classList.contains('curl-host-active');
+      if (!active) {
+        if (chip) chip.remove();
+        return;
+      }
+      if (!chip) {
+        chip = document.createElement('button');
+        chip.id = 'cpCurlFailsafeClose';
+        chip.type = 'button';
+        chip.textContent = 'Close Curl';
+        chip.setAttribute('aria-label', 'Close Curl and unlock page');
+        chip.className = 'cp-curl-failsafe-close';
+        chip.addEventListener('click', (ev) => {
+          try {
+            ev.preventDefault();
+            ev.stopPropagation();
+          } catch (e) {}
+          endCurl();
+        });
+        document.body.appendChild(chip);
+      }
+    };
+    window.setInterval(ensureCloseChip, 800);
+    ensureCloseChip();
+
+    // Failure / unload cleanup
+    window.addEventListener('pagehide', endCurl);
+    window.addEventListener('beforeunload', endCurl);
+    window.addEventListener('error', (ev) => {
+      try {
+        const msg = String((ev && (ev.message || ev.error)) || '');
+        if (/MutationObserver|maximum call stack|out of memory/i.test(msg)) {
+          console.warn('[Curl] fatal UI error — fail-safe idle', msg);
+          window.setTimeout(endCurl, 0);
+        }
+      } catch (e) {}
+    });
+
     setPurposeState('idle');
+    hardClearBlockingUi();
   };
 
   if (document.readyState === 'loading') {

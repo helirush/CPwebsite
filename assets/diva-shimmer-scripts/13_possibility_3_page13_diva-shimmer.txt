@@ -3,9 +3,15 @@ Page 13 — Possibility 3 — Cognition Team
 Section: POSSIBILITIES
 Voice: Shimmer (Diva)
 TTS model: tts-1-hd
-Source: operator-updated page13 copy
+Source: Tim cold-open + established possibility copy (2026-08-31)
 Audio target: assets/audio/CognitionPartner_page13r1.mp3
 ---
+
+What can you build with Cognition Partner?
+
+As your work grows, one Partner may not be enough. A Cognition Team is multiple specialized cognitive actors coordinating together — research, writing, analysis, hosting — still under your purpose and judgment.
+
+This is not a single virtual assistant. It is a team configuration for larger work.
 
 The same foundation can grow into an organization.
 

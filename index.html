@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260831-ipad-footer-listen-lock-1">
+  <link rel="stylesheet" href="./styles.css?v=20260831-static-voice-no-trap-1">
 
 
 
@@ -208,15 +208,25 @@
       pointer-events: auto !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9999 !important;
+      z-index: 12000 !important;
     }
+    /* 20260831 static/8700: internal backdrop is decorative — never pointer trap */
     body.curl-host-active #clerkVoiceBackdrop,
     body.curl-host-active .clerk-voice-backdrop {
       display: block !important;
-      pointer-events: auto !important;
+      pointer-events: none !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9998 !important;
+      z-index: 0 !important;
+    }
+    body.curl-host-active #clerkVoiceStartBtn,
+    body.curl-host-active .clerk-voice-start-btn,
+    body.curl-host-active #clerkVoiceCloseBtn,
+    body.curl-host-active .clerk-voice-close,
+    body.curl-host-active #clerkVoiceFrame {
+      pointer-events: auto !important;
+      z-index: 30 !important;
+      position: relative !important;
     }
     /* Curl host always clickable on journey pages */
     body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
@@ -1188,6 +1198,12 @@
         const isPlaying = () => !audioEl.paused && !audioEl.ended;
 
         const tryStartDiva = async ({ fromGesture = false } = {}) => {
+          // 20260831 Tim QA: quiet arrival — no ambush without journey consent
+          try {
+            if (sessionStorage.getItem('cp_narration_journey_consent_v1') !== '1') {
+              return false;
+            }
+          } catch (_) { return false; }
           if (startInFlight) return isPlaying();
           if (isPlaying()) {
             markStarted();
@@ -1268,13 +1284,13 @@
         };
 
         const kick = () => {
-          tryStartDiva().then((ok) => {
-            if (!ok) armGestureStart();
-          });
+          // quiet arrival: do not autostart Diva on page 1
+          return;
         };
 
-        if (document.readyState === 'complete') setTimeout(kick, 60);
-        else {
+        // Tim QA 20260831: suppressed page-1 autostart (consent via LISTEN only)
+        if (false && document.readyState === 'complete') setTimeout(kick, 60);
+        else if (false) {
           window.addEventListener('load', () => setTimeout(kick, 60), { once: true });
           setTimeout(kick, 120);
         }
@@ -1475,7 +1491,10 @@
   <script src="./assets/cognition/curl/curl_voice_widget.js?v=20260831-curl-select-pos-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-curl-select-pos-1"></script>
+  <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
+
+  
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-static-voice-no-trap-1"></script>
 
 </body>
 </html>

@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260831-ipad-footer-listen-lock-1">
+  <link rel="stylesheet" href="./styles.css?v=20260831-static-voice-no-trap-1">
 
 
 
@@ -208,15 +208,25 @@
       pointer-events: auto !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9999 !important;
+      z-index: 12000 !important;
     }
+    /* 20260831 static/8700: internal backdrop is decorative — never pointer trap */
     body.curl-host-active #clerkVoiceBackdrop,
     body.curl-host-active .clerk-voice-backdrop {
       display: block !important;
-      pointer-events: auto !important;
+      pointer-events: none !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9998 !important;
+      z-index: 0 !important;
+    }
+    body.curl-host-active #clerkVoiceStartBtn,
+    body.curl-host-active .clerk-voice-start-btn,
+    body.curl-host-active #clerkVoiceCloseBtn,
+    body.curl-host-active .clerk-voice-close,
+    body.curl-host-active #clerkVoiceFrame {
+      pointer-events: auto !important;
+      z-index: 30 !important;
+      position: relative !important;
     }
     /* Curl host always clickable on journey pages */
     body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
@@ -698,7 +708,7 @@
 
       <button id="cpR10PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
       <button id="cpR10RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
-<audio playsinline webkit-playsinline id="cpR10NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_page10r1.mp3?v=20260830-p10-shimmer-1">
+<audio playsinline webkit-playsinline id="cpR10NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_page10r1.mp3?v=20260831-tim-qa-audio-pad-1">
         Your browser does not support audio playback.
       </audio>
       <section id="cpR10NarrationScript" hidden aria-hidden="true">
@@ -1175,7 +1185,10 @@
   <script src="./assets/cognition/curl/curl_voice_widget.js?v=20260831-curl-select-pos-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-curl-select-pos-1"></script>
+  <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
+
+  
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-static-voice-no-trap-1"></script>
 
 </body>
 </html>

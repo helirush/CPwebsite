@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260831-ipad-footer-listen-lock-1">
+  <link rel="stylesheet" href="./styles.css?v=20260831-static-voice-no-trap-1">
 
 
 
@@ -208,15 +208,25 @@
       pointer-events: auto !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9999 !important;
+      z-index: 12000 !important;
     }
+    /* 20260831 static/8700: internal backdrop is decorative — never pointer trap */
     body.curl-host-active #clerkVoiceBackdrop,
     body.curl-host-active .clerk-voice-backdrop {
       display: block !important;
-      pointer-events: auto !important;
+      pointer-events: none !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9998 !important;
+      z-index: 0 !important;
+    }
+    body.curl-host-active #clerkVoiceStartBtn,
+    body.curl-host-active .clerk-voice-start-btn,
+    body.curl-host-active #clerkVoiceCloseBtn,
+    body.curl-host-active .clerk-voice-close,
+    body.curl-host-active #clerkVoiceFrame {
+      pointer-events: auto !important;
+      z-index: 30 !important;
+      position: relative !important;
     }
     /* Curl host always clickable on journey pages */
     body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
@@ -650,14 +660,15 @@
 
       <button id="cpR12PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
       <button id="cpR12RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
-<audio playsinline webkit-playsinline id="cpR12NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_page12r1.mp3?v=20260830-p12-shimmer-1">
+<audio playsinline webkit-playsinline id="cpR12NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_page12r1.mp3?v=20260831-tim-revoice-possibilities-1">
         Your browser does not support audio playback.
       </audio>
       <section id="cpR12NarrationScript" hidden aria-hidden="true">
-        <p>Now your knowledge can become useful beyond your private relationship.</p>
-        <p>A trusted Host can draw from selected knowledge in your Living Library to help another person explore a real purpose—without giving them access to everything that remains yours.</p>
-        <p>Here, Claire represents Kuranda while Curl remains the Cognition Partner. Different roles, shared understanding, permissioned by you.</p>
-      </section>
+        <p>What can you build with Cognition Partner?</p>
+        <p>Beyond a private Partner, you can add a Host: a public-facing cognition actor that carries appropriate knowledge outward so other people can interact with what you know — without requiring you to personally conduct every exchange.</p>
+        <p>Your Partner helps you reason and preserve continuity. Your Host serves third parties — customers, colleagues, visitors — under your governance.</p>
+        <!-- prior journey lines retained in assets/audio script file -->
+</section>
     </section>
   </main>
   <script src="../../UnityEnergy/founder_share_panel.js?v=20260805a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260805a';"></script>
@@ -1126,7 +1137,10 @@
   <script src="./assets/cognition/curl/curl_voice_widget.js?v=20260831-curl-select-pos-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-curl-select-pos-1"></script>
+  <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
+
+  
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-static-voice-no-trap-1"></script>
 
 <!-- CP_P12_SPEAK_HIT_JS -->
 <script id="cp-p12-speak-hit-js">

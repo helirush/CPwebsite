@@ -3,9 +3,15 @@ Page 12 — Possibility 2 — Partner + Host
 Section: POSSIBILITIES
 Voice: Shimmer (Diva)
 TTS model: tts-1-hd
-Source: operator-updated page12 copy
+Source: Tim cold-open + established possibility copy (2026-08-31)
 Audio target: assets/audio/CognitionPartner_page12r1.mp3
 ---
+
+What can you build with Cognition Partner?
+
+Beyond a private Partner, you can add a Host: a public-facing cognition actor that carries appropriate knowledge outward so other people can interact with what you know — without requiring you to personally conduct every exchange.
+
+Your Partner helps you reason and preserve continuity. Your Host serves third parties — customers, colleagues, visitors — under your governance.
 
 Now your knowledge can become useful beyond your private relationship.
 

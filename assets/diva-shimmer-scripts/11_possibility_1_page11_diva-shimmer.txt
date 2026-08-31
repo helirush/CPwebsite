@@ -3,9 +3,13 @@ Page 11 — Possibility 1 — Partner
 Section: POSSIBILITIES
 Voice: Shimmer (Diva)
 TTS model: tts-1-hd
-Source: operator-updated page11 copy
+Source: Tim cold-open + established possibility copy (2026-08-31)
 Audio target: assets/audio/CognitionPartner_page11r1.mp3
 ---
+
+What can you build with Cognition Partner?
+
+The simplest, most powerful place to begin is a personal Cognition Partner — a private reasoning companion that keeps your questions, context, and trajectory alive so you do not have to rebuild understanding from scratch every time you return.
 
 This is where cognition becomes personal.
 

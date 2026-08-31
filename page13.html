@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260831-ipad-footer-listen-lock-1">
+  <link rel="stylesheet" href="./styles.css?v=20260831-static-voice-no-trap-1">
 
 
 
@@ -208,15 +208,25 @@
       pointer-events: auto !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9999 !important;
+      z-index: 12000 !important;
     }
+    /* 20260831 static/8700: internal backdrop is decorative — never pointer trap */
     body.curl-host-active #clerkVoiceBackdrop,
     body.curl-host-active .clerk-voice-backdrop {
       display: block !important;
-      pointer-events: auto !important;
+      pointer-events: none !important;
       opacity: 1 !important;
       visibility: visible !important;
-      z-index: 9998 !important;
+      z-index: 0 !important;
+    }
+    body.curl-host-active #clerkVoiceStartBtn,
+    body.curl-host-active .clerk-voice-start-btn,
+    body.curl-host-active #clerkVoiceCloseBtn,
+    body.curl-host-active .clerk-voice-close,
+    body.curl-host-active #clerkVoiceFrame {
+      pointer-events: auto !important;
+      z-index: 30 !important;
+      position: relative !important;
     }
     /* Curl host always clickable on journey pages */
     body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
@@ -627,14 +637,15 @@
 
       <button id="cpR13PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
       <button id="cpR13RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
-<audio playsinline webkit-playsinline id="cpR13NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_page13r1.mp3?v=20260830-p13-shimmer-1">
+<audio playsinline webkit-playsinline id="cpR13NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_page13r1.mp3?v=20260831-tim-revoice-possibilities-1">
         Your browser does not support audio playback.
       </audio>
       <section id="cpR13NarrationScript" hidden aria-hidden="true">
-        <p>The same foundation can grow into an organization.</p>
-        <p>At Unity Energy, specialized people, Partners, knowledge, tools, and systems work together around a shared purpose. Clerk provides the doorway, while each role contributes what it does best and the Living Library preserves what the organization learns.</p>
-        <p>Cognition no longer belongs to a single conversation. It becomes an operating capability of the team.</p>
-      </section>
+        <p>What can you build with Cognition Partner?</p>
+        <p>As your work grows, one Partner may not be enough. A Cognition Team is multiple specialized cognitive actors coordinating together — research, writing, analysis, hosting — still under your purpose and judgment.</p>
+        <p>This is not a single virtual assistant. It is a team configuration for larger work.</p>
+        <!-- prior journey lines retained in assets/audio script file -->
+</section>
     </section>
   </main>
   <script src="../../UnityEnergy/founder_share_panel.js?v=20260805a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260805a';"></script>
@@ -1103,7 +1114,10 @@
   <script src="./assets/cognition/curl/curl_voice_widget.js?v=20260831-curl-select-pos-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-curl-select-pos-1"></script>
+  <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
+
+  
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260831-static-voice-no-trap-1"></script>
 
 </body>
 </html>
