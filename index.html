@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260831-diva-p1-autostart-2">
+  <link rel="stylesheet" href="./styles.css?v=20260831-ipad-footer-listen-lock-1">
 
 
 
@@ -582,7 +582,7 @@
       <!-- Hidden legacy controls retained for narration script compatibility -->
       <button id="cpR1PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
       <button id="cpR1RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
-      <audio id="cpR1NarrationAudio" preload="metadata" src="./assets/audio/CognitionPartner_page1r1.mp3?v=20260831-diva-p1-autostart-2">
+      <audio playsinline webkit-playsinline id="cpR1NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_page1r1.mp3?v=20260831-ipad-footer-listen-lock-1">
         Your browser does not support audio playback.
       </audio>
     </section>
@@ -1261,8 +1261,10 @@
             if (!gestureArmed) return;
             gestureArmed = false;
             document.removeEventListener('pointerdown', onGesture, true);
+            document.removeEventListener('touchstart', onGesture, true);
           };
           document.addEventListener('pointerdown', onGesture, true);
+          document.addEventListener('touchstart', onGesture, { capture: true, passive: true });
         };
 
         const kick = () => {
