@@ -307,7 +307,10 @@
       candidates,
       coerceText(window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT)
     );
-    // Prefer root-absolute auth first. Relative ../api resolves under /CognitionPartner and 404s.
+    // CP GitHub Pages has no local /api/hume/runtime-auth. Prefer Unity public auth (CORS *).
+    appendRuntimeAuthEndpointCandidate(candidates, "https://unityenergy.com/api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "https://unityenergy.com/api/hume/runtime-auth.json");
+    // Local/dev fallbacks (may 404 on static CP host — try after Unity).
     appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth");
     appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth.json");
     appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth");
@@ -337,7 +340,8 @@
       return window
         .fetch(endpoint, {
           method: "GET",
-          credentials: "same-origin",
+          credentials: "omit",
+          mode: "cors",
           headers: { Accept: "application/json" },
         })
         .then(function (response) {

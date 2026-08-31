@@ -11,10 +11,24 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260828-why-listen-gap-force20-1" />
-  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260813-0213"></script>
-  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260813-0213"></script>
-  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260813-0213"></script>
+  <link rel="stylesheet" href="./styles.css?v=20260831-claire-auth-unity-1" />
+  <script>
+    // CP static GitHub Pages has no /api/hume/runtime-auth (404).
+    // Use Unity public runtime-auth (CORS *) so Claire can connect on cognitionpartner.ai.
+    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
+    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
+    window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
+    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+    window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = "https://unityenergy.com/api/hume/runtime-auth";
+    window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+    window.MAXWELLIAN_HUME.character_id = "claire-charcot";
+    window.MAXWELLIAN_HUME.default_character_id = "claire-charcot";
+    window.MAXWELLIAN_HUME.config_id = "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
+    window.MAXWELLIAN_HUME.voice_id = "23982fd1-d6a5-4acc-b396-2454b5715d43";
+  </script>
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260831-claire-auth-unity-1"></script>
+  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260831-claire-auth-unity-1"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260831-claire-auth-unity-1"></script>
 </head>
 <body class="home-page page6-kuranda-voice-page">
   <main class="site-wrap">
@@ -77,6 +91,39 @@
         }
 
         // Claire identity only. Not page-aware. Not Clerk content-aware.
+        // CLAIRE_AUTH_FORCE_UNITY
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = "https://unityenergy.com/api/hume/runtime-auth";
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+        window.MAXWELLIAN_HUME.config_id = window.MAXWELLIAN_HUME.config_id || "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
+        window.MAXWELLIAN_HUME.voice_id = window.MAXWELLIAN_HUME.voice_id || "23982fd1-d6a5-4acc-b396-2454b5715d43";
+        window.MAXWELLIAN_HUME.hume_config_id = window.MAXWELLIAN_HUME.config_id;
+        window.MAXWELLIAN_HUME.hume_voice_id = window.MAXWELLIAN_HUME.voice_id;
+        window.MAXWELLIAN_HUME.lock_character_to_default = true;
+        // Prefer refreshing auth from Unity before launch (bootstrap may have hit CP 404 first).
+        try {
+          if (typeof window.fetch === "function") {
+            window.fetch("https://unityenergy.com/api/hume/runtime-auth", {
+              method: "GET",
+              mode: "cors",
+              credentials: "omit",
+              headers: { Accept: "application/json" }
+            }).then(function (r) { return r && r.ok ? r.json() : null; }).then(function (payload) {
+              if (!payload || !payload.auth) return;
+              var a = payload.auth;
+              var type = String(a.type || "apiKey");
+              var value = String(a.value || a.apiKey || a.accessToken || "").trim();
+              if (!value) return;
+              var normalized = { type: type, value: value };
+              window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
+              window.MAXWELLIAN_HUME_AUTH = normalized;
+              window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+              window.MAXWELLIAN_HUME.auth = normalized;
+              try { sessionStorage.setItem("maxwellian_hume_runtime_auth_v1", JSON.stringify(normalized)); } catch (e) {}
+            }).catch(function () {});
+          }
+        } catch (e) {}
         window.MAXWELLIAN_HUME.character_name = "Claire";
         window.MAXWELLIAN_HUME.character_id = "claire-charcot";
         window.MAXWELLIAN_HUME.default_character_id = "claire-charcot";
