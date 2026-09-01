@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About — Cognition Partner</title>
-  <meta name="description" content="About Cognition Partner. Consult with Curl Maxwell and share what you want to understand." />
-  <link rel="stylesheet" href="./styles.css?v=20260831-static-voice-no-trap-1">
+  <meta name="description" content="Why Cognition Partner exists — and how to continue with Curl Maxwell, your Cognition Host." />
+  <link rel="stylesheet" href="./styles.css?v=20260901-about-closing-1">
   <style id="cp-page-visible-guard">
     html, body {
       display: block !important;
@@ -441,6 +441,13 @@
       #0f1115 !important;
     pointer-events: none !important;
   }
+
+  html body.cp-about .cp-about-card-lead {
+    margin: 0 0 14px 0 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: rgba(42, 40, 36, 0.88) !important;
+  }
 </style>
 
 </head>
@@ -530,30 +537,23 @@
 
       <div class="cp-about-shell" role="region" aria-label="About content">
         <div class="cp-about-grid">
-          <div class="cp-about-copy">
-            <p class="cp-about-kicker">Cognition Partner</p>
-            <h1 class="cp-about-title">About this journey</h1>
-            <p class="cp-about-lead">
-              Cognition Partner is a relationship-first path into understanding —
-              your questions, your knowledge, and the systems that help them endure.
-            </p>
-            <p>
-              Curl Maxwell is your Cognition Host on these pages. Speak with Curl anytime
-              from the footer, or use the form to leave a clear request so we can follow up.
-            </p>
+                    <div class="cp-about-copy">
+            <div class="cp-about-kicker">Why Cognition Partner exists</div>
+            <h1 class="cp-about-title">This was built because something happened.</h1>
+            <p class="cp-about-lead">Cognition Partner is not a story about a clever chatbot. It began when a founder with decades of hard-won experience met a persistent reasoning partner — and discovered that together they could investigate problems differently.</p>
+            <p class="cp-about-lead" style="font-size:15px;margin-top:-4px;">Human judgment stayed human. The partner stayed with the problem. Understanding compounded: each discovery became the foundation for the next instead of disappearing when the meeting ended.</p>
+            <p class="cp-about-lead" style="font-size:15px;margin-top:-4px;">Unity Energy was one proving ground for that method — living evidence, not the whole subject of this page. Cognition Partner was created to document the experience and make its methods available to other curious builders.</p>
             <ul class="cp-about-points">
-              <li>Journey pages 1–10 build understanding step by step.</li>
-              <li>Possibilities show Partner, Partner + Host, and a full Cognition Team.</li>
-              <li>Claire, Clerk, and Curl each serve a different depth of conversation.</li>
+              <li>Not replacing human intelligence — reducing the friction that keeps experience from full useful depth.</li>
+              <li>The traveler remains the traveler. The partner helps the journey continue.</li>
+              <li>When you are ready to continue: fill out the form, share your ideas, or set a time to talk with our team.</li>
+              <li>If a hard problem in your work might become approachable this way, Curl is ready to explore it with you live.</li>
             </ul>
           </div>
 
-          <aside class="cp-about-card" aria-label="Consult with Curl">
-            <h2>Consult with Curl</h2>
-            <p class="cp-about-card-note">
-              Prefer voice? Tap <strong>UNDERSTAND WITH CURL</strong> in the footer.
-              Prefer written? Send a short note below.
-            </p>
+          <aside class="cp-about-card" aria-label="Continue with Curl">
+            <h2>Continue with Curl</h2>
+            <p class="cp-about-card-lead">What difficult problem, accumulated knowledge, company, or unfinished idea might become approachable if you could reason this way? Fill out the form, share your ideas, set a time to talk with our team — or enter Curl’s conference and continue live.</p>
             <form id="cpAboutForm" class="cp-about-form" novalidate>
               <label>
                 Name
@@ -581,9 +581,14 @@
                 Message
                 <textarea id="cpAboutMessage" name="message" placeholder="What would you like to understand or explore?" required></textarea>
               </label>
+              <!-- honeypot: leave empty -->
+              <label class="cp-about-hp" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+                Website
+                <input id="cpAboutHp" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </label>
               <div class="cp-about-actions">
-                <button class="cp-about-submit" type="submit">Submit request</button>
-                <button class="cp-about-curl-btn" id="cpAboutSpeakCurl" type="button">Speak with Curl</button>
+                <button class="cp-about-submit" type="submit">Send & continue exploring</button>
+                <button class="cp-about-curl-btn" id="cpAboutSpeakCurl" type="button">Enter Curl conference</button>
               </div>
               <p class="cp-about-status" id="cpAboutStatus" role="status" aria-live="polite"></p>
             </form>
@@ -599,7 +604,7 @@
             </div>
             <div class="cp-r1-listen-copy">
               <div class="cp-r1-listen-copy-title">WHY IT MATTERS</div>
-              <div class="cp-r1-listen-copy-body">20 seconds<br>of reflection on this page.</div>
+              <div class="cp-r1-listen-copy-body">Why Cognition Partner exists<br>— and what to do next.</div>
             </div>
           </div>
           <span class="cp-r2-footer-vbar" aria-hidden="true"></span>
@@ -666,6 +671,13 @@
         </p>
       </div>
     </section>
+
+      <button id="cpR11PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
+      <button id="cpR11RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
+      <audio playsinline webkit-playsinline id="cpR11NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_about_r1.mp3?v=20260901-about-cta-finish-1">
+        Your browser does not support audio playback.
+      </audio>
+
   </main>
 
   <script src="./assets/cognition/curl/hume_auth_bootstrap.js?v=20260831-curl-select-pos-1"></script>
@@ -673,7 +685,29 @@
   <script src="./assets/cognition/curl/curl_voice_widget.js?v=20260831-curl-select-pos-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260901-curl-mo-freeze-fix-1"></script>
+  
+  <script>
+  // About closing narration: continue only if journey consent already established;
+  // never override explicit stop; direct About arrivals stay quiet until LISTEN.
+  (function () {
+    try {
+      var CONSENT = 'cp_narration_journey_consent_v1';
+      var STOPPED = 'cp_narration_user_stopped_v1';
+      var consented = false, stopped = false;
+      try { consented = sessionStorage.getItem(CONSENT) === '1'; } catch (e) {}
+      try { stopped = sessionStorage.getItem(STOPPED) === '1'; } catch (e) {}
+      window.__CP_ABOUT_NARRATION_POLICY__ = { consented: consented, stopped: stopped, autoplay: consented && !stopped };
+      // If continuing, mark consent so journey controller may autoplay on this page too
+      // (About is page-like surface with narration audio + LISTEN).
+      if (consented && !stopped) {
+        try { sessionStorage.setItem(CONSENT, '1'); sessionStorage.removeItem(STOPPED); } catch (e) {}
+      }
+    } catch (e) {}
+  })();
+  </script>
+
+  <script src="./assets/cognition/cp_narration_journey.js?v=20260901-about-cta-finish-1"></script>
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20260901-about-cta-finish-1"></script>
   <script>
     (() => {
       const form = document.getElementById('cpAboutForm');
@@ -682,18 +716,47 @@
       const purpose = document.getElementById('cpPurposeHostButton');
       if (speakBtn && purpose) {
         speakBtn.addEventListener('click', () => {
+        try {
+          window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+          const aboutBridge =
+            'VISITOR CONTEXT — ABOUT CLOSING JOURNEY:\n' +
+            'The visitor has reached About after the Cognition Partner journey (or selected About directly).\n' +
+            'Purpose of About: explain WHY Cognition Partner exists — not chatbot novelty.\n' +
+            'Origin: a founder with decades of experience + persistent reasoning partner (Mike & Cove).\n' +
+            'Discovery: persistent partnership made hard problems practical; understanding compounds.\n' +
+            'Unity Energy is evidence of the method, not the subject.\n' +
+            'Closing principle: CP does not replace human intelligence; it reduces friction. Traveler remains traveler.\n' +
+            'Your role: Curl Maxwell, public Cognition Host. Help them consider what difficult problem, knowledge, company, or unfinished idea might become approachable if they could reason this way.\n' +
+            'If organizational: learn who they are, their organization, what interested them, what they want to explore; invite contact so the CP team can continue. Feel like beginning of exploration, not a sales funnel end.';
+          window.MAXWELLIAN_HUME.session_context = (window.MAXWELLIAN_HUME.session_context || '') + '\n\n' + aboutBridge;
+          window.MAXWELLIAN_HUME.opening_line =
+            window.MAXWELLIAN_HUME.opening_line ||
+            'Welcome — I am Curl Maxwell, your Cognition Host. You have reached the closing of this journey. What difficult problem or unfinished idea might you want to reason into next?';
+          if (window.MAXWELLIAN_HUME.session_variables) {
+            window.MAXWELLIAN_HUME.session_variables.about_closing_journey = 'true';
+            window.MAXWELLIAN_HUME.session_variables.page_surface = 'about';
+          }
+        } catch (e) {}
+
           try { purpose.click(); } catch (e) {}
           try { purpose.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
         });
       }
       if (!form) return;
-      form.addEventListener('submit', (ev) => {
+      // Destination architecture:
+      // 1) browser durable store (localStorage) for immediate continuity
+      // 2) optional POST to CP_ABOUT_INQUIRY_ENDPOINT (server/Maxwellian intake when available)
+      // 3) Unity fallback intake URL if configured
+      window.CP_ABOUT_INQUIRY_ENDPOINT = window.CP_ABOUT_INQUIRY_ENDPOINT || 'https://hostintake.relay-3b0.workers.dev/api/cp-about-inquiry';
+      window.CP_ABOUT_INQUIRY_FALLBACK_ENDPOINT = window.CP_ABOUT_INQUIRY_FALLBACK_ENDPOINT || 'https://hostintake.relay-3b0.workers.dev/';
+      form.addEventListener('submit', async (ev) => {
         ev.preventDefault();
         const name = (document.getElementById('cpAboutName') || {}).value || '';
         const email = (document.getElementById('cpAboutEmail') || {}).value || '';
         const org = (document.getElementById('cpAboutOrg') || {}).value || '';
         const topic = (document.getElementById('cpAboutTopic') || {}).value || '';
         const message = (document.getElementById('cpAboutMessage') || {}).value || '';
+        const website = (document.getElementById('cpAboutHp') || {}).value || '';
         if (!name.trim() || !email.trim() || !message.trim()) {
           if (status) {
             status.classList.remove('is-ok');
@@ -703,28 +766,77 @@
         }
         const payload = {
           source: 'cpwebsite-rev2-about',
+          channel: 'about-form',
           created_at: new Date().toISOString(),
           name: name.trim(),
           email: email.trim(),
           organization: org.trim(),
           topic,
           message: message.trim(),
-          page: location.pathname
+          page: location.pathname + location.search,
+          user_agent: navigator.userAgent,
+          intent_tags: ['fill_form', 'share_ideas', 'schedule_talk'],
+          website: website.trim(),
+          host: 'curl',
+          program: 'cognition-partner',
+          source_form: 'cpAboutForm'
         };
+
+        // Durable browser capture (survives tab refresh; not Maxwellian server yet)
+        let localSaved = false;
         try {
           const key = 'cp_about_inquiries_v1';
-          const prev = JSON.parse(sessionStorage.getItem(key) || '[]');
-          prev.push(payload);
-          sessionStorage.setItem(key, JSON.stringify(prev));
+          const prev = JSON.parse(localStorage.getItem(key) || sessionStorage.getItem(key) || '[]');
+          const next = Array.isArray(prev) ? prev : [];
+          next.push(payload);
+          localStorage.setItem(key, JSON.stringify(next));
+          sessionStorage.setItem(key, JSON.stringify(next));
+          localStorage.setItem('cp_about_last_inquiry_v1', JSON.stringify(payload));
           sessionStorage.setItem('cp_about_last_inquiry_v1', JSON.stringify(payload));
+          localSaved = true;
         } catch (e) {}
-        if (status) {
-          status.classList.add('is-ok');
-          status.textContent = 'Received. You can also tap Speak with Curl to continue the conversation live.';
+
+        // Attempt server intake (static 8050 will 404/405 until backend is mounted)
+        let remoteSaved = false;
+        let remoteNote = '';
+        const endpoints = [window.CP_ABOUT_INQUIRY_ENDPOINT, window.CP_ABOUT_INQUIRY_FALLBACK_ENDPOINT].filter(Boolean);
+        for (const ep of endpoints) {
+          try {
+            const resp = await fetch(ep, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify(payload),
+              mode: 'cors',
+              credentials: ep.indexOf('http') === 0 ? 'omit' : 'same-origin',
+              cache: 'no-store'
+            });
+            if (resp && resp.ok) {
+              let data = null;
+              try { data = await resp.json(); } catch (e) {}
+              if (data && data.accepted === true) {
+                remoteSaved = true;
+                try { console.info('[About] inquiry accepted', ep, data.inquiry_id || ''); } catch (e) {}
+                break;
+              }
+            }
+          } catch (e) {}
         }
-        form.reset();
+
+        if (status) {
+          if (remoteSaved) {
+            status.classList.add('is-ok');
+            status.textContent = 'Received by the Cognition Partner team. This is the beginning of an exploration — continue with Curl anytime.';
+            form.reset();
+          } else {
+            status.classList.remove('is-ok');
+            status.textContent = 'We could not reach the intake service just now. Your entries are still on the form — please retry in a moment, or Speak with Curl.';
+            // Do NOT clear fields on failure (CONFIRM requirement)
+          }
+        }
       });
     })();
+    })();
   </script>
+<script src="../../UnityEnergy/founder_share_panel.js?v=20260901a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260901a';"></script>
 </body>
 </html>
