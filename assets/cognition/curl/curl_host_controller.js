@@ -11,7 +11,7 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20260831-static-voice-no-trap-1';
+  const CURL_V = '20260901-curl-mo-freeze-fix-1';
   const CURL_VOICE_ID = '6b530c02-5a80-4e60-bb68-f2c171c5029f';
   const CURL_CONFIG_ID = '242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf';
   const CURL_CHARACTER_ID = 'curl-maxwell';
@@ -114,14 +114,15 @@
     const styleBtnVisible = (btn) => {
       if (!btn) return;
       try {
-        btn.disabled = false;
-        btn.removeAttribute('disabled');
-        btn.hidden = false;
-        btn.style.display = 'flex';
-        btn.style.visibility = 'visible';
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-        btn.classList.add('clerk-voice-start-btn');
+        // Idempotent writes only — prevents MutationObserver attribute storms.
+        if (btn.disabled) btn.disabled = false;
+        if (btn.hasAttribute('disabled')) btn.removeAttribute('disabled');
+        if (btn.hidden) btn.hidden = false;
+        if (btn.style.display !== 'flex') btn.style.display = 'flex';
+        if (btn.style.visibility !== 'visible') btn.style.visibility = 'visible';
+        if (btn.style.opacity !== '1') btn.style.opacity = '1';
+        if (btn.style.pointerEvents !== 'auto') btn.style.pointerEvents = 'auto';
+        if (!btn.classList.contains('clerk-voice-start-btn')) btn.classList.add('clerk-voice-start-btn');
       } catch (e) {}
     };
 
@@ -173,7 +174,9 @@
           txt === 'curl is ready' ||
           (txt.includes('curl is ready') && !/stop listening|pause curl/.test(txt)));
       if (alreadyReady) {
-        styleBtnVisible(btn);
+        // CRITICAL: do not call styleBtnVisible here.
+        // Attribute/style churn re-enters MutationObserver and freezes the tab
+        // (public cognitionpartner.ai Curl lockup).
         return;
       }
       withBtnWriteGuard(() => {
@@ -288,10 +291,11 @@
             return;
           }
           if (st === 'selected') {
-            // Restore ready label only if widget wiped it — forceStart is idempotent.
-            if (!/stop|pause/.test(label) && !(label.includes('curl is ready') && label.includes('select'))) {
-              forceStartButtonReady(btn);
-            }
+            // Restore ready label only if widget wiped it.
+            // If already "curl is ready" (with or without select), do nothing.
+            if (/stop listening|pause curl|pause claire|stop-listening/.test(label)) return;
+            if (label.includes('curl is ready') || btn.dataset.curlState === 'waiting') return;
+            forceStartButtonReady(btn);
           }
         });
         purposeBtn._curlMo = curlMo;
@@ -315,7 +319,8 @@
             return;
           }
           if (st === 'selected') {
-            if (!(label.includes('curl is ready') && label.includes('select'))) forceStartButtonReady(btn);
+            if (label.includes('curl is ready') || btn.dataset.curlState === 'waiting') return;
+            forceStartButtonReady(btn);
           }
         }, 800);
         purposeBtn.dataset.curlSpeakPoll = String(poll);
@@ -408,7 +413,7 @@
 
       // Claire-like start gate + mic path
       window.MAXWELLIAN_HUME.use_unity_start_gate = true;
-      window.MAXWELLIAN_HUME.preflight_microphone_on_launch = true;
+      window.MAXWELLIAN_HUME.preflight_microphone_on_launch = false; // mic only on SELECT
       window.MAXWELLIAN_HUME.character_name = 'Curl Maxwell';
       window.MAXWELLIAN_HUME.character_id = CURL_CHARACTER_ID;
       window.MAXWELLIAN_HUME.default_character_id = CURL_CHARACTER_ID;
@@ -473,13 +478,34 @@
         return '';
       };
       // Fetch order is practical; SEMANTIC authority is labeled in session_context.
-      curlBoot = await fetchKnowledge('CURL_BOOT_SEQUENCE.md');
-      curlOperatingCanon = await fetchKnowledge('CURL_OPERATING_CANON.md');
-      curlOnboard = await fetchKnowledge('SpeakWithCurlOnBoard.md');
-      curlIdentityNarrative = await fetchKnowledge('Curl_Internal_Identity_Narrative.md');
-      curlIdentityPack = await fetchKnowledge('CURL_IDENTITY_PACK.md');
-      curlJourneyPages = await fetchKnowledge('CURL_JOURNEY_PAGES_1_13.md');
-      curlKnowledgePack = await fetchKnowledge('CURL_DEMO_KNOWLEDGE_PACK.md');
+      // Parallel fetch with per-file timeout — never block Curl open on slow knowledge.
+      const fetchKnowledgeTimed = async (name) => {
+        try {
+          return await Promise.race([
+            fetchKnowledge(name),
+            new Promise((resolve) => setTimeout(() => resolve(''), 2500))
+          ]);
+        } catch (e) {
+          return '';
+        }
+      };
+      [
+        curlBoot,
+        curlOperatingCanon,
+        curlOnboard,
+        curlIdentityNarrative,
+        curlIdentityPack,
+        curlJourneyPages,
+        curlKnowledgePack
+      ] = await Promise.all([
+        fetchKnowledgeTimed('CURL_BOOT_SEQUENCE.md'),
+        fetchKnowledgeTimed('CURL_OPERATING_CANON.md'),
+        fetchKnowledgeTimed('SpeakWithCurlOnBoard.md'),
+        fetchKnowledgeTimed('Curl_Internal_Identity_Narrative.md'),
+        fetchKnowledgeTimed('CURL_IDENTITY_PACK.md'),
+        fetchKnowledgeTimed('CURL_JOURNEY_PAGES_1_13.md'),
+        fetchKnowledgeTimed('CURL_DEMO_KNOWLEDGE_PACK.md')
+      ]);
 
       const pagePath = (location.pathname.split('/').pop() || 'index.html') + location.search;
       const openingLine =
@@ -569,6 +595,15 @@
       window.MAXWELLIAN_HUME.opening_line = openingLine;
       window.MAXWELLIAN_HUME.engagement_protocol =
         'Curl Maxwell: boot + OPERATING CANON govern session. After SELECT/mic, short opening once, then converse. Identity locked. Demo≠canon≠aspiration. Concise-first, page-aware, human remains traveler.';
+
+
+      // Hard cap session context — oversized prompts can freeze public EVI boot.
+      try {
+        const MAX_CTX = 14000;
+        if (typeof window.MAXWELLIAN_HUME.session_context === 'string' && window.MAXWELLIAN_HUME.session_context.length > MAX_CTX) {
+          window.MAXWELLIAN_HUME.session_context = window.MAXWELLIAN_HUME.session_context.slice(0, MAX_CTX) + '\n\n[context truncated for runtime stability]';
+        }
+      } catch (e) {}
 
       purposeBtn.dataset.curlVoiceReady = 'true';
       return true;
