@@ -13504,7 +13504,7 @@ html body.curl-host-active #cpCurlFailsafeClose {
   right: max(2.8%, env(safe-area-inset-right, 0px)) !important;
   left: auto !important;
   /* was 193px up from dock; +5px up */
-  bottom: calc(max(12px, env(safe-area-inset-bottom, 0px)) + 198px) !important;
+  bottom: calc(max(12px, env(safe-area-inset-bottom, 0px)) + 205px) !important;
   z-index: 12020 !important;
   pointer-events: auto !important;
   display: inline-flex !important;
@@ -13532,7 +13532,7 @@ html body.curl-host-active #cpCurlFailsafeClose {
     0 0 18px rgba(60, 140, 255, 0.22),
     0 10px 22px rgba(40, 24, 8, 0.22) !important;
   /* was -83px left; +5px left */
-  transform: translateX(-88px) !important;
+  transform: translateX(-91px) !important;
 }
 #cpCurlFailsafeClose.cp-curl-failsafe-close:hover,
 #cpCurlFailsafeClose.cp-curl-failsafe-close:focus-visible {
