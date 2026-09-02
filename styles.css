@@ -2672,6 +2672,10 @@ body.lead-form-open {
   pointer-events: none !important;
 }
 
+/* Claire experience: force Ready/SELECT above home-page hide specificity */
+body.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn,
+body.page6-kuranda-voice-page #clerkVoiceStartBtn,
+body.page6-kuranda-voice-page .clerk-voice-start-btn,
 .page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn,
 .page6-kuranda-voice-page #clerkVoiceStartBtn,
 .page6-kuranda-voice-page .clerk-voice-start-btn {
@@ -2689,6 +2693,8 @@ body.lead-form-open {
   justify-content: center !important;
   visibility: visible !important;
   opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 20050 !important;
   width: 230px !important;
   min-width: 230px !important;
   max-width: 230px !important;
@@ -4668,10 +4674,13 @@ body.home-page.curl-host-active #clerkVoiceStartBtn:hover {
 }
 
 /* Hide green button until host engaged */
+/* Hide donor Start/SELECT on home/page1 unless Curl host is active.
+   Do NOT apply on Claire experience (page6-kuranda-voice-page) — that page
+   owns #clerkVoiceStartBtn as Claire Ready/SELECT. */
 body.cp-page1:not(.curl-host-active) #clerkVoiceStartBtn,
 body.cp-page1:not(.curl-host-active) .clerk-voice-start-btn,
-body.home-page:not(.curl-host-active) #clerkVoiceStartBtn,
-body.home-page:not(.curl-host-active) .clerk-voice-start-btn {
+body.home-page:not(.curl-host-active):not(.page6-kuranda-voice-page) #clerkVoiceStartBtn,
+body.home-page:not(.curl-host-active):not(.page6-kuranda-voice-page) .clerk-voice-start-btn {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;

@@ -11,7 +11,18 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260831-claire-auth-unity-1" />
+  <link rel="stylesheet" href="./styles.css?v=20260901-claire-select-unhide-1" />
+  <style id="cp-claire-select-force-1">
+    /* Page-local failsafe: Claire Ready/SELECT must remain clickable */
+    body.page6-kuranda-voice-page #clerkVoiceStartBtn,
+    body.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      z-index: 20050 !important;
+    }
+  </style>
   <script>
     // CP static GitHub Pages has no /api/hume/runtime-auth (404).
     // Use Unity public runtime-auth (CORS *) so Claire can connect on cognitionpartner.ai.
@@ -30,7 +41,7 @@
   <script src="./assets/kuranda/clare/claire_character_config.js?v=20260831-claire-auth-unity-1"></script>
   <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260831-claire-auth-unity-1"></script>
 </head>
-<body class="home-page page6-kuranda-voice-page">
+<body class="page6-kuranda-voice-page claire-host-active">
   <main class="site-wrap">
     <section class="page-card">
       <img class="page-image" src="./assets/kuranda_p2.png?v=20260830-two-step-hosts-1" alt="Kuranda page 2 with Claire voice experience" />
