@@ -13433,36 +13433,7 @@ html body #cpPurposeHostButton.cp-r2-purpose-host {
   pointer-events: auto !important;
 }
 
-/* Visible fail-safe close while Curl host active */
-#cpCurlFailsafeClose.cp-curl-failsafe-close {
-  position: fixed !important;
-  top: max(12px, env(safe-area-inset-top, 0px)) !important;
-  right: max(12px, env(safe-area-inset-right, 0px)) !important;
-  z-index: 10050 !important;
-  pointer-events: auto !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 40px !important;
-  padding: 8px 14px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(255, 210, 64, 0.55) !important;
-  background: rgba(20, 16, 10, 0.92) !important;
-  color: #ffe08a !important;
-  font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, sans-serif !important;
-  letter-spacing: 0.04em !important;
-  text-transform: uppercase !important;
-  cursor: pointer !important;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.35) !important;
-}
-#cpCurlFailsafeClose.cp-curl-failsafe-close:hover {
-  background: rgba(40, 30, 12, 0.96) !important;
-}
-
-/* When host idle, chip removed by JS — hide orphans */
-body:not(.curl-host-active) #cpCurlFailsafeClose {
-  display: none !important;
-}
+/* Visible fail-safe close — superseded by CP_R2_CLOSE_CURL_FOOTER_SEAT_20260902 at file end */
 
 /* Compressed desktop: keep cinematic plate, scale footer stack, avoid casual scroll */
 @media (max-height: 820px) and (min-width: 901px) {
@@ -13521,4 +13492,61 @@ html body.curl-host-active #cpPurposeHostButton,
 html body.curl-host-active #cpCurlFailsafeClose {
   pointer-events: auto !important;
   z-index: 12010 !important;
+}
+
+/* CP_R2_CLOSE_CURL_FOOTER_SEAT_20260902
+   Close Curl just above cream footer, over Curl SELECT seat.
+   Warm sun-glow palette (not black top-corner chip). */
+#cpCurlFailsafeClose.cp-curl-failsafe-close {
+  position: fixed !important;
+  top: auto !important;
+  right: max(2.8%, env(safe-area-inset-right, 0px)) !important;
+  left: auto !important;
+  bottom: calc(max(12px, env(safe-area-inset-bottom, 0px)) + 118px) !important;
+  z-index: 12020 !important;
+  pointer-events: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 36px !important;
+  min-width: 118px !important;
+  padding: 8px 16px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 210, 96, 0.85) !important;
+  background: linear-gradient(180deg, rgba(255, 214, 120, 0.96) 0%, rgba(232, 168, 64, 0.94) 55%, rgba(210, 140, 48, 0.96) 100%) !important;
+  color: #2a1c08 !important;
+  font: 700 12px/1.15 system-ui, -apple-system, Segoe UI, sans-serif !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 236, 180, 0.35),
+    0 0 18px rgba(255, 190, 70, 0.45),
+    0 10px 24px rgba(40, 24, 8, 0.22) !important;
+  transform: translateX(-8px) !important;
+}
+#cpCurlFailsafeClose.cp-curl-failsafe-close:hover,
+#cpCurlFailsafeClose.cp-curl-failsafe-close:focus-visible {
+  background: linear-gradient(180deg, rgba(255, 228, 150, 0.98) 0%, rgba(245, 190, 80, 0.96) 50%, rgba(220, 150, 50, 0.98) 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 240, 190, 0.5),
+    0 0 22px rgba(255, 200, 80, 0.55),
+    0 12px 26px rgba(40, 24, 8, 0.25) !important;
+  outline: none !important;
+}
+body:not(.curl-host-active) #cpCurlFailsafeClose {
+  display: none !important;
+}
+html body.curl-host-active #cpCurlFailsafeClose {
+  pointer-events: auto !important;
+  z-index: 12020 !important;
+  display: inline-flex !important;
+}
+@media (max-width: 900px) {
+  #cpCurlFailsafeClose.cp-curl-failsafe-close {
+    right: max(12px, env(safe-area-inset-right, 0px)) !important;
+    bottom: calc(max(10px, env(safe-area-inset-bottom, 0px)) + 102px) !important;
+    min-width: 108px !important;
+    transform: none !important;
+  }
 }

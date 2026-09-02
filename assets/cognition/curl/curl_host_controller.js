@@ -11,7 +11,7 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20260901-curl-mo-freeze-fix-1';
+  const CURL_V = '20260902-close-curl-footer-seat-1';
   const CURL_VOICE_ID = '6b530c02-5a80-4e60-bb68-f2c171c5029f';
   const CURL_CONFIG_ID = '242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf';
   const CURL_CHARACTER_ID = 'curl-maxwell';
