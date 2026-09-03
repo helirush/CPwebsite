@@ -1,6 +1,6 @@
 /* Curl Maxwell — Cognition Partner Cognition Host
  * Scaffolded from Claire runtime package.
- * Voice ID loaded 6b530c02-5a80-4e60-bb68-f2c171c5029f. config_id still pending if required. Knowledge seed loaded.
+ * Voice ID loaded 23982fd1-d6a5-4acc-b396-2454b5715d43. config_id still pending if required. Knowledge seed loaded.
  * character_id: curl-maxwell | host UI label: CURL
  */
 /*
@@ -272,7 +272,7 @@ window.MAXWELLIAN_HUME = {
       // Optional: set a dedicated lower-cost model profile id here.
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       // Optional: set a dedicated voice profile id for this intelligence tier.
-      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 900,
       skill_packs_max_selected: 2,
@@ -289,7 +289,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Balanced cost/performance for normal customer guidance and services discussions.",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 1800,
       skill_packs_max_selected: 2,
@@ -306,7 +306,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Customer-scoped operating mode with memory continuity and clear transformer/chart interpretation guidance.",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 2400,
       skill_packs_max_selected: 3,
@@ -324,7 +324,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Higher-depth mode for reinterpretation, anomaly triage, and contextual board analysis.",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 3000,
       skill_packs_max_selected: 3,
@@ -760,7 +760,7 @@ window.MAXWELLIAN_HUME = {
   // Optional config version lock.
   config_version: 0,
   // Voice target used by OpenAI realtime.
-  voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+  voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
   // Phase 2 character registry (routing + metadata). Existing global fields remain fallback defaults.
   characters: {
     
@@ -770,7 +770,7 @@ window.MAXWELLIAN_HUME = {
       character_avatar_url: "",
       character_background_url: "assets/images/cognition_p2.png",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_variables: {
         character_name: "Curl Maxwell",
         character_role: "Public Cognition Host for Cognition Partner",
@@ -783,7 +783,7 @@ window.MAXWELLIAN_HUME = {
       character_avatar_url: "",
       character_background_url: "assets/images/cognition_p2.png",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_variables: {
         character_name: "Curl Maxwell",
         character_role: "Public Cognition Host for Cognition Partner",

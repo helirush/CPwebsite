@@ -15,8 +15,8 @@
 - [x] Voice scripts intentionally unloaded on pages until IDs + safe re-enable
 
 ## Waiting on operator
-- [x] Hume voice_id received 2026-08-19: `6b530c02-5a80-4e60-bb68-f2c171c5029f`
-- [x] Hume `voice_id` for Curl: `6b530c02-5a80-4e60-bb68-f2c171c5029f`
+- [x] Hume voice_id received 2026-08-19: `23982fd1-d6a5-4acc-b396-2454b5715d43`
+- [x] Hume `voice_id` for Curl: `23982fd1-d6a5-4acc-b396-2454b5715d43`
 - [x] Hume `config_id` for Curl (shared Claire/Clerk): `242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf`
 - [ ] First live conversation pass after IDs (listen, then expand knowledge)
 
@@ -40,7 +40,7 @@
 - embed_url fixed to `./assets/cognition/curl/hume_renderer/`
 - Visible-guard allows modal only when `body.curl-host-active`
 - Halo contract: selected glow on arm; radiate rings only while speaking
-- IDs: voice `6b530c02-5a80-4e60-bb68-f2c171c5029f` / config `242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf`
+- IDs: voice `23982fd1-d6a5-4acc-b396-2454b5715d43` / config `242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf`
 
 
 ## STAGE FIX 20260819-curl-stage-2

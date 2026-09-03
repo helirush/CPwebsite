@@ -491,7 +491,7 @@ window.MAXWELLIAN_HUME = {
       // Optional: set a dedicated lower-cost model profile id here.
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       // Optional: set a dedicated voice profile id for this intelligence tier.
-      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
+      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 900,
       skill_packs_max_selected: 2,
@@ -508,7 +508,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Balanced cost/performance for normal customer guidance and services discussions.",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
+      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 1800,
       skill_packs_max_selected: 2,
@@ -525,7 +525,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Customer-scoped operating mode with memory continuity and clear transformer/chart interpretation guidance.",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
+      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 2400,
       skill_packs_max_selected: 3,
@@ -543,7 +543,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Higher-depth mode for reinterpretation, anomaly triage, and contextual board analysis.",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
+      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
       session_context_char_limit: 24000,
       skill_pack_excerpt_char_limit: 3000,
       skill_packs_max_selected: 3,
@@ -974,12 +974,12 @@ window.MAXWELLIAN_HUME = {
     include_console_diagnostics: true,
   },
   experimental_voice_candidates: [
-    "23982fd1-d6a5-4acc-b396-2454b5715d43",
+    "6b530c02-5a80-4e60-bb68-f2c171c5029f",
     "cb9ebbd1-1543-4323-8362-6883702a67b2",
     "68593f30-b539-496d-b1f1-f9816c93d61c",
   ],
   experimental_voice_labels: {
-    "23982fd1-d6a5-4acc-b396-2454b5715d43": "CC01.60802",
+    "6b530c02-5a80-4e60-bb68-f2c171c5029f": "CC01.60802",
     "cb9ebbd1-1543-4323-8362-6883702a67b2": "jm03_60802",
     "68593f30-b539-496d-b1f1-f9816c93d61c": "jm02_60802",
   },
@@ -1034,7 +1034,7 @@ window.MAXWELLIAN_HUME = {
   // Optional config version lock.
   config_version: 0,
   // Voice target used by OpenAI realtime.
-  voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
+  voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
   // Phase 2 character registry (routing + metadata). Existing global fields remain fallback defaults.
   characters: {
     "claire-charcot": {
@@ -1043,7 +1043,7 @@ window.MAXWELLIAN_HUME = {
       character_avatar_url: "",
       character_background_url: "assets/images/kuranda_p2.png",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
-      voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
+      voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
       session_variables: {
         character_name: "Claire",
         character_role: "Public conversational guide for Kuranda Mind & Body",
