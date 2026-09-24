@@ -23,7 +23,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260902-close-curl-final-pos-1">
+  <link rel="stylesheet" href="./styles.css?v=20260924-compact-link-1">
 
 <!-- CP_R2_JOURNEY_10_LIVE: final authority after styles.css -->
 <style id="cp-journey-10-live">
@@ -412,14 +412,40 @@
     transform: translate(var(--cp-journey-nudge-x), var(--cp-journey-nudge-y)) !important;
   }
 </style>
+
+<!-- CP_COMPACT_LINK_PREVIEW: hero as CSS background (no large scrapeable <img>) -->
+<style id="cp-compact-link-preview">
+  /* Humans still see full art; link scrapers no longer get a giant page image. */
+  html body .page-image.cp-r1-image,
+  html body .cp-r1-image.page-image {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-image: url("./assets/CognitionPartner_p1r6.png?cp_bg=20260820-p1-r6");
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    /* prevent empty-box collapse */
+    min-height: 60vh !important;
+  }
+</style>
+
+<style id="cp-compact-link-preview-logos">
+  html body .cp-r1-brand-lockup-logo[style*="background-image"] {
+    width: var(--cp-brand-logo-w, 54px);
+    height: var(--cp-brand-logo-h, 54px);
+    min-width: 42px;
+    min-height: 42px;
+  }
+</style>
 </head>
 <body class="home-page cp-page1">
   <main class="site-wrap cp-r1-wrap">
     <section class="page-card cp-r1-card">
-      <img class="page-image cp-r1-image" src="./assets/CognitionPartner_p1r6.png?cp_bg=20260820-p1-r6" alt="Cognition Partner page 1 revision 6" />
+      <div class="page-image cp-r1-image" role="img" aria-label="Cognition Partner page 1 revision 6" data-cp-bg="./assets/CognitionPartner_p1r6.png?cp_bg=20260820-p1-r6"></div>
       <div class="cp-r1-top-card cp-r2-top-card" aria-label="Cognition Partner top navigation">
         <a class="cp-r1-brand-lockup cp-r1-brand-lockup--top cp-r2-brand-lockup" href="./index.html" aria-label="Cognition Partner home">
-          <img class="cp-r1-brand-lockup-logo" src="./CP_fatLOGOclear_60716.png?v=20260817-header-logo-dark" alt="" aria-hidden="true" />
+          <span class="cp-r1-brand-lockup-logo" aria-hidden="true" style="background-image:url('./CP_fatLOGOclear_60716.png?v=20260817-header-logo-dark');background-size:contain;background-repeat:no-repeat;background-position:center;display:inline-block;"></span>
           <span class="cp-r1-brand-lockup-copy">
             <span class="cp-r1-brand-lockup-wordmark">COGNITION PARTNER<span class="cp-r1-brand-lockup-tm">™</span></span>
             <span class="cp-r1-brand-lockup-tagline">Your Partner. Your Journey. Your Life.</span>
@@ -501,7 +527,7 @@
         <div class="cp-r2-footer-left">
           <div class="cp-r2-footer-why" aria-hidden="true">
             <div class="cp-r1-cplisten-glyph-wrap">
-              <img class="cp-r1-cplisten-glyph" src="./assets/cplisten.svg?cp_listen=20260817-speaker-big-r1" alt="" />
+              <span class="cp-r1-cplisten-glyph" aria-hidden="true" style="background-image:url('./assets/cplisten.svg?cp_listen=20260817-speaker-big-r1');background-size:contain;background-repeat:no-repeat;background-position:center;display:inline-block;width:100%;height:100%;"></span>
             </div>
             <div class="cp-r1-listen-copy">
               <div class="cp-r1-listen-copy-title">WHY IT MATTERS</div>
@@ -547,7 +573,7 @@
             <span class="cp-r2-purpose-ring cp-r2-purpose-ring--5"></span>
             <span class="cp-r2-purpose-ring cp-r2-purpose-ring--6"></span>
             <span class="cp-r2-purpose-glitter"></span>
-            <img class="cp-r2-purpose-orb" src="./assets/curl/curl_orb_live_20260820-172503_1d0b8b7e31.png" alt="" />
+            <span class="cp-r2-purpose-orb" aria-hidden="true" style="background-image:url('./assets/curl/curl_orb_live_20260820-172503_1d0b8b7e31.png');background-size:contain;background-repeat:no-repeat;background-position:center;display:block;width:100%;height:100%;"></span>
           </span>
           <span class="cp-r2-purpose-copy">
             <span class="cp-r2-purpose-kicker">MEET WITH</span>
@@ -575,7 +601,7 @@
       
             <div class="cp-r1-bottom-logo-card cp-r1-bottom-logo-card--hero" aria-label="Cognition Partner brand">
         <a class="cp-r1-brand-lockup cp-r1-brand-lockup--bottom cp-r1-brand-lockup--above-banner cp-r1-brand-lockup--hero" href="./index.html" aria-label="Cognition Partner home">
-        <img class="cp-r1-brand-lockup-logo" src="./CPlogo_60715.png?v=20260810-p1-r4" alt="" aria-hidden="true" />
+        <span class="cp-r1-brand-lockup-logo" aria-hidden="true" style="background-image:url('./CPlogo_60715.png?v=20260810-p1-r4');background-size:contain;background-repeat:no-repeat;background-position:center;display:inline-block;"></span>
         <span class="cp-r1-brand-lockup-copy">
           <span class="cp-r1-brand-lockup-wordmark">COGNITION <span class="cp-r1-brand-lockup-wordmark-gold">PARTNER</span><span class="cp-r1-brand-lockup-tm">™</span></span>
           <span class="cp-r1-brand-lockup-rule" aria-hidden="true"></span>
