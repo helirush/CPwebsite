@@ -647,6 +647,7 @@
       };
     })();
   </script>
+  <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261019-openai-live-api-1"></script>
 <script src="./assets/unity/clerk/clerk_character_config.js?v=20261019-openai-live-only-1"></script>
   
 <script id="cp-openai-live-only">
@@ -661,8 +662,8 @@
     c.authless_hume_connection = false;
     c.hume_api_key = '';
     c.hume_config_id = '';
-    if (!c.openai_session_endpoint) c.openai_session_endpoint = '/api/openai/realtime/session';
-    if (!c.openai_live_session_endpoint) c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.openai_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session';
+    c.openai_live_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/live/session';
     c.openai_live_api = true;
     if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
     if (!c.openai_model) c.openai_model = 'gpt-live-1';
@@ -672,7 +673,7 @@
   } catch (e) {}
 })();
 </script>
-<script src="./assets/unity/clerk/clerk_voice_widget.js?v=20261019-openai-live-only-1"></script>
+<script src="./assets/unity/clerk/clerk_voice_widget.js?v=20261019-openai-live-api-1"></script>
 </head>
 <body class="home-page cp-clerk-onepage">
   <main class="site-wrap">
@@ -1040,8 +1041,8 @@
         window.MAXWELLIAN_HUME.openai_voice = 'vesper';
         window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
         window.MAXWELLIAN_HUME.openai_live_api = true;
-        window.MAXWELLIAN_HUME.openai_session_endpoint = '/api/openai/realtime/session';
-        window.MAXWELLIAN_HUME.openai_live_session_endpoint = '/api/openai/live/session';
+        window.MAXWELLIAN_HUME.openai_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session';
+        window.MAXWELLIAN_HUME.openai_live_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/live/session';
         window.MAXWELLIAN_HUME.openai_renderer_url = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20261012-clerk-openai-fix-1');
         window.MAXWELLIAN_HUME.renderer_url = window.MAXWELLIAN_HUME.openai_renderer_url;
         window.MAXWELLIAN_HUME.hume_embed_url = window.MAXWELLIAN_HUME.openai_renderer_url;
@@ -2198,8 +2199,8 @@
     c.openai_voice = 'vesper';
     c.openai_realtime_model = 'gpt-live-1';
     c.openai_live_api = true;
-    c.openai_session_endpoint = '/api/openai/realtime/session';
-    c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.openai_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session';
+    c.openai_live_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/live/session';
     c.openai_renderer_url = './assets/unity/clerk/openai_renderer/index.html?v=20261012-clerk-openai-fix-1';
     c.embed_url = c.openai_renderer_url;
     c.renderer_url = c.openai_renderer_url;

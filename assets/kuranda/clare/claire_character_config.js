@@ -995,13 +995,13 @@ window.MAXWELLIAN_HUME = {
   hume_runtime_auth_endpoint: "",
   allow_hume_authless_connect: true,
   allow_openai_fallback: true,
-  openai_session_endpoint: "/api/openai/realtime/session",
+  openai_session_endpoint: "https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session",
   openai_realtime_model: "gpt-live-1",
   openai_voice: "willow",
   openai_voice_profile_id: "claire-willow-gpt-live-1",
   openai_live_api: true,
-  openai_live_session_endpoint: "/api/openai/live/session",
-  openai_session_endpoint: "/api/openai/realtime/session",
+  openai_live_session_endpoint: "https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/live/session",
+  openai_session_endpoint: "https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session",
   openai_embed_url: "./openai_renderer/index.html?v=20261011-willow-live-1",
   openai_voice_instruction_set:
     "You are Claire, public guide and Cognition Host for Kuranda Mind & Body Institute. Professional adult female voice: warm, composed, intelligent, and welcoming. " +

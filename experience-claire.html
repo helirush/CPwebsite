@@ -47,7 +47,8 @@
     window.MAXWELLIAN_HUME.config_id = "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
     window.MAXWELLIAN_HUME.voice_id = "6b530c02-5a80-4e60-bb68-f2c171c5029f";
   </script>
-<script src="./assets/kuranda/clare/claire_character_config.js?v=20260831-claire-auth-unity-1"></script>
+  <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261019-openai-live-api-1"></script>
+<script src="./assets/kuranda/clare/claire_character_config.js?v=20261019-openai-live-api-1"></script>
   
 <script id="cp-openai-live-only">
 (function () {
@@ -61,8 +62,8 @@
     c.authless_hume_connection = false;
     c.hume_api_key = '';
     c.hume_config_id = '';
-    if (!c.openai_session_endpoint) c.openai_session_endpoint = '/api/openai/realtime/session';
-    if (!c.openai_live_session_endpoint) c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.openai_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session';
+    c.openai_live_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/live/session';
     c.openai_live_api = true;
     if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
     if (!c.openai_model) c.openai_model = 'gpt-live-1';
@@ -72,7 +73,7 @@
   } catch (e) {}
 })();
 </script>
-<script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260831-claire-auth-unity-1"></script>
+<script src="./assets/kuranda/clare/claire_voice_widget.js?v=20261019-openai-live-api-1"></script>
 </head>
 <body class="page6-kuranda-voice-page claire-host-active">
   <main class="site-wrap">
