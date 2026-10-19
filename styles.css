@@ -13597,3 +13597,45 @@ html body[class*="cp-page"].curl-host-active #clerkVoiceStartBtn:hover {
   border-color: rgba(255, 214, 120, 0.95) !important;
 }
 
+/* === 20261019 promote: LISTEN hover journey cue from eWebmaster === */
+/* ============================================================
+   CP_LISTEN_HOVER_CUE_ALL_PAGES_20261011
+   Page1: begin your journey
+   Page2–10: continue your journey
+   Possibilities (11–13): understand your possibilities
+   ============================================================ */
+html body[class*="cp-page"] .cp-r2-listen,
+html body.home-page .cp-r2-listen {
+  position: relative !important;
+}
+html body[class*="cp-page"] .cp-start-journey-cue,
+html body.home-page .cp-start-journey-cue {
+  position: absolute !important;
+  left: 50% !important;
+  bottom: calc(100% + 10px) !important;
+  transform: translateX(-50%) !important;
+  white-space: nowrap !important;
+  padding: 8px 12px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(210, 168, 92, 0.45) !important;
+  background: rgba(20, 16, 10, 0.92) !important;
+  color: #f3e2b0 !important;
+  font: 600 11px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  letter-spacing: 0.04em !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.28) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 280ms ease, transform 280ms ease !important;
+  z-index: 90 !important;
+}
+html body[class*="cp-page"].cp-show-start-cue .cp-start-journey-cue,
+html body.home-page.cp-show-start-cue .cp-start-journey-cue,
+html body[class*="cp-page"] .cp-r2-listen:hover .cp-start-journey-cue,
+html body[class*="cp-page"] .cp-r2-listen:focus-visible .cp-start-journey-cue,
+html body[class*="cp-page"] .cp-r2-listen:focus-within .cp-start-journey-cue,
+html body.home-page .cp-r2-listen:hover .cp-start-journey-cue,
+html body.home-page .cp-r2-listen:focus-visible .cp-start-journey-cue,
+html body.home-page .cp-r2-listen:focus-within .cp-start-journey-cue {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(-2px) !important;
+}
