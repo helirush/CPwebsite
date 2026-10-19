@@ -372,8 +372,8 @@
       window.MAXWELLIAN_HUME.openai_live_api = true;
       window.MAXWELLIAN_HUME.openai_voice = 'marin';
       window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
-      window.MAXWELLIAN_HUME.openai_session_endpoint = 'http://127.0.0.1:8600/api/openai/realtime/session';
-      window.MAXWELLIAN_HUME.openai_live_session_endpoint = 'http://127.0.0.1:8600/api/openai/live/session';
+      window.MAXWELLIAN_HUME.openai_session_endpoint = '/api/openai/realtime/session';
+      window.MAXWELLIAN_HUME.openai_live_session_endpoint = '/api/openai/live/session';
       window.MAXWELLIAN_HUME.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
       window.MAXWELLIAN_HUME.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
       window.MAXWELLIAN_HUME.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
@@ -817,8 +817,8 @@ if (!launcher) {
             includePageContext: true,
             contextPayload: {
               voice_engine_preference: 'openai',
-              openai_live_session_endpoint: 'http://127.0.0.1:8600/api/openai/live/session',
-              openai_session_endpoint: 'http://127.0.0.1:8600/api/openai/realtime/session',
+              openai_live_session_endpoint: '/api/openai/live/session',
+              openai_session_endpoint: '/api/openai/realtime/session',
               openai_voice: 'marin',
               openai_realtime_model: 'gpt-live-1',
               organization: 'Cognition Partner',

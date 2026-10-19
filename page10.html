@@ -23,7 +23,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20261019-listen-cue-1">
+  <link rel="stylesheet" href="./styles.css?v=20261019-curl-promote-2">
 
 <!-- CP_R2_JOURNEY_10_LIVE: final authority after styles.css -->
 <style id="cp-journey-10-live">
@@ -329,7 +329,7 @@
 /* Edit these dials — master CSS at end of styles.css reads them */
 :root {
   --cp-curl-orb-x: -50px;
-  --cp-curl-orb-y: -7px;
+  --cp-curl-orb-y: -2px;
   --cp-curl-orb-size-px: 156px;
   --cp-curl-plate-px: 162px;
   --cp-curl-plate-y: 0px;
@@ -348,7 +348,7 @@
 :root {
   --cp-curl-plate-px: 162px;
   --cp-curl-orb-size-px: 156px;
-  --cp-curl-orb-y: -7px;
+  --cp-curl-orb-y: -2px;
   --cp-curl-contrast: 0.78;
 }
 </style>
@@ -1177,15 +1177,34 @@
       tryAt(0);
     })();
   </script>
-  <script src="./assets/cognition/curl/hume_auth_bootstrap.js?v=20260831-curl-select-pos-1"></script>
-  <script src="./assets/cognition/curl/curl_character_config.js?v=20261012-curl-openai-form-1"></script>
-  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261012-curl-openai-form-1"></script>
+  <script src="./assets/cognition/curl/hume_auth_bootstrap.js?v=20261019-curl-promote-2"></script>
+  <script src="./assets/cognition/curl/curl_character_config.js?v=20261019-curl-promote-2"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-curl-promote-2"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
   <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
 
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-openai-form-1"></script>
+  
+<script id="cp-curl-marin-live">
+(function () {
+  try {
+    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+    var c = window.MAXWELLIAN_HUME;
+    c.voice_engine = 'openai';
+    c.openai_voice = 'marin';
+    c.voice_id = 'marin';
+    c.openai_realtime_model = 'gpt-live-1';
+    c.openai_model = 'gpt-live-1';
+    c.openai_live_api = true;
+    c.openai_session_endpoint = '/api/openai/realtime/session';
+    c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.runtime_auth_bootstrap_enabled = false;
+    c.widget_url = c.widget_url || './assets/cognition/curl/P261019-curl-promote-2';
+  } catch (e) {}
+})();
+</script>
+<script src="./assets/cognition/curl/curl_host_controller.js?v=20261019-curl-promote-2"></script>
 
 </body>
 </html>

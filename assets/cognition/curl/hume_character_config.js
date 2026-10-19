@@ -26,7 +26,7 @@ window.MAXWELLIAN_HUME = {
   // Voice stack selector for widget routing.
   voice_engine: "openai",
   openai_renderer_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1",
-  openai_live_session_endpoint: "http://127.0.0.1:8600/api/openai/live/session",
+  openai_live_session_endpoint: "/api/openai/live/session",
   openai_live_api: true,
   // Diagnostics can be re-enabled for troubleshooting, but default is off in normal operation.
   show_session_diagnostics: false,
@@ -724,7 +724,7 @@ window.MAXWELLIAN_HUME = {
   hume_runtime_auth_endpoint: "",
   allow_hume_authless_connect: false,
   allow_openai_fallback: false,
-  openai_session_endpoint: "http://127.0.0.1:8600/api/openai/realtime/session",
+  openai_session_endpoint: "/api/openai/realtime/session",
   openai_realtime_model: "gpt-live-1",
   openai_voice: "marin",
   // Canonical Curl Text Modification (Marin) — operator lock 2026-10-12
