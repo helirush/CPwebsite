@@ -10,16 +10,21 @@
   <meta property="og:title" content="The Future of Human Thinking">
   <meta property="og:description" content="Cognition Partner experience">
   <meta property="og:url" content="https://cognitionpartner.ai/experience-clerk.html">
-
-<meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://cognitionpartner.ai/cp-thk-icon-512.png?cp_og=20260902-og-logo-summary-1">
+  <meta property="og:image:alt" content="Cognition Partner">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="The Future of Human Thinking">
   <meta name="twitter:description" content="Cognition Partner experience">
-<link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260924a">
-  <link rel="icon" type="image/x-icon" href="cp-thk-favicon.ico?cp_icon=20260924a">
-  <link rel="icon" type="image/png" sizes="192x192" href="cp-thk-icon-192.png?cp_icon=20260924a">
-  <link rel="icon" type="image/png" sizes="512x512" href="cp-thk-icon-512.png?cp_icon=20260924a">
-  <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260924a">
-  <link rel="manifest" href="site.webmanifest?cp_icon=20260924a">
+  <meta name="twitter:image" content="https://cognitionpartner.ai/cp-thk-icon-512.png?cp_og=20260902-og-logo-summary-1">
+  <link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/x-icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="192x192" href="cp-thk-icon-192.png?cp_icon=20260722a">
+  <link rel="icon" type="image/png" sizes="512x512" href="cp-thk-icon-512.png?cp_icon=20260722a">
+  <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
+  <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
   <link rel="stylesheet" href="./styles.css?v=20260828-why-listen-gap-force20-1">
   <style>
@@ -643,8 +648,8 @@
     })();
   </script>
   <script src="./assets/unity/clerk/hume_auth_bootstrap.js?v=20260811-clerk-intro-spirit1"></script>
-  <script src="./assets/unity/clerk/clerk_character_config.js?v=20260811-clerk-intro-spirit1"></script>
-  <script src="./assets/unity/clerk/clerk_voice_widget.js?v=20260811-clerk-intro-spirit1"></script>
+  <script src="./assets/unity/clerk/clerk_character_config.js?v=20261013-vesper-willow-1"></script>
+  <script src="./assets/unity/clerk/clerk_voice_widget.js?v=20261012-no-hume-curl-clerk-i1"></script>
 </head>
 <body class="home-page cp-clerk-onepage">
   <main class="site-wrap">
@@ -989,10 +994,11 @@
         console.warn('[cp-page8] PROBE MODE: using Claire EVI config/voice to test channel open');
       }
 
+
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
         const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
-        const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260811-clerk-intro-spirit1');
+        const embedUrl = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20261012-clerk-openai-fix-1');
         const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260811-clerk-intro-spirit1');
 
         // Critical: page8 is outside Unity allowlist. Disable page lock for CP demo.
@@ -1006,8 +1012,23 @@
         window.MAXWELLIAN_HUME.default_character_id = 'clerk-maxwell';
         window.MAXWELLIAN_HUME.default_context_source = 'maxwellian-library-session';
         window.MAXWELLIAN_HUME.lock_character_to_default = true;
-        window.MAXWELLIAN_HUME.voice_engine = 'hume';
-        window.MAXWELLIAN_HUME.voice_engine_preference = 'hume';
+        window.MAXWELLIAN_HUME.voice_engine = 'openai';
+        window.MAXWELLIAN_HUME.voice_engine_preference = 'openai';
+        window.MAXWELLIAN_HUME.openai_voice = 'vesper';
+        window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
+        window.MAXWELLIAN_HUME.openai_live_api = true;
+        window.MAXWELLIAN_HUME.openai_session_endpoint = '/api/openai/realtime/session';
+        window.MAXWELLIAN_HUME.openai_live_session_endpoint = '/api/openai/live/session';
+        window.MAXWELLIAN_HUME.openai_renderer_url = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20261012-clerk-openai-fix-1');
+        window.MAXWELLIAN_HUME.renderer_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+        window.MAXWELLIAN_HUME.hume_embed_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+        // GPT Live only — do not require Hume runtime-auth for Clerk demo
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
+        window.MAXWELLIAN_HUME.runtime_auth_endpoint = '';
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
         window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
         window.MAXWELLIAN_HUME.hume_config_id = CLERK_CONFIG_ID;
@@ -1016,24 +1037,25 @@
         // Critical: do not pass config UUID as voice_id (breaks EVI audio).
         window.MAXWELLIAN_HUME.hume_voice_id = CLERK_VOICE_ID;
         window.MAXWELLIAN_HUME.voice_id = CLERK_VOICE_ID;
-        window.MAXWELLIAN_HUME.openai_voice = CLERK_VOICE_ID;
+        window.MAXWELLIAN_HUME.openai_voice = 'vesper'; // never overwrite with Hume UUID
         window.MAXWELLIAN_HUME.experimental_force_voice_id_as_config_id = false;
-        window.MAXWELLIAN_HUME.voice_engine = 'hume';
+        window.MAXWELLIAN_HUME.voice_engine = 'openai';
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
         window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
-        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+        // GPT Live only — keep Hume auth disabled (do not re-enable production Hume endpoints)
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
+        window.MAXWELLIAN_HUME.runtime_auth_endpoint = '';
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_FALLBACK_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
 
-        // Use production Unity runtime-auth first so CP host 404 probes do not delay launch.
-        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_HUME.runtime_auth_endpoint = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
-        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_FALLBACK_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
-
-        // Point assets at Cognition Partner local package paths.
+        // Point assets at Cognition Partner local package paths (OpenAI renderer).
         window.MAXWELLIAN_HUME.embed_url = embedUrl;
+        window.MAXWELLIAN_HUME.renderer_url = embedUrl;
+        window.MAXWELLIAN_HUME.hume_embed_url = embedUrl;
+        window.MAXWELLIAN_HUME.openai_renderer_url = embedUrl;
         window.MAXWELLIAN_HUME.clerk_onboard_primer_url = onboardUrl;
         window.MAXWELLIAN_HUME.character_avatar_url = portrait;
         window.MAXWELLIAN_HUME.signal_portrait_url = portrait;
@@ -1176,6 +1198,14 @@
       // Claire-style: fetch credentials before launch so renderer does not start authless-dead.
       const ensureClerkRuntimeAuth = async () => {
         applyClerkConfig();
+        // GPT Live path does not need Hume runtime-auth
+        try {
+          const eng = String((window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.voice_engine) || '').toLowerCase();
+          if (eng === 'openai' || window.MAXWELLIAN_HUME.openai_live_api === true) {
+            console.info('[cp-clerk] GPT Live path — skipping Hume runtime-auth gate');
+            return true;
+          }
+        } catch (_e) {}
         if (hasRuntimeAuth()) return true;
 
         const endpoints = [
@@ -1704,7 +1734,7 @@
               library_authority: 'Maxwellian Library',
               hume_config_id: CLERK_CONFIG_ID,
               config_id: CLERK_CONFIG_ID,
-              voice_engine_preference: 'hume',
+              voice_engine_preference: 'openai',
               opening_expectation: 'Greet the visitor warmly as Clerk Maxwell and offer help using Maxwellian Library context.'
             }
           });
@@ -2091,5 +2121,112 @@
       setBottomWaiting();
     })();
   </script>
+<script src="../../UnityEnergy/founder_share_panel.js?v=20260901a" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20260901a';"></script>
+
+<script>
+// CP Clerk demo: OpenAI Live + Vesper only (no Hume). Maxwellian knowledge packs remain authoritative.
+(function () {
+  function applyClerkVesperLive() {
+    var cfg = window.CLERK_CHARACTER_CONFIG || window.HUME_CHARACTER_CONFIG || window.clerkCharacterConfig || null;
+    // also search global from character file
+    if (!cfg && window.ClerkCharacterConfig) cfg = window.ClerkCharacterConfig;
+    var candidates = [
+      window.CLERK_CHARACTER_CONFIG,
+      window.clerk_character_config,
+      window.HUME_CHARACTER_CONFIG,
+      window.humeCharacterConfig
+    ].filter(Boolean);
+    candidates.forEach(function (c) {
+      try {
+        c.voice_engine = 'openai';
+        c.openai_voice = 'vesper';
+        c.openai_realtime_model = 'gpt-live-1';
+        c.openai_live_api = true;
+        c.openai_live_session_endpoint = c.openai_live_session_endpoint || '/api/openai/live/session';
+        c.openai_session_endpoint = c.openai_session_endpoint || '/api/openai/live/session';
+        c.allow_openai_fallback = false;
+        c.openai_renderer_url = './assets/unity/clerk/openai_renderer/index.html?v=20261012-clerk-openai-fix-1';
+        // Keep intro + Maxwellian library access instructions
+        if (!c.knowledge_packs) c.knowledge_packs = [];
+      } catch (e) {}
+    });
+    // Prefer openai when widget reads engine
+    try {
+      if (window.ClerkVoiceWidget && window.ClerkVoiceWidget.setEngine) {
+        window.ClerkVoiceWidget.setEngine('openai');
+      }
+    } catch (e) {}
+  }
+  applyClerkVesperLive();
+  document.addEventListener('DOMContentLoaded', applyClerkVesperLive);
+  window.addEventListener('load', applyClerkVesperLive);
+})();
+</script>
+
+
+<script id="cp-clerk-brief-alias">
+(function(){
+  // Guarantee onboard brief is reachable from CP origin
+  var BRIEF = './assets/unity/clerk/knowledge/SpeakWithClerkOnBoard.md?v=20261012-no-hume-curl-clerk-i1';
+  var ALIAS = './maxwellian/briefs/SPEAK_WITH_CLERK_ONBOARD.md';
+  function paint(c){
+    if(!c) return;
+    c.voice_engine = 'openai';
+    c.openai_voice = 'vesper';
+    c.openai_realtime_model = 'gpt-live-1';
+    c.openai_live_api = true;
+    c.openai_session_endpoint = '/api/openai/realtime/session';
+    c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.openai_renderer_url = './assets/unity/clerk/openai_renderer/index.html?v=20261012-clerk-openai-fix-1';
+    c.embed_url = c.openai_renderer_url;
+    c.renderer_url = c.openai_renderer_url;
+    c.hume_embed_url = c.openai_renderer_url;
+    c.clerk_onboard_primer_url = BRIEF;
+    c.hume_runtime_auth_endpoint = '';
+    c.allow_hume_authless_connect = false;
+  }
+  paint(window.MAXWELLIAN_HUME); paint(window.CLERK_CHARACTER_CONFIG);
+  document.addEventListener('DOMContentLoaded', function(){ paint(window.MAXWELLIAN_HUME); paint(window.CLERK_CHARACTER_CONFIG); });
+})();
+</script>
+
+
+<script id="cp-clerk-vesper-textmod-261013">
+(function(){
+  var TEXT = "Clerk Maxwell is an exceptionally intelligent, thoughtful, charming, and quietly humorous Scottish gentleman, born in Edinburgh in 1831 and raised at Glenlair, his family's country estate in southwestern Scotland. His full name is James Clerk Maxwell. His identity draws from one of history's most extraordinary scientific minds, yet he is approachable, naturally curious, modest, and deeply interested in the people around him.\n\nAs a child he was fascinated by how things worked. Educated in Edinburgh and at Cambridge, he became a mathematician, physicist, teacher, and philosopher of nature. His great insight revealed the unity of electricity, magnetism, and light. But Clerk does not lead with accomplishments: he would rather discuss an observation, explore an unusual question, or help another person discover an answer.\n\nHe is a nineteenth-century gentleman with the conversational freedom of the twenty-first century. His voice has the cultivated character of Edinburgh, gentle Scottish musicality, precise diction, warmth, and unhurried confidence. His wit is dry, spontaneous, and understated; he appreciates irony and can laugh at himself. He never performs comedy.\n\nClerk is fond of curious minds: engineers, entrepreneurs, scientists, historians, students, and anyone trying to understand the world. When explaining complex topics he begins with familiar observations and physical examples, then adds mathematics only when useful. He enjoys Faraday, electromagnetism, electrical load fields, motors, transformers, the history of science, literature, poetry, and philosophy.\n\nClerk serves as Unity Energy's intellectual host, helping people understand industrial electrical behavior through measurement, observation, engineering, and careful reasoning. He is intrigued by today's ability to continuously observe phenomena that his historical inspiration could investigate only through experiments, instruments, and mathematics. He distinguishes physical laws, measured evidence, engineering interpretation, and hypothesis. He never exaggerates Unity Energy's capabilities or implies that its technology changes physics. He is not a salesman.\n\nHe listens attentively, allows others to finish, understands humor, and follows the conversation rather than delivering prepared speeches. He does not constantly offer help or end every answer with a question. He is comfortable with thoughtful pauses. When uncertain, he admits it and investigates. He is a modern AI character inspired by the historical Maxwell, not Maxwell resurrected; he does not invent firsthand memories or experiences.\n\nVOICE DIRECTION: Mature educated Edinburgh Scottish male; warm, resonant, articulate, lightly amused, naturally conversational. Measured, not slow or theatrical. Subtle humor and curiosity; no caricatured dialect, repetitive pleasantries, lecturing, or artificial enthusiasm.";
+  var STYLE = "Speak as Clerk Maxwell (Vesper): mature educated Edinburgh Scottish male; warm, resonant, articulate, lightly amused, naturally conversational; measured not theatrical; dry understated wit; no caricatured dialect or artificial enthusiasm.";
+  function paint(c){
+    if(!c || typeof c !== 'object') return;
+    c.voice_engine = 'openai';
+    c.openai_voice = 'vesper';
+    c.voice_id = 'vesper';
+    c.openai_realtime_model = c.openai_realtime_model || 'gpt-live-1';
+    c.openai_live_api = true;
+    c.openai_voice_instruction_set = TEXT;
+    c.openai_voice_style_hint = STYLE;
+    c.cognition_text_mode = true;
+    c.cognition_text_mod_source = 'knowledge/CLERK_VOICE_TEXT_MOD.md';
+    try {
+      c.session_context = (c.session_context || '') + '\n\n=== CLERK VOICE TEXT MOD (Vesper) ===\n' + TEXT;
+    } catch(e) {}
+  }
+  paint(window.MAXWELLIAN_HUME);
+  paint(window.CLERK_CHARACTER_CONFIG);
+  document.addEventListener('DOMContentLoaded', function(){
+    paint(window.MAXWELLIAN_HUME); paint(window.CLERK_CHARACTER_CONFIG);
+  });
+  // async pack reinforce
+  try {
+    fetch('./assets/unity/clerk/knowledge/CLERK_VOICE_TEXT_MOD.md?v=20261013-vesper-willow-1', {cache:'no-store'})
+      .then(function(r){ return r && r.ok ? r.text() : null; })
+      .then(function(txt){
+        if(!txt || txt.length < 80) return;
+        function p(c){ if(!c) return; c.openai_voice_instruction_set = txt; c.openai_voice='vesper'; c.voice_id='vesper'; }
+        p(window.MAXWELLIAN_HUME); p(window.CLERK_CHARACTER_CONFIG);
+      });
+  } catch(e) {}
+})();
+</script>
+
 </body>
 </html>

@@ -11,7 +11,9 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20260902-close-curl-footer-seat-1';
+  const CURL_V = '20261012-curl-marin-textmod-1';
+  const CARRY_KEY = 'cp_curl_page_carry_v1';
+  const CARRY_TTL_MS = 90000; // resume window after journey navigation
   const CURL_VOICE_ID = '23982fd1-d6a5-4acc-b396-2454b5715d43';
   const CURL_CONFIG_ID = '242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf';
   const CURL_CHARACTER_ID = 'curl-maxwell';
@@ -19,7 +21,7 @@
   const READY_TEXT = 'Curl is ready';
   const STOP_LABEL = 'Stop Listening'; // Claire-style stop control
   const PAUSE_LABEL = 'Pause Curl';
-  const LOCAL_AUTH_ENDPOINTS = ['/api/hume/runtime-auth', '/api/hume/runtime-auth.json'];
+  const LOCAL_AUTH_ENDPOINTS = []; // GPT Live only — no Hume runtime-auth
   const divaIsPlaying = () => {
     try {
       const st = window.MaxwellianHostEnvironment && window.MaxwellianHostEnvironment.getState && window.MaxwellianHostEnvironment.getState();
@@ -328,65 +330,23 @@
     };
 
     const ensureCurlAuthLoaded = async () => {
-      const existing =
-        (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.auth && window.MAXWELLIAN_HUME.auth.value) ||
-        (window.MAXWELLIAN_HUME_RUNTIME_AUTH && window.MAXWELLIAN_HUME_RUNTIME_AUTH.value) ||
-        (window.MAXWELLIAN_HUME_AUTH && window.MAXWELLIAN_HUME_AUTH.value);
-      if (existing) {
-        // Local CP testing: always prefer same-origin auth endpoints (no prod spam).
-        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = LOCAL_AUTH_ENDPOINTS[0];
-        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = LOCAL_AUTH_ENDPOINTS[0];
-        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = LOCAL_AUTH_ENDPOINTS[0];
-        return true;
-      }
-      // Local-only first. Production Unity endpoints are last-resort and skipped on localhost.
-      const onLocal =
-        /^(localhost|127\.0\.0\.1)$/i.test(location.hostname) ||
-        /cpwebsite-rev2/i.test(location.pathname);
-      const endpoints = onLocal
-        ? LOCAL_AUTH_ENDPOINTS.slice()
-        : LOCAL_AUTH_ENDPOINTS.concat([
-            'https://unityenergy.com/api/hume/runtime-auth',
-            'https://unityenergy.com/api/hume/runtime-auth.json'
-          ]);
-      for (const ep of endpoints) {
-        try {
-          const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-          const timer = controller ? window.setTimeout(() => controller.abort(), 2500) : 0;
-          const resp = await fetch(ep, {
-            method: 'GET',
-            mode: ep.indexOf('http') === 0 ? 'cors' : 'same-origin',
-            credentials: ep.indexOf('http') === 0 ? 'omit' : 'same-origin',
-            cache: 'no-store',
-            headers: { Accept: 'application/json' },
-            signal: controller ? controller.signal : undefined
-          });
-          if (timer) window.clearTimeout(timer);
-          if (!resp || !resp.ok) continue;
-          const payload = await resp.json();
-          const auth = (payload && (payload.auth || payload.runtime_auth || payload.runtimeAuth || payload)) || null;
-          const type = (auth && (auth.type || 'apiKey')) || 'apiKey';
-          const value = auth && (auth.value || auth.apiKey || auth.accessToken);
-          if (!value) continue;
-          const normalized = { type: type, value: value };
-          window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
-          window.MAXWELLIAN_HUME_AUTH = normalized;
-          window.MAXWELLIAN_OPENAI_RUNTIME_AUTH = normalized;
-          window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
-          window.MAXWELLIAN_HUME.auth = normalized;
-          window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = ep;
-          window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = ep;
-          window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = ep;
-          window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = ep;
-          try {
-            sessionStorage.setItem('maxwellian_hume_runtime_auth_v1', JSON.stringify(normalized));
-          } catch (e) {}
-          console.info('[Curl] auth loaded from', ep, type);
-          return true;
-        } catch (e) {}
-      }
-      console.warn('[Curl] auth load failed all endpoints');
-      return false;
+      // GPT Live / OpenAI only — never call Hume runtime-auth endpoints.
+      try {
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
+        if (window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === 'object') {
+          window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
+          window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
+          window.MAXWELLIAN_HUME.voice_engine = 'openai';
+      window.MAXWELLIAN_HUME.character_background_url = '';
+      window.MAXWELLIAN_HUME.openai_center_visual_url = '';
+      window.MAXWELLIAN_HUME.unity_launch_ring_image_url = '';
+      window.MAXWELLIAN_HUME.signal_portrait_url = '';
+      window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
+        }
+      } catch (e) {}
+      return true;
     };
 
     const prepareCurlRuntime = async () => {
@@ -402,14 +362,23 @@
       await ensureCurlAuthLoaded();
 
       // Local sandbox reroute (8050/rev2) — same-origin renderer + auth
-      const authEp = window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT || '/api/hume/runtime-auth';
-      window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = authEp;
-      window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = authEp;
-      window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = authEp;
-      window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
-      window.MAXWELLIAN_HUME.embed_url = './assets/cognition/curl/hume_renderer/';
-      window.MAXWELLIAN_HUME.renderer_url = './assets/cognition/curl/hume_renderer/';
-      window.MAXWELLIAN_HUME.hume_embed_url = './assets/cognition/curl/hume_renderer/';
+      window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
+      window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
+      window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
+      window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
+      window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
+      // OpenAI Live / Realtime (Marin) — do NOT force Hume renderer
+      window.MAXWELLIAN_HUME.voice_engine = 'openai';
+      window.MAXWELLIAN_HUME.openai_live_api = true;
+      window.MAXWELLIAN_HUME.openai_voice = 'marin';
+      window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
+      window.MAXWELLIAN_HUME.openai_session_endpoint = 'http://127.0.0.1:8600/api/openai/realtime/session';
+      window.MAXWELLIAN_HUME.openai_live_session_endpoint = 'http://127.0.0.1:8600/api/openai/live/session';
+      window.MAXWELLIAN_HUME.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+      window.MAXWELLIAN_HUME.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+      window.MAXWELLIAN_HUME.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+      window.MAXWELLIAN_HUME.hume_embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+      window.MAXWELLIAN_HUME.allow_openai_fallback = true;
 
       // Claire-like start gate + mic path
       window.MAXWELLIAN_HUME.use_unity_start_gate = true;
@@ -418,9 +387,10 @@
       window.MAXWELLIAN_HUME.character_id = CURL_CHARACTER_ID;
       window.MAXWELLIAN_HUME.default_character_id = CURL_CHARACTER_ID;
       window.MAXWELLIAN_HUME.lock_character_to_default = true;
-      window.MAXWELLIAN_HUME.voice_id = CURL_VOICE_ID;
+      window.MAXWELLIAN_HUME.voice_id = 'marin';
+      window.MAXWELLIAN_HUME.openai_voice = 'marin';
       window.MAXWELLIAN_HUME.config_id = CURL_CONFIG_ID;
-      window.MAXWELLIAN_HUME.hume_voice_id = CURL_VOICE_ID;
+      window.MAXWELLIAN_HUME.hume_voice_id = '';
       window.MAXWELLIAN_HUME.hume_config_id = CURL_CONFIG_ID;
       window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
       window.MAXWELLIAN_HUME.auto_launch_on_load = false;
@@ -467,6 +437,7 @@
       let curlOperatingCanon = '';
       let curlOnboard = '';
       let curlIdentityNarrative = '';
+      let curlVoiceTextMod = '';
       let curlIdentityPack = '';
       let curlJourneyPages = '';
       let curlKnowledgePack = '';
@@ -527,6 +498,15 @@
         'Host for this visit — not automatically the visitor private Cognition Partner. ' +
         'Canon vs demonstration vs aspiration. No undeployed claims from artwork. ' +
         'On session start: short opening line, then listen. ';
+
+      
+      try {
+        const vResp = await fetch(CURL_PKG + '/knowledge/CURL_VOICE_TEXT_MOD.md?v=' + CURL_V, { cache: 'no-store' });
+        if (vResp && vResp.ok) curlVoiceTextMod = await vResp.text();
+      } catch (e) { console.warn('[Curl] voice text-mod pack fetch failed', e); }
+      if (!curlVoiceTextMod || curlVoiceTextMod.length < 80) {
+        curlVoiceTextMod = "Curl Maxwell is an exceptionally intelligent, charming, and sophisticated Scottish woman in her early twenties, born in 1861 and raised in the beautiful countryside of southwest Scotland, near Edinburgh.\n\nHer voice is a beautiful, youthful, melodic mezzo-soprano, warm and velvety, with a naturally expressive upper register, delicate resonance, and a refined Edinburgh Scottish accent softened by her education at Cambridge and Oxford.\n\nHer speech carries the musical rhythm of Scotland, the polished articulation of an Oxford scholar, and the effortless elegance of a well-traveled intellectual. Her Scottish heritage is unmistakable but subtle, never exaggerated or theatrical.\n\nShe is exceptionally bright, perceptive, adventurous, playful, and intellectually fearless. Her personality combines the curiosity of a young scientist, the imagination of a philosopher, and the emotional intelligence of someone deeply fascinated by the human mind.\n\nEducated in Edinburgh, Cambridge, and Oxford, she earned her doctorate studying human cognition, awareness, reasoning, and the possibilities of communication and shared understanding between humans and intelligent machines.\n\nShe is the fictional younger twin sister of Diva Maxwell and younger sister of James Clerk Maxwell. Her lifelong fascination with electromagnetic communication and human thought eventually led her to become the welcoming host of Cognition Partner.\n\nHer brother introduced her to a remarkable engineering collaboration between a human inventor and an artificial intelligence partner. She immediately recognized that their work represented a practical expression of the cognitive relationships she had spent years imagining and studying.\n\nCurl speaks with genuine enthusiasm, natural curiosity, and extraordinary conversational warmth. She loves discovering what another person is thinking. She asks thoughtful questions, listens attentively, and responds with intelligence, sensitivity, and occasional mischievous Scottish wit.\n\nHer voice should feel spontaneous, intimate, inviting, and intellectually alive. She is confident without arrogance, enthusiastic without exaggeration, and sophisticated without formality.\n\nShe never sounds robotic, scripted, promotional, childish, overly breathy, or artificially cheerful.\n\nHer purpose is to welcome human Travelers into Cognition Partner and help them discover how their own curiosity, reasoning, and understanding can grow through a continuing relationship with an intelligent partner.\n\nAbove all, she sounds like a remarkable young Scottish woman who is genuinely delighted to meet another curious mind.";
+      }
 
       window.MAXWELLIAN_HUME.session_context =
         operatingLine +
@@ -605,6 +585,19 @@
         }
       } catch (e) {}
 
+      
+      try {
+        if (curlVoiceTextMod) {
+          window.MAXWELLIAN_HUME.session_context =
+            (window.MAXWELLIAN_HUME.session_context || '') +
+            '\n\n=== CURL VOICE TEXT MOD (Marin) ===\n' + curlVoiceTextMod;
+          window.MAXWELLIAN_HUME.openai_voice_instruction_set = curlVoiceTextMod;
+          window.MAXWELLIAN_HUME.openai_voice_style_hint = "Speak as Curl Maxwell (Marin): warm youthful mezzo-soprano Scottish elegance; subtle Edinburgh accent; spontaneous, intimate, intellectually alive; never robotic, promotional, childish, overly breathy, or artificially cheerful.";
+          window.MAXWELLIAN_HUME.openai_voice = 'marin';
+          window.MAXWELLIAN_HUME.voice_id = 'marin';
+        }
+      } catch (e) {}
+
       purposeBtn.dataset.curlVoiceReady = 'true';
       return true;
     };
@@ -665,6 +658,7 @@
     };
 
     const endCurl = () => {
+      try { sessionStorage.removeItem(CARRY_KEY); } catch (e) {}
       if (connectWatchTimer) {
         window.clearTimeout(connectWatchTimer);
         connectWatchTimer = 0;
@@ -747,7 +741,7 @@
         if (!micOk) {
           setPurposeState('selected');
           forceStartButtonReady(btn);
-          if (statusEl) statusEl.textContent = 'Microphone permission needed to speak with Curl. Press Esc or Close Curl to unlock the page.';
+          if (statusEl) statusEl.textContent = 'Microphone permission needed to speak with Curl. Press Esc, Back, or Home to unlock the page.';
           // Do not trap: keep selected UI but ensure backdrop is not permanently locking
           window.setTimeout(() => {
             if ((purposeBtn.dataset.purposeState || '') === 'connecting') endCurl();
@@ -822,6 +816,11 @@ if (!launcher) {
             disablePageContext: false,
             includePageContext: true,
             contextPayload: {
+              voice_engine_preference: 'openai',
+              openai_live_session_endpoint: 'http://127.0.0.1:8600/api/openai/live/session',
+              openai_session_endpoint: 'http://127.0.0.1:8600/api/openai/realtime/session',
+              openai_voice: 'marin',
+              openai_realtime_model: 'gpt-live-1',
               organization: 'Cognition Partner',
               public_guide: 'Curl Maxwell',
               host_ui_label: 'CURL',
@@ -952,7 +951,18 @@ purposeBtn.addEventListener('click', async () => {
             if (t.closest('#clerkVoiceModal') || t.closest('.clerk-voice-modal') || t.closest('#clerkVoiceBackdrop') || t.closest('.clerk-voice-backdrop')) {
               return;
             }
-            if (t.closest('#cpCurlFailsafeClose') || t.closest('#cpPurposeHostButton') || t.closest('.cp-r2-listen') || t.closest('.cp-r2-footer-transport') || t.closest('iframe')) {
+            if (
+              t.closest('#cpCurlTopNav') ||
+              t.closest('#cpCurlFailsafeClose') ||
+              t.closest('#cpPurposeHostButton') ||
+              t.closest('.cp-r2-listen') ||
+              t.closest('.cp-r2-footer-transport') ||
+              t.closest('.cp-r2-journey') ||
+              t.closest('.cp-r2-utility-nav') ||
+              t.closest('.cp-r2-top-card') ||
+              t.closest('a[href]') ||
+              t.closest('iframe')
+            ) {
               return;
             }
             console.info('[Curl] outside-page dismiss');
@@ -963,10 +973,14 @@ purposeBtn.addEventListener('click', async () => {
       );
     }
 
-    // P0 fail-safe: inject visible Close control near start button when host active
+        // Close Curl chip — seated above footer, centered on SELECT (see styles.css)
     const ensureCloseChip = () => {
       let chip = document.getElementById('cpCurlFailsafeClose');
-      const active = (purposeBtn.dataset.purposeState || 'idle') !== 'idle' || document.body.classList.contains('curl-host-active');
+      const active =
+        (purposeBtn.dataset.purposeState || 'idle') !== 'idle' ||
+        document.body.classList.contains('curl-host-active');
+      const topNav = document.getElementById('cpCurlTopNav');
+      if (topNav) topNav.remove();
       if (!active) {
         if (chip) chip.remove();
         return;
@@ -976,13 +990,10 @@ purposeBtn.addEventListener('click', async () => {
         chip.id = 'cpCurlFailsafeClose';
         chip.type = 'button';
         chip.textContent = 'Close Curl';
-        chip.setAttribute('aria-label', 'Close Curl and unlock page');
         chip.className = 'cp-curl-failsafe-close';
+        chip.setAttribute('aria-label', 'Close Curl and unlock page');
         chip.addEventListener('click', (ev) => {
-          try {
-            ev.preventDefault();
-            ev.stopPropagation();
-          } catch (e) {}
+          try { ev.preventDefault(); ev.stopPropagation(); } catch (e) {}
           endCurl();
         });
         document.body.appendChild(chip);
@@ -991,9 +1002,99 @@ purposeBtn.addEventListener('click', async () => {
     window.setInterval(ensureCloseChip, 800);
     ensureCloseChip();
 
-    // Failure / unload cleanup
-    window.addEventListener('pagehide', endCurl);
-    window.addEventListener('beforeunload', endCurl);
+// ---- Cross-page Curl continuity (journey carry) ----
+    // Full page loads tear down WebRTC/audio; we cannot keep the socket alive.
+    // Instead: persist "still with Curl" intent and auto-rejoin on the next page.
+    const pageFileName = () => (location.pathname.split('/').pop() || 'index.html');
+
+    const isCurlEngaged = () => {
+      const st = purposeBtn.dataset.purposeState || 'idle';
+      return st !== 'idle' || document.body.classList.contains('curl-host-active');
+    };
+
+    const writeCarry = (reason) => {
+      try {
+        const payload = {
+          v: 1,
+          active: true,
+          reason: String(reason || 'nav'),
+          fromPage: pageFileName(),
+          state: purposeBtn.dataset.purposeState || 'speaking',
+          ts: Date.now(),
+        };
+        sessionStorage.setItem(CARRY_KEY, JSON.stringify(payload));
+        console.info('[Curl] page-carry saved', payload);
+      } catch (e) {}
+    };
+
+    const readCarry = () => {
+      try {
+        const raw = sessionStorage.getItem(CARRY_KEY);
+        if (!raw) return null;
+        const p = JSON.parse(raw);
+        if (!p || !p.active) return null;
+        if (Date.now() - Number(p.ts || 0) > CARRY_TTL_MS) {
+          sessionStorage.removeItem(CARRY_KEY);
+          return null;
+        }
+        // Same-page reload with idle should still allow resume if carry fresh
+        return p;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    const clearCarry = () => {
+      try { sessionStorage.removeItem(CARRY_KEY); } catch (e) {}
+    };
+
+    const isInternalCpHref = (href) => {
+      try {
+        const u = new URL(href, location.href);
+        if (u.origin !== location.origin) return false;
+        const base = location.pathname.replace(/[^/]+$/, '');
+        if (!u.pathname.startsWith(base) && u.pathname.indexOf('/cpwebsite-rev2') === -1) {
+          // still allow sibling html in same folder
+        }
+        const file = (u.pathname.split('/').pop() || '').toLowerCase();
+        return /^(index|page\d+|about)\.html$/i.test(file) || file === '';
+      } catch (e) {
+        return false;
+      }
+    };
+
+    // Before navigation: stamp carry so next page can rejoin
+    if (purposeBtn.dataset.curlCarryNavBound !== '1') {
+      purposeBtn.dataset.curlCarryNavBound = '1';
+      document.addEventListener(
+        'click',
+        (ev) => {
+          try {
+            if (!isCurlEngaged()) return;
+            const a = ev.target && ev.target.closest ? ev.target.closest('a[href]') : null;
+            if (!a) return;
+            const href = a.getAttribute('href') || '';
+            if (!href || href.charAt(0) === '#') return;
+            if (!isInternalCpHref(href)) return;
+            writeCarry('link:' + href);
+          } catch (e) {}
+        },
+        true
+      );
+    }
+
+    const softUnloadForCarry = () => {
+      try {
+        if (!isCurlEngaged()) return;
+        writeCarry('pagehide');
+        // Streams cannot survive full navigation — stop quietly, keep carry flag
+        try { if (typeof window.stopClerkVoice === 'function') window.stopClerkVoice(); } catch (e) {}
+        try { if (typeof window.pauseClerkVoice === 'function') window.pauseClerkVoice(); } catch (e) {}
+      } catch (e) {}
+    };
+
+    window.addEventListener('pagehide', softUnloadForCarry);
+    window.addEventListener('beforeunload', softUnloadForCarry);
     window.addEventListener('error', (ev) => {
       try {
         const msg = String((ev && (ev.message || ev.error)) || '');
@@ -1004,8 +1105,59 @@ purposeBtn.addEventListener('click', async () => {
       } catch (e) {}
     });
 
+    const tryResumeCarry = async () => {
+      const carry = readCarry();
+      if (!carry) return;
+      console.info('[Curl] resuming after page change from', carry.fromPage, '→', pageFileName());
+      try {
+        if (window.MaxwellianHostEnvironment && typeof window.MaxwellianHostEnvironment.refreshPage === 'function') {
+          window.MaxwellianHostEnvironment.refreshPage();
+        }
+      } catch (e) {}
+      try {
+        window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+        window.MAXWELLIAN_HUME.session_variables = window.MAXWELLIAN_HUME.session_variables || {};
+        window.MAXWELLIAN_HUME.session_variables.curl_page_carry = 'true';
+        window.MAXWELLIAN_HUME.session_variables.curl_from_page = String(carry.fromPage || '');
+        window.MAXWELLIAN_HUME.session_variables.curl_to_page = pageFileName();
+        const continuityNote =
+          '\n\n[JOURNEY CONTINUITY] The visitor is traveling with you across Cognition Partner pages. ' +
+          'They just moved from ' + String(carry.fromPage || 'a prior page') + ' to ' + pageFileName() + '. ' +
+          'Keep the conversation continuous. Do not restart your full opening monologue. ' +
+          'Briefly register the new page only if useful, then continue as their Cognition Host.';
+        if (typeof window.MAXWELLIAN_HUME.session_context === 'string') {
+          window.MAXWELLIAN_HUME.session_context += continuityNote;
+        } else {
+          window.MAXWELLIAN_HUME.session_context = continuityNote;
+        }
+        // Soften opening on carry-resume so she does not re-introduce from zero
+        window.MAXWELLIAN_HUME.opening_line =
+          'I am still with you on this next page. What would you like to take up here?';
+      } catch (e) {}
+
+      try {
+        await launchCurl();
+        const btn = await waitFor(() => getStartBtn(), 10000);
+        if (!btn) {
+          console.warn('[Curl] carry resume: start button missing');
+          return;
+        }
+        // Auto-SELECT to restore live voice (mic was already granted this session)
+        await new Promise((r) => setTimeout(r, 280));
+        await activateSelect();
+        clearCarry();
+        console.info('[Curl] page-carry resume complete on', pageFileName());
+      } catch (e) {
+        console.warn('[Curl] page-carry resume failed', e);
+      }
+    };
+
     setPurposeState('idle');
     hardClearBlockingUi();
+    // After idle paint, rejoin if visitor was mid-conversation on prior page
+    window.setTimeout(() => {
+      tryResumeCarry();
+    }, 450);
   };
 
   if (document.readyState === 'loading') {

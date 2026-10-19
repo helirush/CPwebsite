@@ -5193,7 +5193,10 @@
 
   function ensureFloatingLauncher() {
     try {
+      // CP site: never mount floating launcher (big circular CP icon).
       if (window.__CURL_FORCE_NO_FLOAT__) return null;
+      if (document.body && /cp-page/i.test(document.body.className || "")) return null;
+      if (/cpwebsite-rev2/i.test(location.pathname || "")) return null;
       if (document.body && document.body.classList.contains('cp-page1')) return null;
     } catch (e) {}
     injectModalStyles();
@@ -8953,18 +8956,33 @@
   }
 
   function setLaunchEmblemVisible(visible) {
-    try {
-      if (document.body && document.body.classList.contains("page6-cognition-voice-page")) {
-        visible = false;
-      }
-    } catch (_e) {}
-
+    // CP Curl: never show Unity launch emblem / big CP head icon.
+    visible = false;
     const emblem = document.getElementById("clerkVoiceLaunchEmblem");
-    if (!emblem) return;
-    emblem.hidden = true;
-    if (visible && !hasConversationStarted) {
-      startSignalFormationSequence(getRuntimeVoiceConfig());
+    if (emblem) {
+      emblem.hidden = true;
+      emblem.style.display = "none";
+      emblem.style.visibility = "hidden";
+      emblem.style.opacity = "0";
+      emblem.setAttribute("aria-hidden", "true");
     }
+    const ring = document.getElementById("clerkVoiceLaunchRing");
+    if (ring) {
+      ring.removeAttribute("src");
+      ring.hidden = true;
+    }
+    const backdrop = document.getElementById("clerkVoiceBackdrop");
+    if (backdrop) {
+      backdrop.style.backgroundImage = "none";
+      backdrop.style.opacity = "0";
+    }
+    const portrait = document.getElementById("clerkVoiceSignalPortrait");
+    if (portrait) {
+      portrait.removeAttribute("src");
+      portrait.hidden = true;
+    }
+    // Do not start signal formation portrait sequence on CP (big icon path).
+    return;
   }
 
   function setUnityOverlayMessage(message) {
@@ -11021,7 +11039,8 @@
       }
     }
     if (backdrop) {
-      const backgroundCandidates = buildFloatingLauncherAssetCandidateVariants(
+      const backgroundCandidates = []; // CP_CURL_NO_BACKDROP_LOGO — never paint big logo backdrop
+      const _ignoreBg = buildFloatingLauncherAssetCandidateVariants(
         coerceText(cfg && cfg.character_background_url)
       );
       if (backgroundCandidates.length > 0) {

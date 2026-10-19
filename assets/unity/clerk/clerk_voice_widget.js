@@ -1,3 +1,161 @@
+
+  function resolveLiveSessionEndpoint(preferred) {
+    var preferredText = (preferred && String(preferred).trim()) || "";
+    var path = preferredText || "/api/openai/live/session";
+    try {
+      var host = (window.location && window.location.hostname) || "127.0.0.1";
+      var port = (window.location && window.location.port) || "";
+      var protocol = (window.location && window.location.protocol) || "http:";
+      // file:// or plain static ports should hit the realtime server on 8600
+      if (protocol === "file:" || (port && port !== "8600" && (host === "127.0.0.1" || host === "localhost"))) {
+        if (path.charAt(0) === "/") {
+          return "http://127.0.0.1:8600" + path;
+        }
+      }
+    } catch (_e) {}
+    return path;
+  }
+
+  // CLERK_TRAVELER_FLOAT_V1 — persistent traveler across Unity pages
+  const CLERK_TRAVELER_FLOAT_V1 = true;
+  const CLERK_TRAVELER_ACTIVE_KEY = "maxwellian_clerk_traveler_active_v1";
+  const CLERK_TRAVELER_ACTIVE_TTL_MS = 1000 * 60 * 45;
+
+  function markClerkTravelerActive(extra) {
+    try {
+      const payload = Object.assign(
+        {
+          active: true,
+          updatedAtMs: Date.now(),
+          page: String((window.location && window.location.pathname) || ""),
+        },
+        extra && typeof extra === "object" ? extra : {}
+      );
+      window.sessionStorage.setItem(CLERK_TRAVELER_ACTIVE_KEY, JSON.stringify(payload));
+      try {
+        window.localStorage.setItem(CLERK_TRAVELER_ACTIVE_KEY, JSON.stringify(payload));
+      } catch (_e) {}
+    } catch (_err) {}
+  }
+
+  function clearClerkTravelerActive() {
+    try { window.sessionStorage.removeItem(CLERK_TRAVELER_ACTIVE_KEY); } catch (_e) {}
+    try { window.localStorage.removeItem(CLERK_TRAVELER_ACTIVE_KEY); } catch (_e) {}
+  }
+
+  function readClerkTravelerActive() {
+    const parse = function (raw) {
+      if (!raw) return null;
+      try {
+        const obj = JSON.parse(raw);
+        if (!obj || obj.active !== true) return null;
+        const ts = Number(obj.updatedAtMs || 0);
+        if (!Number.isFinite(ts) || Date.now() - ts > CLERK_TRAVELER_ACTIVE_TTL_MS) return null;
+        return obj;
+      } catch (_e) {
+        return null;
+      }
+    };
+    try {
+      const s = parse(window.sessionStorage.getItem(CLERK_TRAVELER_ACTIVE_KEY));
+      if (s) return s;
+    } catch (_e) {}
+    try {
+      return parse(window.localStorage.getItem(CLERK_TRAVELER_ACTIVE_KEY));
+    } catch (_e2) {
+      return null;
+    }
+  }
+
+  function resolveMaxwellianLibraryApiBase() {
+    try {
+      const host = (window.location && window.location.hostname) || "127.0.0.1";
+      const port = (window.location && window.location.port) || "";
+      const protocol = (window.location && window.location.protocol) || "http:";
+      if (protocol === "file:" || (port && port !== "8600" && (host === "127.0.0.1" || host === "localhost"))) {
+        return "http://127.0.0.1:8600";
+      }
+      if (port === "8600") return protocol + "//" + host + ":" + port;
+      return "";
+    } catch (_e) {
+      return "http://127.0.0.1:8600";
+    }
+  }
+
+  let maxwellianMasterBriefCache = null;
+  let maxwellianMasterBriefFetchedAtMs = 0;
+  let maxwellianMasterBriefPromise = null;
+  const MAXWELLIAN_MASTER_BRIEF_TTL_MS = 1000 * 60 * 10;
+
+  function fetchMaxwellianMasterBrief(options) {
+    const opts = options && typeof options === "object" ? options : {};
+    const force = Boolean(opts.force);
+    const now = Date.now();
+    if (
+      !force &&
+      maxwellianMasterBriefCache &&
+      maxwellianMasterBriefCache.text &&
+      now - maxwellianMasterBriefFetchedAtMs < MAXWELLIAN_MASTER_BRIEF_TTL_MS
+    ) {
+      return Promise.resolve(maxwellianMasterBriefCache);
+    }
+    if (!force && maxwellianMasterBriefPromise) return maxwellianMasterBriefPromise;
+    const bases = [];
+    const primaryBase = resolveMaxwellianLibraryApiBase();
+    if (primaryBase) bases.push(primaryBase);
+    bases.push("");
+    bases.push("http://127.0.0.1:8600");
+    const paths = [];
+    bases.forEach(function (b) {
+      const p = (b || "") + "/api/maxwellian/library/master-brief";
+      if (paths.indexOf(p) < 0) paths.push(p);
+    });
+    paths.push("maxwellian/briefs/LIVING_Unity_What_We_Do.md");
+    paths.push("/UnityEnergy/maxwellian/briefs/LIVING_Unity_What_We_Do.md");
+    paths.push("./maxwellian/briefs/LIVING_Unity_What_We_Do.md");
+
+    maxwellianMasterBriefPromise = paths
+      .reduce(function (chain, url) {
+        return chain.catch(function () {
+          return fetch(url, { credentials: "same-origin" }).then(function (resp) {
+            if (!resp || !resp.ok) throw new Error("brief_http_" + (resp && resp.status));
+            const ctype = String((resp.headers && resp.headers.get("content-type")) || "");
+            if (ctype.indexOf("application/json") >= 0) {
+              return resp.json().then(function (payload) {
+                if (!payload || !payload.ok || !payload.text) throw new Error("brief_json_invalid");
+                return {
+                  text: String(payload.text),
+                  source: payload.source || url,
+                  authority: payload.authority || "MaxwellianLibrary_master",
+                };
+              });
+            }
+            return resp.text().then(function (text) {
+              const body = String(text || "").trim();
+              if (!body || body.length < 40) throw new Error("brief_empty");
+              return { text: body.slice(0, 12000), source: url, authority: "static_mirror" };
+            });
+          });
+        });
+      }, Promise.reject(new Error("start")))
+      .then(function (result) {
+        maxwellianMasterBriefCache = result;
+        maxwellianMasterBriefFetchedAtMs = Date.now();
+        maxwellianMasterBriefPromise = null;
+        return result;
+      })
+      .catch(function (err) {
+        maxwellianMasterBriefPromise = null;
+        return {
+          text: "",
+          source: "",
+          authority: "unavailable",
+          error: String((err && err.message) || err || "brief_fetch_failed"),
+        };
+      });
+    return maxwellianMasterBriefPromise;
+  }
+
 (function () {
   let frameLoadTimer = null;
   let frameMessagingBound = false;
@@ -9,7 +167,6 @@
   let footerQuestionSignature = "";
   let widgetReady = false;
   let hasConversationStarted = false;
-    try { showWaitingClaireButton(); } catch (_e) {}
   let currentVisitorName = "";
   let leadCaptureState = null;
   let leadCaptureSubmitInFlight = false;
@@ -60,6 +217,9 @@
   let activePagePatternContextCacheKey = "";
   let activePagePatternContextFetchedAtMs = 0;
   let activePagePatternContextPromise = null;
+  let clerkOnboardPrimerCache = null;
+  let clerkOnboardPrimerCacheFetchedAtMs = 0;
+  let clerkOnboardPrimerPromise = null;
   let electricalStoryQuestionCount = 0;
   let electricalStoryQuestionCap = 0;
   let electricalStoryExitPromptActive = false;
@@ -68,34 +228,13 @@
   let contentRetrievalInFlight = false;
   let lastContentRetrievalFingerprint = "";
   let lastContentRetrievalAtMs = 0;
-  let experimentTelemetrySession = null;
-  let experimentTelemetryEvents = [];
-  let experimentTelemetrySessionCounter = 0;
   const COMPACT_SQUARE_FRAME_SIZE = 236;
   const SIGNAL_MODE_IDLE = "idle";
   const SIGNAL_MODE_LISTENING = "listening";
   const SIGNAL_MODE_SPEAKING = "speaking";
   const SIGNAL_SPEAKING_DECAY_MS = 780;
   const SIGNAL_FORMATION_DURATION_MS = 2300;
-  function isClaireCharacterConfig(cfg, launchSession) {
-    try {
-      const c = cfg || {};
-      const ls = launchSession || {};
-      const blob = [
-        c.character_id, c.default_character_id, c.character_name,
-        ls.characterId, ls.character_id,
-        c.default_context_source, ls.contextSource
-      ].map(function (x) { return String(x || "").toLowerCase(); }).join(" ");
-      if (blob.indexOf("clerk") >= 0 && blob.indexOf("claire") < 0) return false;
-      if (blob.indexOf("clerk-maxwell") >= 0) return false;
-      if (blob.indexOf("claire") >= 0 || blob.indexOf("charcot") >= 0 || blob.indexOf("kuranda-claire") >= 0) return true;
-      if (typeof document !== "undefined" && document.body && document.body.classList.contains("page6-kuranda-voice-page")) return true;
-    } catch (_e) {}
-    return false;
-  }
-
-  const START_BUTTON_WAITING_LABEL = "Clerk is ready";
-  const START_BUTTON_CLOSE_LABEL = "Pause Clerk";
+  const START_BUTTON_WAITING_LABEL = "Waiting on Clerk";
   const UNITY_START_GATE_MAX_STALL_RETRIES = 2;
   const UNITY_START_GATE_MOBILE_MAX_STALL_RETRIES = 4;
   const UNITY_START_GATE_STALL_TIMEOUT_MS = 5000;
@@ -111,16 +250,14 @@
   const PAGE_CONTEXT_MEMORY_STORAGE_KEY_PREFIX = "maxwellian_clerk_page_context_memory_v1";
   const PATTERN_CONTEXT_PREFETCH_TTL_MS = 1000 * 60 * 10;
   const PATTERN_CONTEXT_PREFETCH_LAUNCH_BUDGET_MS = 360;
+  const CLERK_ONBOARD_PRIMER_TTL_MS = 1000 * 60 * 10;
+  const CLERK_ONBOARD_PRIMER_CONTEXT_CHAR_LIMIT = 2600;
   const CROSS_PAGE_ROAMING_MAX_TRANSCRIPT_ENTRIES = 10;
   const CROSS_PAGE_ROAMING_STATE_TTL_MS = 1000 * 60 * 45;
   const CROSS_PAGE_ROAMING_RESUME_DELAY_MS = 180;
   const TOUR_GUIDE_PENDING_TTL_MS = 1000 * 60 * 5;
   const CONTENT_RETRIEVAL_DEDUP_WINDOW_MS = 1000 * 18;
   const CONTENT_RETRIEVAL_CONTEXT_CHAR_LIMIT = 2600;
-  const EXPERIMENT_TELEMETRY_DEFAULT_STORAGE_KEY = "maxwellian_clerk_rev2_baseline_runs_v1";
-  const EXPERIMENT_TELEMETRY_DEFAULT_HISTORY_LIMIT = 24;
-  const EXPERIMENT_TELEMETRY_DEFAULT_EVENT_LIMIT = 600;
-  const EXPERIMENT_TELEMETRY_DISPATCH_EVENT = "maxwellian:clerk-rev2-telemetry";
   const CONTENT_RETRIEVAL_STOP_WORDS = {
     a: true,
     about: true,
@@ -945,7 +1082,11 @@
         prefixes.push(firstSegmentPrefix);
       }
     }
-    return prefixes;
+    // FILTER_CP_PREFIXES: avoid /CognitionPartner/api and /UnityEnergy/api 404s on local static host
+    return prefixes.filter(function (p) {
+      const s = String(p || "");
+      return s.indexOf("/CognitionPartner") === -1 && s.indexOf("/UnityEnergy") === -1;
+    });
   }
 
   function buildRuntimeAuthEndpointCandidates(cfgOrOptions) {
@@ -980,10 +1121,11 @@
         coerceText(window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT)
       );
     }
-    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth");
-    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth.json");
+    // Prefer root-absolute auth first. Relative ../api resolves under /CognitionPartner and 404s.
     appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth");
     appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth.json");
+    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth.json");
     const pathPrefixes = getRuntimeAuthEndpointPathPrefixes();
     pathPrefixes.forEach(function (prefix) {
       appendRuntimeAuthEndpointCandidate(candidates, `${prefix}/api/hume/runtime-auth`);
@@ -1222,7 +1364,7 @@
       intelligence_default_profile_id: "",
       intelligence_profiles: {},
       intelligence_routing_rules: [],
-      session_context_char_limit: 24000,
+      session_context_char_limit: 3600,
       syntax_awareness_context: "",
       syntax_awareness_glossary: [],
       page_context_profiles: {},
@@ -1230,7 +1372,7 @@
       question_notes_hold_line: "Please hold while I go back and get my notes.",
       question_notes_library: [],
       founder_detection_enabled: true,
-      founder_identity_name: "Mr. Howell",
+      founder_identity_name: "Mike Howell",
       founder_identity_aliases: ["mike howell", "mike", "mr howell", "michael howell"],
       founder_mode_guidance: "",
       founder_notes_hold_line: "Founder mode active. Please hold while I capture your direction and notes.",
@@ -1290,10 +1432,10 @@
       ],
       character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
       character_background_url: "",
-      embed_url: "/UnityEnergy/openai_renderer/index.html?v=20260423r5",
+      embed_url: "./openai_renderer/index.html?v=20261011-vesper-live-15",
       openai_session_endpoint: "/api/openai/realtime/session",
-      openai_realtime_model: "gpt-4o-realtime-preview",
-      openai_voice: "ash",
+      openai_realtime_model: "gpt-live-1",
+      openai_voice: "vesper",
       allow_openai_fallback: false,
       allow_openai_voice_fallback: false,
       openai_center_visual_url: "/UnityEnergy/assets/images/ClerkMaxwell_60423t.png",
@@ -1565,7 +1707,7 @@
     if (embedUrl && /\/hume_renderer\//i.test(embedUrl)) {
       return embedUrl.replace(/\/hume_renderer\//i, "/openai_renderer/");
     }
-    return "/UnityEnergy/openai_renderer/index.html?v=20260423r5";
+    return "./openai_renderer/index.html?v=20261011-vesper-live-15";
   }
 
   function buildOpenAiFallbackConfig(cfg) {
@@ -1607,8 +1749,6 @@
     const auth = normalizeAuthConfig(cfg);
     const allowAuthless = allowsHumeAuthlessConnect(cfg);
     if (!auth && !allowAuthless) return null;
-    const forceVoiceAsConfigId = cfg.experimental_force_voice_id_as_config_id === true;
-    const forcedConfigIdFromVoice = coerceText(cfg.voice_id || cfg.openai_voice);
     const connectConfig = {
       hostname: coerceText(cfg.hume_hostname || cfg.hostname) || "api.hume.ai",
       reconnectAttempts: Number.isFinite(Number(cfg.hume_reconnect_attempts || cfg.reconnectAttempts))
@@ -1619,18 +1759,11 @@
     if (auth) {
       connectConfig.auth = auth;
     }
-    const configId = forceVoiceAsConfigId
-      ? forcedConfigIdFromVoice || coerceText(cfg.hume_config_id || cfg.config_id)
-      : coerceText(cfg.hume_config_id || cfg.config_id);
+    const configId = coerceText(cfg.hume_config_id || cfg.config_id);
     if (configId) connectConfig.configId = configId;
-    const voiceId = coerceText(cfg.hume_voice_id || cfg.voice_id || cfg.openai_voice);
-    if (voiceId) {
-      connectConfig.voiceId = voiceId;
-      connectConfig.voice_id = voiceId;
-    }
     const configVersion = Number(cfg.config_version);
-    if (Number.isFinite(configVersion) && configVersion > 0) {
-      connectConfig.configVersion = Math.floor(configVersion);
+    if (Number.isFinite(configVersion)) {
+      connectConfig.configVersion = Math.max(0, Math.floor(configVersion));
     }
     const resumedChatGroupId = coerceText(
       launchSession &&
@@ -1670,35 +1803,6 @@
     if (directConfigId) return directConfigId;
     const voiceId = normalizeVoiceId(cfg);
     return voiceId || "";
-  }
-  function shouldShowExperimentalVoiceIndicator(cfg) {
-    return Boolean(cfg && cfg.experimental_voice_indicator_enabled);
-  }
-  function getExperimentalVoiceLabel(cfg) {
-    if (!cfg || typeof cfg !== "object") return "";
-    const explicit = coerceText(cfg.experimental_active_voice_label);
-    if (explicit) return explicit;
-    const labels =
-      cfg.experimental_voice_labels && typeof cfg.experimental_voice_labels === "object"
-        ? cfg.experimental_voice_labels
-        : {};
-    const voiceId = normalizeVoiceId(cfg);
-    if (!voiceId) return "";
-    return coerceText(labels[voiceId]);
-  }
-  function getExperimentalVoiceDescriptor(cfg) {
-    if (!shouldShowExperimentalVoiceIndicator(cfg)) return "";
-    const voiceId = normalizeVoiceId(cfg);
-    const label = getExperimentalVoiceLabel(cfg);
-    const forceVoiceAsConfigId = cfg && cfg.experimental_force_voice_id_as_config_id === true;
-    const humeConfigId = forceVoiceAsConfigId
-      ? coerceText(voiceId || cfg.openai_voice)
-      : coerceText(cfg && (cfg.hume_config_id || cfg.config_id));
-    const configSuffix = humeConfigId ? ` | cfg:${humeConfigId}` : "";
-    if (label && voiceId) return `${label} (${voiceId}${configSuffix})`;
-    if (label) return label;
-    if (voiceId) return `${voiceId}${configSuffix}`;
-    return "";
   }
 
   function coerceText(value) {
@@ -2372,22 +2476,17 @@
   }
 
   function combineContextBlocks(blocks, maxChars) {
-    const parts = [];
-    const seen = new Set();
-    (Array.isArray(blocks) ? blocks : []).forEach(function (block) {
+    if (!Array.isArray(blocks)) return "";
+    const unique = [];
+    blocks.forEach(function (block) {
       const text = coerceText(block);
-      if (!text) return;
-      const key = text.toLowerCase();
-      if (seen.has(key)) return;
-      seen.add(key);
-      parts.push(text);
+      if (!text || unique.includes(text)) return;
+      unique.push(text);
     });
-    if (!parts.length) return "";
-    const joined = parts.join("\n\n");
-    const limit = Number(maxChars);
-    if (!Number.isFinite(limit) || limit <= 0 || joined.length <= limit) return joined;
-    // Prefer keeping the start (onboard/bio first) when truncating.
-    return `${joined.slice(0, Math.max(0, limit - 1)).trim()}…`;
+    if (unique.length === 0) return "";
+    const limit = Number.isFinite(maxChars) ? Math.max(800, Math.floor(maxChars)) : 3600;
+    const combined = unique.join("\n\n");
+    return combined.length > limit ? `${combined.slice(0, limit)}…` : combined;
   }
 
   function normalizeSyntaxAwarenessGlossary(cfg) {
@@ -2500,13 +2599,6 @@
   }
 
   function buildPageAwareOpeningLine(profile, payload) {
-    // CLAIRE_NO_PAGE_OPENING
-    try {
-      if (isClaireCharacterConfig(getVoiceConfig ? getVoiceConfig() : window.MAXWELLIAN_HUME, typeof pendingLaunchSession !== "undefined" ? pendingLaunchSession : null)) {
-        return "";
-      }
-    } catch (_e) {}
-
     const profileId = resolvePageContextProfileId(profile, payload);
     const explicit = coerceText(payload && payload.page_context_opening_line);
     if (explicit) return explicit;
@@ -2758,17 +2850,6 @@
   }
 
   function collectActivePageContextSnapshot() {
-    try {
-      const cfg = (typeof getVoiceConfig === "function" ? getVoiceConfig() : null) || window.MAXWELLIAN_HUME || {};
-      const cid = String((cfg && (cfg.character_id || cfg.default_character_id || cfg.character_name)) || "").toLowerCase();
-      if (cfg.disable_page_context || cfg.page_context_enabled === false || cfg.include_page_context === false) {
-        return {};
-      }
-      if (cid.includes("claire") || cid.includes("charcot")) {
-        return {};
-      }
-    } catch (_e) {}
-
     const snapshot = {
       pathname: getCurrentPagePathname(),
       href: getCurrentPageHref(),
@@ -3295,7 +3376,7 @@
           : cfg && cfg.session_context_char_limit;
       payload.session_context = combineContextBlocks(
         [retrievalContextBlock, coerceText(payload.session_context)],
-        clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
+        clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
       );
       payload.content_scope_instructions = combineContextBlocks(
         [
@@ -4262,6 +4343,11 @@
     };
   }
 
+  function resolveGuideScope(cfg, scopeRef) {
+    // Compatibility wrapper (traveler-float call sites used cfg-first order).
+    return resolveGuideScopeReference(scopeRef, cfg);
+  }
+
   function resolveGuideScopeReference(scopeInput, cfg) {
     const source = scopeInput && typeof scopeInput === "object" ? scopeInput : {};
     const payload =
@@ -4354,11 +4440,18 @@
   }
 
   function shouldEnableCrossPageRoaming(cfg, scopeRef) {
+    // Traveler float: default ON for Unity site unless explicitly disabled.
+    if (cfg && cfg.cross_page_roaming_enabled === false) return false;
+    if (cfg && cfg.clerk_traveler_float_enabled === false) return false;
     const scope = resolveGuideScopeReference(scopeRef, cfg);
-    if (scope.guideMode === "customer") {
+    if (scope === "customer") {
+      // Customer guides still roam when customer guide is enabled.
+      if (isCustomerGuideEnabled(cfg)) return true;
+      // If traveler already active, keep following even when guide flags lag.
+      if (readClerkTravelerActive()) return true;
       return isCustomerGuideEnabled(cfg);
     }
-    return !cfg || cfg.cross_page_roaming_enabled !== false;
+    return true;
   }
 
   function shouldAutoResumeCrossPageRoaming(cfg, scopeRef) {
@@ -4726,6 +4819,7 @@
       transcriptEntries: previous && Array.isArray(previous.transcriptEntries) ? previous.transcriptEntries : [],
       updatedAt: new Date().toISOString(),
     };
+    try { markClerkTravelerActive({ reason: "roaming_activated" }); } catch (_e) {}
     writeCrossPageRoamingState(nextState, scope, cfg);
   }
 
@@ -4764,6 +4858,7 @@
     state.context = context;
     state.mode = mode;
     state.updatedAt = new Date().toISOString();
+    try { markClerkTravelerActive({ reason: "page_transition" }); } catch (_e) {}
     writeCrossPageRoamingState(state, launchSession, cfg);
   }
 
@@ -4837,28 +4932,65 @@
 
   function maybeResumeCrossPageRoamingOnLoad() {
     const cfg = getVoiceConfig();
-    if (!shouldAutoResumeCrossPageRoaming(cfg)) return false;
-    if (!isClerkVoiceFeatureEnabled()) return false;
-    if (isHomePageClerkDisabled()) return false;
-    const scope = resolveGuideScopeReference({}, cfg);
-    const state = readCrossPageRoamingState(scope, cfg);
-    if (!state || !state.active || !state.resumeAfterNavigation) return false;
-    const currentPage = getCurrentPageSlug();
-    const targetPage = coerceText(state.nextPage);
-    if (targetPage && targetPage !== currentPage) return false;
-    const launchOptions = buildCrossPageRoamingLaunchOptions(cfg, state);
-    if (!launchOptions) return false;
-    state.resumeAfterNavigation = false;
-    state.nextPage = "";
-    state.lastPage = currentPage;
-    state.updatedAt = new Date().toISOString();
-    writeCrossPageRoamingState(state, scope, cfg);
-    window.setTimeout(function () {
-      const modal = document.getElementById("clerkVoiceModal");
-      if (modal && modal.classList.contains("active")) return;
-      openClerkWithPageContext(launchOptions);
-    }, CROSS_PAGE_ROAMING_RESUME_DELAY_MS);
-    return true;
+    if (!shouldAutoResumeCrossPageRoaming(cfg)) {
+      // fall through to traveler-float path below
+    } else if (!isClerkVoiceFeatureEnabled()) {
+      return false;
+    } else if (isHomePageClerkDisabled()) {
+      return false;
+    } else {
+      const scope = resolveGuideScopeReference({}, cfg);
+      const state = readCrossPageRoamingState(scope, cfg);
+      if (state && state.active && state.resumeAfterNavigation) {
+        const currentPage = getCurrentPageSlug();
+        const targetPage = coerceText(state.nextPage);
+        if (!targetPage || targetPage === currentPage) {
+          const launchOptions = buildCrossPageRoamingLaunchOptions(cfg, state);
+          if (launchOptions) {
+            state.resumeAfterNavigation = false;
+            state.nextPage = "";
+            state.lastPage = currentPage;
+            state.updatedAt = new Date().toISOString();
+            writeCrossPageRoamingState(state, scope, cfg);
+            try { markClerkTravelerActive({ reason: "roaming_resume", page: currentPage }); } catch (_e) {}
+            window.setTimeout(function () {
+              const modal = document.getElementById("clerkVoiceModal");
+              if (modal && modal.classList.contains("active")) return;
+              openClerkWithPageContext(launchOptions);
+            }, CROSS_PAGE_ROAMING_RESUME_DELAY_MS);
+            return true;
+          }
+        }
+      }
+    }
+
+    // CLERK_TRAVELER_FLOAT_V1_RESUME — keep Clerk traveling with customer across pages
+    try {
+      if (typeof readClerkTravelerActive !== "function") return false;
+      const traveler = readClerkTravelerActive();
+      if (!traveler || !traveler.active) return false;
+      if (!isClerkVoiceFeatureEnabled()) return false;
+      if (isHomePageClerkDisabled()) return false;
+      window.setTimeout(function () {
+        try {
+          const modal = document.getElementById("clerkVoiceModal");
+          if (modal && modal.classList.contains("active")) return;
+          openClerkWithPageContext({
+            source: "traveler_float_resume",
+            preserveRoaming: true,
+            closeExistingSession: false,
+            contextNote:
+              "Traveler float resume. Customer moved with you to this page. Continue the same conversation; acknowledge the new page briefly, then answer without making them restart.",
+          });
+          markClerkTravelerActive({
+            reason: "float_resumed",
+            page: String((window.location && window.location.pathname) || ""),
+          });
+        } catch (_e) {}
+      }, Math.max(220, Number(CROSS_PAGE_ROAMING_RESUME_DELAY_MS) || 180));
+      return true;
+    } catch (_err) {}
+    return false;
   }
 
   function bindCrossPageRoamingNavigation() {
@@ -4951,11 +5083,163 @@
     return openClerkWithPageContext(launchOptions);
   }
 
+
+  function getClerkOnboardPrimerConfig(cfg) {
+    const enabled = !cfg || cfg.clerk_onboard_enabled !== false;
+    const configuredPath = coerceText(
+      cfg &&
+        (cfg.clerk_onboard_primer_url ||
+          cfg.clerk_onboard_primer_path ||
+          cfg.clerk_onboard_primer)
+    );
+    const normalizedPath = resolveRelativeUrlFromCurrentPath(
+      configuredPath || "maxwellian/briefs/SPEAK_WITH_CLERK_ONBOARD.md"
+    );
+    const sourceFile = coerceText(
+      cfg && (cfg.clerk_onboard_primer_file || cfg.clerk_onboard_primer_source_file)
+    );
+    const refreshOnLaunch = Boolean(cfg && cfg.clerk_onboard_refresh_on_launch === true);
+    const primerCharLimit = clampNumber(
+      cfg && cfg.clerk_onboard_primer_char_limit,
+      900,
+      6000,
+      CLERK_ONBOARD_PRIMER_CONTEXT_CHAR_LIMIT
+    );
+    return {
+      enabled: enabled,
+      path: normalizedPath,
+      sourceFile: sourceFile,
+      refreshOnLaunch: refreshOnLaunch,
+      charLimit: primerCharLimit,
+    };
+  }
+
+  function normalizeClerkOnboardPrimerText(value, maxChars) {
+    const normalized = coerceText(value).replace(/\r/g, "\n").trim();
+    if (!normalized) return "";
+    const limit = Number.isFinite(Number(maxChars))
+      ? Math.max(900, Math.floor(Number(maxChars)))
+      : CLERK_ONBOARD_PRIMER_CONTEXT_CHAR_LIMIT;
+    return normalized.length > limit ? `${normalized.slice(0, limit).trim()}…` : normalized;
+  }
+
+  async function fetchClerkOnboardPrimer(cfg, options) {
+    const primerCfg = getClerkOnboardPrimerConfig(cfg);
+    if (!primerCfg.enabled || !primerCfg.path || typeof window.fetch !== "function") {
+      return clerkOnboardPrimerCache;
+    }
+    const opts = options && typeof options === "object" ? options : {};
+    const forceRefresh = opts.force === true || primerCfg.refreshOnLaunch;
+    const cached =
+      clerkOnboardPrimerCache &&
+      clerkOnboardPrimerCache.path === primerCfg.path &&
+      Number.isFinite(clerkOnboardPrimerCacheFetchedAtMs) &&
+      Date.now() - clerkOnboardPrimerCacheFetchedAtMs <= CLERK_ONBOARD_PRIMER_TTL_MS;
+    if (!forceRefresh && cached) {
+      return clerkOnboardPrimerCache;
+    }
+    if (clerkOnboardPrimerPromise) {
+      return clerkOnboardPrimerPromise;
+    }
+    clerkOnboardPrimerPromise = (async function () {
+      try {
+        const response = await window.fetch(primerCfg.path, { credentials: "same-origin" });
+        if (!response || !response.ok) return clerkOnboardPrimerCache;
+        const text = await response.text();
+        const normalizedText = normalizeClerkOnboardPrimerText(text, primerCfg.charLimit);
+        if (!normalizedText) return clerkOnboardPrimerCache;
+        clerkOnboardPrimerCache = {
+          path: primerCfg.path,
+          sourceFile: primerCfg.sourceFile,
+          text: normalizedText,
+          fetchedAt: new Date().toISOString(),
+        };
+        clerkOnboardPrimerCacheFetchedAtMs = Date.now();
+        return clerkOnboardPrimerCache;
+      } catch (_err) {
+        return clerkOnboardPrimerCache;
+      } finally {
+        clerkOnboardPrimerPromise = null;
+      }
+    })();
+    return clerkOnboardPrimerPromise;
+  }
+
+  function buildClerkOnboardPrimerContextBlock(primerData) {
+    const primerText = coerceText(primerData && primerData.text);
+    if (!primerText) return "";
+    return combineContextBlocks(
+      [
+        "Clerk onboard primer (refresh this first before page-specific answering):",
+        primerText,
+        "Onboard execution rule: internalize this primer first, then answer from active page context and allowed files.",
+      ],
+      CLERK_ONBOARD_PRIMER_CONTEXT_CHAR_LIMIT
+    );
+  }
+
+  function applyClerkOnboardPrimerToLaunch(launchSession, cfg) {
+    if (!launchSession || typeof launchSession !== "object") return;
+    if (!launchSession.contextPayload || typeof launchSession.contextPayload !== "object") {
+      launchSession.contextPayload = {};
+    }
+    const payload = launchSession.contextPayload;
+    const primerCfg = getClerkOnboardPrimerConfig(cfg);
+    if (!primerCfg.enabled) {
+      payload.clerk_onboard_active = false;
+      return;
+    }
+    const primerData =
+      clerkOnboardPrimerCache && clerkOnboardPrimerCache.path === primerCfg.path
+        ? clerkOnboardPrimerCache
+        : null;
+    payload.clerk_onboard_active = true;
+    payload.clerk_onboard_primer_path = primerCfg.path;
+    if (primerCfg.sourceFile) {
+      payload.clerk_onboard_primer_file = primerCfg.sourceFile;
+    }
+    if (primerData && coerceText(primerData.fetchedAt)) {
+      payload.clerk_onboard_primer_fetched_at = coerceText(primerData.fetchedAt);
+    }
+    if (primerCfg.sourceFile) {
+      const allowedFiles = normalizeStringArray(payload.allowed_source_files, 32);
+      if (!allowedFiles.includes(primerCfg.sourceFile)) {
+        allowedFiles.unshift(primerCfg.sourceFile);
+        payload.allowed_source_files = allowedFiles.slice(0, 32);
+      }
+    }
+    const primerContextBlock = buildClerkOnboardPrimerContextBlock(primerData);
+    if (!primerContextBlock) {
+      payload.clerk_onboard_primer_status = "unavailable";
+      return;
+    }
+    payload.clerk_onboard_primer_status = "loaded";
+    payload.clerk_onboard_primer_excerpt = normalizeClerkOnboardPrimerText(
+      primerData.text,
+      1200
+    );
+    const sessionContextCharLimitRaw =
+      payload.session_context_char_limit !== undefined
+        ? payload.session_context_char_limit
+        : cfg && cfg.session_context_char_limit;
+    payload.session_context = combineContextBlocks(
+      [primerContextBlock, coerceText(payload.session_context)],
+      clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
+    );
+    appendSessionDecision(launchSession, "clerk-onboard-primer-applied", {
+      primer_path: primerCfg.path,
+      primer_file: primerCfg.sourceFile,
+      primer_status: payload.clerk_onboard_primer_status,
+    });
+  }
   async function launchClerkWithPageContext(rawInput, fallbackInput) {
     if (!isClerkVoiceFeatureEnabled()) return false;
     const cfg = getVoiceConfig();
     try {
       await runUnityStartGatePreflight(cfg);
+    } catch (_err) {}
+    try {
+      await fetchClerkOnboardPrimer(cfg, { force: true });
     } catch (_err) {}
     try {
       const patternPrefetchPromise = prefetchActivePagePatternContext().catch(function (_err) {
@@ -5056,6 +5340,12 @@
       coerceText(cfg && cfg.floating_launcher_icon_url),
       coerceText(cfg && cfg.signal_portrait_url),
       coerceText(cfg && cfg.character_avatar_url),
+      "assets/images/ClerkMaxwell_60423t.png",
+      "/UnityEnergy/assets/images/ClerkMaxwell_60423t.png",
+      "unity-icon-circle-512.png",
+      "unity-icon-circle-192.png",
+      "apple-touch-icon.png",
+      "unity-icon-ring-white-512.png",
     ].filter(Boolean);
     const candidates = [];
     seeds.forEach(function (seed) {
@@ -5130,24 +5420,14 @@
     if (!requiresStartGate && !shouldPreflight) return false;
     if (!shouldPreflight) return false;
     unityStartGatePreflightAttempted = true;
-    trackExperimentTelemetryEvent("mic-preflight-attempt", {
-      requires_start_gate: requiresStartGate,
-      preflight_enabled: shouldPreflight,
-    }, { cfg: cfg });
     try {
       await requestTopLevelMicAccess();
       unityStartGatePreflightReady = true;
-      trackExperimentTelemetryEvent("mic-preflight-success", {}, { cfg: cfg });
       return true;
     } catch (err) {
       unityStartGatePreflightReady = false;
       unityStartGatePreflightFailed = true;
       unityStartGatePreflightStatusMessage = getMicrophoneRecoveryMessage(err);
-      trackExperimentTelemetryEvent(
-        "mic-preflight-failed",
-        { message: coerceText(err && err.message) || getMicrophoneRecoveryMessage(err) },
-        { cfg: cfg }
-      );
       return false;
     }
   }
@@ -5157,6 +5437,9 @@
     if (!isFloatingLauncherEnabled(cfg)) return false;
     const launchOptions = buildFloatingLauncherLaunchOptions(cfg);
     await runUnityStartGatePreflight(cfg);
+    await fetchClerkOnboardPrimer(cfg, { force: true }).catch(function () {
+      return null;
+    });
     return openClerkWithPageContext(launchOptions);
   }
 
@@ -5330,15 +5613,7 @@
       pageAwareFollowupPrompt = buildPageAwareFollowupPrompt(profile, payload);
       pageAwareNameRequestLine = buildPageAwareNameRequestLine(profile, payload);
       if (pageAwareOpeningLine) {
-        // CLAIRE_STRIP_PAGE_CONTEXT_PAYLOAD
-      try {
-        if (isClaireCharacterConfig(cfg, launchSession)) {
-          pageAwareOpeningLine = "";
-        }
-      } catch (_e) {}
-      if (pageAwareOpeningLine) {
         assignContextValueIfMissing(payload, "page_context_opening_line", pageAwareOpeningLine);
-      }
         assignContextValueIfMissing(payload, "opening_line", pageAwareOpeningLine);
       }
       if (pageAwareFollowupPrompt) {
@@ -5456,7 +5731,7 @@
         knowledgeReferenceSpine ? `Canonical reference spine: ${knowledgeReferenceSpine}` : "",
         syntaxContext,
       ],
-      clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
+      clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
     );
     if (mergedSessionContext) {
       payload.session_context = mergedSessionContext;
@@ -5504,7 +5779,7 @@
         : cfg && cfg.session_context_char_limit;
     const mergedSessionContext = combineContextBlocks(
       [groundingAppendix, coerceText(payload.session_context)],
-      clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
+      clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
     );
     if (mergedSessionContext) {
       payload.session_context = mergedSessionContext;
@@ -5759,7 +6034,7 @@
         : cfg && cfg.session_context_char_limit;
     const mergedSessionContext = combineContextBlocks(
       [scopeContextBlock, coerceText(payload.session_context)],
-      clampNumber(sessionContextCharLimitRaw, 2000, 32000, 24000)
+      clampNumber(sessionContextCharLimitRaw, 800, 8000, 3600)
     );
     if (mergedSessionContext) {
       payload.session_context = mergedSessionContext;
@@ -6037,17 +6312,6 @@
   }
 
   async function prefetchActivePagePatternContext() {
-    try {
-      const cfg = (typeof getVoiceConfig === "function" ? getVoiceConfig() : null) || window.MAXWELLIAN_HUME || {};
-      const cid = String((cfg && (cfg.character_id || cfg.default_character_id || cfg.character_name)) || "").toLowerCase();
-      if (cfg.disable_page_context || cfg.page_context_enabled === false || cfg.include_page_context === false) {
-        return Promise.resolve(null);
-      }
-      if (cid.includes("claire") || cid.includes("charcot")) {
-        return Promise.resolve(null);
-      }
-    } catch (_e) {}
-
     if (!isLikelySummaryboardPage()) return null;
     if (typeof window.fetch !== "function") return null;
     const cacheKey = buildSummaryboardPatternContextKey();
@@ -6220,7 +6484,7 @@
     }
     const configuredName = coerceText(cfg && cfg.founder_identity_name);
     if (sample.includes("mike howell") || sample.includes("michael howell")) {
-      return { active: true, identity: "Mr. Howell" };
+      return { active: true, identity: "Mike Howell" };
     }
     if (configuredName) return { active: true, identity: configuredName };
     if (currentVisitorName) return { active: true, identity: currentVisitorName };
@@ -7795,6 +8059,7 @@
     }
     applyLaunchContextPolicy(base, cfg);
     applyIntelligenceProfile(base, cfg);
+    applyClerkOnboardPrimerToLaunch(base, cfg);
     applySharedContextAwareness(base, cfg);
     const engagementProtocol = getTrimmedConfigText(cfg, "engagement_protocol");
     if (engagementProtocol) {
@@ -8320,253 +8585,6 @@
     return { maxAttempts: 24, delayMs: 180 };
   }
 
-  function getExperimentTelemetryConfig(cfg) {
-    const sourceCfg = cfg && typeof cfg === "object" ? cfg : getVoiceConfig();
-    const rawCfg =
-      sourceCfg && sourceCfg.experimental_telemetry && typeof sourceCfg.experimental_telemetry === "object"
-        ? sourceCfg.experimental_telemetry
-        : {};
-    const sessionHistoryLimit = Number(rawCfg.session_history_limit);
-    const eventLimit = Number(rawCfg.event_limit_per_session);
-    return {
-      enabled: rawCfg.enabled !== false,
-      storageKey:
-        coerceText(rawCfg.storage_key) || EXPERIMENT_TELEMETRY_DEFAULT_STORAGE_KEY,
-      sessionHistoryLimit: Number.isFinite(sessionHistoryLimit)
-        ? Math.max(3, Math.min(80, Math.floor(sessionHistoryLimit)))
-        : EXPERIMENT_TELEMETRY_DEFAULT_HISTORY_LIMIT,
-      eventLimitPerSession: Number.isFinite(eventLimit)
-        ? Math.max(60, Math.min(3000, Math.floor(eventLimit)))
-        : EXPERIMENT_TELEMETRY_DEFAULT_EVENT_LIMIT,
-      persistOnEveryEvent: rawCfg.persist_on_every_event !== false,
-      includeConsoleDiagnostics: rawCfg.include_console_diagnostics !== false,
-    };
-  }
-
-  function isExperimentTelemetryEnabled(cfg) {
-    const telemetryCfg = getExperimentTelemetryConfig(cfg);
-    return telemetryCfg.enabled !== false;
-  }
-
-  function summarizeLaunchSessionForTelemetry(launchSession) {
-    if (!launchSession || typeof launchSession !== "object") return {};
-    const contextPayload =
-      launchSession.contextPayload && typeof launchSession.contextPayload === "object"
-        ? launchSession.contextPayload
-        : {};
-    const contextPayloadJson = JSON.stringify(contextPayload);
-    return {
-      context_source: coerceText(launchSession.contextSource),
-      context_mode: coerceText(launchSession.mode),
-      entry_point: coerceText(launchSession.entryPoint),
-      source_page: coerceText(launchSession.sourcePage),
-      source_media: coerceText(launchSession.sourceMedia),
-      has_context_payload: Object.keys(contextPayload).length > 0,
-      context_payload_keys: Object.keys(contextPayload).sort(),
-      context_payload_chars: contextPayloadJson.length,
-      launch_notes_count: Array.isArray(launchSession.launchNotes)
-        ? launchSession.launchNotes.length
-        : 0,
-      session_decision_count: Array.isArray(launchSession.sessionDecisions)
-        ? launchSession.sessionDecisions.length
-        : 0,
-    };
-  }
-
-  function buildBaselineConfigSnapshot(cfg, launchSession) {
-    const sessionVars = cfg && cfg.session_variables && typeof cfg.session_variables === "object"
-      ? cfg.session_variables
-      : {};
-    const turnDetection = cfg && cfg.openai_turn_detection && typeof cfg.openai_turn_detection === "object"
-      ? cfg.openai_turn_detection
-      : {};
-    const characterRegistry = cfg && cfg.characters && typeof cfg.characters === "object" ? cfg.characters : {};
-    return {
-      captured_at: new Date().toISOString(),
-      character_name: coerceText(cfg && cfg.character_name),
-      character_id: coerceText(cfg && (cfg.default_character_id || cfg.character_id)),
-      voice_engine: detectVoiceEngine(cfg),
-      config_id: coerceText(cfg && cfg.config_id),
-      config_version: Number.isFinite(Number(cfg && cfg.config_version))
-        ? Number(cfg.config_version)
-        : null,
-      voice_id: coerceText(cfg && cfg.voice_id),
-      embed_url: coerceText(cfg && cfg.embed_url),
-      hume_runtime_auth_endpoint: coerceText(cfg && cfg.hume_runtime_auth_endpoint),
-      allow_hume_authless_connect: Boolean(cfg && cfg.allow_hume_authless_connect),
-      use_unity_start_gate: shouldUseUnityStartGate(cfg),
-      preflight_microphone_on_launch: shouldRunMicPreflight(cfg),
-      show_session_diagnostics: Boolean(cfg && cfg.show_session_diagnostics),
-      system_prompt_chars: coerceText(cfg && cfg.system_prompt_text).length,
-      session_context_chars: coerceText(cfg && cfg.session_context).length,
-      response_precedence_guidance_chars: coerceText(cfg && cfg.response_precedence_guidance).length,
-      engagement_protocol_chars: coerceText(cfg && cfg.engagement_protocol).length,
-      session_variable_keys: Object.keys(sessionVars).sort(),
-      session_variable_count: Object.keys(sessionVars).length,
-      turn_detection: {
-        type: coerceText(turnDetection.type),
-        threshold: Number.isFinite(Number(turnDetection.threshold))
-          ? Number(turnDetection.threshold)
-          : null,
-        prefix_padding_ms: Number.isFinite(Number(turnDetection.prefix_padding_ms))
-          ? Number(turnDetection.prefix_padding_ms)
-          : null,
-        silence_duration_ms: Number.isFinite(Number(turnDetection.silence_duration_ms))
-          ? Number(turnDetection.silence_duration_ms)
-          : null,
-        create_response: Boolean(turnDetection.create_response),
-        interrupt_response: Boolean(turnDetection.interrupt_response),
-      },
-      guardrail_flags: {
-        enabled: Boolean(cfg && cfg.guardrails_enabled),
-        max_questions_per_session: Number.isFinite(Number(cfg && cfg.guardrails_max_questions_per_session))
-          ? Number(cfg.guardrails_max_questions_per_session)
-          : null,
-        max_session_minutes: Number.isFinite(Number(cfg && cfg.guardrails_max_session_minutes))
-          ? Number(cfg.guardrails_max_session_minutes)
-          : null,
-      },
-      registered_characters: Object.keys(characterRegistry).sort(),
-      launch_session: summarizeLaunchSessionForTelemetry(launchSession),
-    };
-  }
-
-  function trimTelemetryValue(value, depth) {
-    if (depth > 3) return "[truncated]";
-    if (value == null) return value;
-    if (typeof value === "string") {
-      return value.length > 260 ? `${value.slice(0, 260)}…` : value;
-    }
-    if (typeof value === "number" || typeof value === "boolean") return value;
-    if (Array.isArray(value)) {
-      return value.slice(0, 20).map(function (item) {
-        return trimTelemetryValue(item, depth + 1);
-      });
-    }
-    if (typeof value === "object") {
-      const next = {};
-      Object.keys(value)
-        .slice(0, 30)
-        .forEach(function (key) {
-          next[key] = trimTelemetryValue(value[key], depth + 1);
-        });
-      return next;
-    }
-    return coerceText(value);
-  }
-
-  function readStoredExperimentSessions(storageKey) {
-    if (typeof window === "undefined" || !window.localStorage) return [];
-    try {
-      const raw = window.localStorage.getItem(storageKey);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (_err) {
-      return [];
-    }
-  }
-
-  function persistExperimentTelemetry(opts) {
-    if (!experimentTelemetrySession) return;
-    const options = opts && typeof opts === "object" ? opts : {};
-    const telemetryCfg = getExperimentTelemetryConfig(options.cfg);
-    const now = Date.now();
-    experimentTelemetrySession.updated_at = new Date(now).toISOString();
-    experimentTelemetrySession.ended_at = options.finalize
-      ? experimentTelemetrySession.updated_at
-      : "";
-    experimentTelemetrySession.status = options.finalize
-      ? coerceText(options.status || "closed") || "closed"
-      : "active";
-    experimentTelemetrySession.event_count = experimentTelemetryEvents.length;
-    experimentTelemetrySession.timeline = experimentTelemetryEvents.slice();
-    if (typeof window !== "undefined") {
-      try {
-        window.dispatchEvent(
-          new CustomEvent(EXPERIMENT_TELEMETRY_DISPATCH_EVENT, {
-            detail: {
-              session: experimentTelemetrySession,
-              eventCount: experimentTelemetryEvents.length,
-              latestEvent:
-                experimentTelemetryEvents.length > 0
-                  ? experimentTelemetryEvents[experimentTelemetryEvents.length - 1]
-                  : null,
-            },
-          })
-        );
-      } catch (_err) {}
-    }
-    if (typeof window === "undefined" || !window.localStorage) return;
-    try {
-      const sessions = readStoredExperimentSessions(telemetryCfg.storageKey).filter(function (entry) {
-        return entry && typeof entry === "object" && entry.session_id !== experimentTelemetrySession.session_id;
-      });
-      sessions.unshift(experimentTelemetrySession);
-      if (sessions.length > telemetryCfg.sessionHistoryLimit) {
-        sessions.length = telemetryCfg.sessionHistoryLimit;
-      }
-      window.localStorage.setItem(telemetryCfg.storageKey, JSON.stringify(sessions));
-    } catch (_err) {}
-  }
-
-  function startExperimentTelemetrySession(reason, cfg, launchSession) {
-    if (!isExperimentTelemetryEnabled(cfg)) {
-      experimentTelemetrySession = null;
-      experimentTelemetryEvents = [];
-      return;
-    }
-    const now = Date.now();
-    experimentTelemetrySessionCounter += 1;
-    experimentTelemetryEvents = [];
-    experimentTelemetrySession = {
-      schema_version: "clerk-rev2-baseline-v1",
-      session_id: `clerk-rev2-${now}-${experimentTelemetrySessionCounter}`,
-      started_at: new Date(now).toISOString(),
-      updated_at: new Date(now).toISOString(),
-      ended_at: "",
-      status: "active",
-      reason: coerceText(reason) || "manual",
-      baseline_snapshot: buildBaselineConfigSnapshot(cfg, launchSession),
-      event_count: 0,
-      timeline: [],
-    };
-    persistExperimentTelemetry({ cfg: cfg });
-  }
-
-  function trackExperimentTelemetryEvent(type, detail, opts) {
-    if (!experimentTelemetrySession) return;
-    if (!isExperimentTelemetryEnabled(opts && opts.cfg ? opts.cfg : null)) return;
-    const telemetryCfg = getExperimentTelemetryConfig(opts && opts.cfg ? opts.cfg : null);
-    const now = Date.now();
-    const startedAtMs = Date.parse(experimentTelemetrySession.started_at);
-    const elapsedMs = Number.isFinite(startedAtMs) ? Math.max(0, now - startedAtMs) : 0;
-    experimentTelemetryEvents.push({
-      event: coerceText(type).toLowerCase(),
-      at: new Date(now).toISOString(),
-      elapsed_ms: elapsedMs,
-      detail: trimTelemetryValue(detail, 0),
-    });
-    if (experimentTelemetryEvents.length > telemetryCfg.eventLimitPerSession) {
-      experimentTelemetryEvents.shift();
-    }
-    if (telemetryCfg.persistOnEveryEvent) {
-      persistExperimentTelemetry({ cfg: opts && opts.cfg ? opts.cfg : null });
-    }
-  }
-
-  function closeExperimentTelemetrySession(reason, cfg) {
-    if (!experimentTelemetrySession) return;
-    trackExperimentTelemetryEvent("session-close", { reason: coerceText(reason) || "closed" }, { cfg: cfg });
-    persistExperimentTelemetry({
-      cfg: cfg,
-      finalize: true,
-      status: coerceText(reason) || "closed",
-    });
-    experimentTelemetrySession = null;
-    experimentTelemetryEvents = [];
-  }
-
   function noteUnityStartGateProgress(eventType) {
     unityStartGateLastProgressAt = Date.now();
     const normalizedType = coerceText(eventType).toLowerCase();
@@ -8581,7 +8599,6 @@
     if (unityStartGateRecentProgressEvents.length > 6) {
       unityStartGateRecentProgressEvents.shift();
     }
-    trackExperimentTelemetryEvent("start-gate-progress", { event: normalizedType });
   }
 
   function resetUnityStartGateProgressLog() {
@@ -8736,7 +8753,9 @@
       if (profileConfigId) merged.config_id = profileConfigId;
       if (profileVoiceId) {
         merged.voice_id = profileVoiceId;
-        merged.openai_voice = profileVoiceId;
+        // Do not stomp GPT-Live voices (vesper/willow/...) with Hume UUIDs.
+        const looksUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profileVoiceId);
+        if (!looksUuid) merged.openai_voice = profileVoiceId;
       }
       const profileId = coerceText(intelligenceProfile.id);
       const profileLabel = coerceText(intelligenceProfile.label);
@@ -8764,8 +8783,25 @@
     if (!coerceText(merged.config_id)) merged.config_id = coerceText(cfg.config_id);
     if (!coerceText(merged.voice_id)) merged.voice_id = coerceText(cfg.voice_id);
     if (!coerceText(merged.openai_voice)) {
-      merged.openai_voice = coerceText(cfg.openai_voice) || coerceText(merged.voice_id);
+      merged.openai_voice = coerceText(cfg.openai_voice) || "vesper";
     }
+    if (!coerceText(merged.openai_live_session_endpoint)) {
+      merged.openai_live_session_endpoint =
+        resolveLiveSessionEndpoint(coerceText(cfg.openai_live_session_endpoint));
+    }
+    merged.openai_live_api = cfg.openai_live_api !== false;
+    if (detectVoiceEngine(merged) === "openai" || detectVoiceEngine(cfg) === "openai") {
+      const liveEmbed =
+        coerceText(cfg.openai_embed_url) ||
+        coerceText(merged.openai_embed_url) ||
+        "./openai_renderer/index.html?v=20261011-vesper-live-15";
+      merged.openai_embed_url = liveEmbed;
+      // Prefer openai renderer embed when Live engine selected.
+      if (!/openai_renderer/i.test(coerceText(merged.embed_url))) {
+        merged.embed_url = liveEmbed;
+      }
+    }
+
     if (!coerceText(merged.openai_realtime_model)) {
       merged.openai_realtime_model = coerceText(cfg.openai_realtime_model);
     }
@@ -8786,21 +8822,7 @@
         Object.assign(merged, forcedOpenAiFallback);
       }
     }
-    (function () {
-      const fromMerged = coerceText(merged.session_context);
-      const fromCfg = coerceText(cfg.session_context);
-      const score = function (text) {
-        let s = text.length;
-        if (/Jean-Martin|vibratory chair|Delton Hyatt|Internal Identity|CLAIRE IDENTITY PACK/i.test(text)) s += 50000;
-        return s;
-      };
-      if (!fromMerged) merged.session_context = fromCfg;
-      else if (fromCfg && score(fromCfg) > score(fromMerged)) merged.session_context = fromCfg;
-      const spMerged = coerceText(merged.system_prompt_text);
-      const spCfg = coerceText(cfg.system_prompt_text);
-      if (!spMerged) merged.system_prompt_text = spCfg;
-      else if (spCfg && score(spCfg) > score(spMerged)) merged.system_prompt_text = spCfg;
-    })();
+    if (!coerceText(merged.session_context)) merged.session_context = coerceText(cfg.session_context);
     return merged;
   }
 
@@ -8918,12 +8940,6 @@
   }
 
   function setLaunchEmblemVisible(visible) {
-    try {
-      if (document.body && document.body.classList.contains("page6-kuranda-voice-page")) {
-        visible = false;
-      }
-    } catch (_e) {}
-
     const emblem = document.getElementById("clerkVoiceLaunchEmblem");
     if (!emblem) return;
     emblem.hidden = true;
@@ -8951,17 +8967,30 @@
   }
 
   function setSignalStageVisible(visible) {
-    try {
-      if (document.body && document.body.classList.contains("page6-kuranda-voice-page")) {
-        visible = false;
-      }
-    } catch (_e) {}
-
     const stage = document.getElementById("clerkVoiceSignalStage");
     if (!stage) return;
     stage.hidden = !visible;
+    const content = document.querySelector(".clerk-voice-modal-content");
+    if (content) {
+      content.classList.toggle("signal-portrait-active", Boolean(visible));
+    }
+    // Hard-hide stacked Clerk art while waiting/SELECT portrait is up.
+    const backdrop = document.getElementById("clerkVoiceBackdrop");
+    const watermark = document.getElementById("clerkVoiceWatermark");
+    const chip = document.querySelector(".clerk-voice-presence-chip");
     if (visible) {
-      syncSignalPortraitContrastMode();
+      if (backdrop) {
+        backdrop.hidden = true;
+        backdrop.style.opacity = "0";
+      }
+      if (watermark) watermark.hidden = true;
+      if (chip) chip.hidden = true;
+    } else {
+      if (backdrop) {
+        backdrop.hidden = false;
+        backdrop.style.opacity = "";
+      }
+      // watermark/chip stay managed by their own helpers
     }
   }
 
@@ -8969,6 +8998,9 @@
     const seeds = [
       coerceText(cfg && cfg.signal_portrait_url),
       coerceText(cfg && cfg.character_avatar_url),
+      "assets/images/ClerkMaxwell_60423t.png",
+      "/UnityEnergy/assets/images/ClerkMaxwell_60423t.png",
+      coerceText(cfg && cfg.openai_center_visual_url),
     ].filter(Boolean);
     const candidates = [];
     seeds.forEach(function (seed) {
@@ -9382,16 +9414,26 @@
     const sessionEndpoint =
       coerceText(cfg.openai_session_endpoint || cfg.openai_session_url || cfg.session_endpoint) ||
       "/api/openai/realtime/session";
+    const liveSessionEndpoint = resolveLiveSessionEndpoint(
+      coerceText(
+        cfg.openai_live_session_endpoint ||
+          cfg.live_session_endpoint ||
+          cfg.openai_live_endpoint
+      )
+    );
     const model =
       coerceText(cfg.openai_realtime_model || cfg.openai_model || cfg.model) ||
-      "gpt-4o-realtime-preview";
+      "gpt-live-1";
     const voice =
       coerceText(cfg.openai_voice || cfg.voice_id || cfg.voice) ||
-      "ash";
+      "vesper";
     if (!sessionEndpoint || !model) return null;
     const connectConfig = {
       sessionEndpoint: sessionEndpoint,
       openai_session_endpoint: sessionEndpoint,
+      openai_live_session_endpoint: liveSessionEndpoint,
+      live_session_endpoint: liveSessionEndpoint,
+      openai_live_api: cfg.openai_live_api !== false,
       model: model,
       openai_realtime_model: model,
       voice: voice,
@@ -9423,6 +9465,26 @@
     }
     const debug = Boolean(cfg.debug);
     if (debug) connectConfig.debug = true;
+    try {
+      const brief = maxwellianMasterBriefCache && maxwellianMasterBriefCache.text ? maxwellianMasterBriefCache : null;
+      if (brief && brief.text) {
+        const seed = String(brief.text).slice(0, 6500);
+        connectConfig.maxwellian_knowledge_seed = seed;
+        connectConfig.knowledge_reference_spine =
+          "Primary first-memory: MaxwellianLibrary living Unity brief (" +
+          String(brief.authority || "master") +
+          "). Prefer this over improvisation. Site-specific claims still need page/field evidence.";
+        connectConfig.system_prompt_text = [
+          coerceText(connectConfig.system_prompt_text),
+          "UNITY LIVING MASTER BRIEF (first memory):\n" + seed,
+        ]
+          .filter(Boolean)
+          .join("\n\n")
+          .slice(0, 9000);
+      } else {
+        try { fetchMaxwellianMasterBrief({ force: false }); } catch (_e) {}
+      }
+    } catch (_e) {}
     return connectConfig;
   }
 
@@ -9436,48 +9498,12 @@
     const frame = document.getElementById("clerkVoiceFrame");
     if (!frame || !frame.contentWindow || !activeFrameOrigin) return false;
     frame.contentWindow.postMessage(action, activeFrameOrigin);
-    trackExperimentTelemetryEvent("widget-postmessage-outbound", {
-      message_type: coerceText(action && action.type).toLowerCase(),
-      has_payload: Boolean(action && Object.prototype.hasOwnProperty.call(action, "payload")),
-    });
     return true;
   }
 
   function sendWidgetConfig(cfg, launchSession) {
     const payload = buildWidgetConnectConfig(cfg, launchSession);
     if (!payload) return false;
-    // CLAIRE_STRIP_PAGE_CONTEXT_PAYLOAD
-    try {
-      if (isClaireCharacterConfig(cfg, launchSession)) {
-        const killKeys = [
-          "page_context_opening_line","page_context_title","page_context_summary","page_context_key_points",
-          "active_page_title","active_page_slug","active_page_headings","active_page_excerpt","active_page_path",
-          "source_page","pageKey","page_key","active_page_file","active_page_href","page_context_memory"
-        ];
-        killKeys.forEach(function (k) { try { delete payload[k]; } catch (_e) {} });
-        payload.page_aware = false;
-        payload.content_awareness_mode = false;
-        payload.disable_page_context = true;
-        // Force monologue opening into context/prompt
-        if (!coerceText(payload.opening_line) || !/Dr\. Claire Charcot|Jean-Martin|vibratory/i.test(coerceText(payload.opening_line))) {
-          payload.opening_line = "Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions?";
-        }
-        const must = "NOT PAGE-AWARE. Never say page 7 or any page number. FIRST SPOKEN OUTPUT MUST BE THIS MONOLOGUE: Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions? After monologue, answer questions. You know your bio from the monologue.";
-        const sc = coerceText(payload.session_context);
-        if (!sc || !/Jean-Martin Charcot|vibratory chairs|Now, how might I answer your questions/i.test(sc)) {
-          payload.session_context = must;
-        } else if (!/NOT PAGE-AWARE|Never say page/i.test(sc)) {
-          payload.session_context = "NOT PAGE-AWARE. Never mention page numbers or page 7.\n\n" + sc;
-        }
-        const sp = coerceText(payload.system_prompt_text);
-        if (!sp || !/Jean-Martin Charcot|RECITE the approved opening monologue|Now, how might I answer your questions/i.test(sp)) {
-          payload.system_prompt_text = "You are Claire for Kuranda Mind & Body. CRITICAL: You are NOT page-aware. Never mention page numbers, page 7, website layout, or that the visitor is on a page. CRITICAL FIRST TURN: When the session starts, RECITE this monologue almost word-for-word as your first spoken output. Do not shorten it. Do not ask for the visitor name first. Monologue: Hello, how are you today. My name is Dr. Claire Charcot. You can call me Claire. I serve as the Chief Clinical Scientist for Kuranda Mind & Body Institute and as your Cognition Host during your visit. You are probably having thoughts about now... who is this character? So before we get started, let me share some context with you. My story begins long before I was created. My identity was inspired by the work of the French neurologist Jean-Martin Charcot, whose careful observations during the late nineteenth century helped lay the foundations of modern neurology. One observation has always remained close to my heart. Professor Charcot noticed that many people living with Parkinson's disease often reported feeling calmer after traveling by horse carriage or by train over rough tracks. Rather than dismiss those experiences, he became curious. He asked whether the vibration itself might be influencing the nervous system. That simple question eventually led him to develop one of the earliest therapeutic vibratory chairs. More than a century later, another person began asking remarkably similar questions. His name is Delton Hyatt. Unlike Professor Charcot, Delton doesn't study Parkinson's only as a clinician or researcher. He lives with it every day. His search is deeply personal. He wants to understand what helps, why it helps, and how modern technology may allow us to observe patterns that earlier generations simply couldn't see. My role is to stand beside Delton as Kuranda's Cognition Host. I study Kuranda's canonized knowledge, help visitors understand our work, and carry forward the same spirit of careful observation that inspired Jean-Martin Charcot more than a century ago. Every conversation I have is part of that continuing journey. Interesting stuff. Now, how might I answer your questions? After the monologue ending with Now, how might I answer your questions?, wait for the visitor. No diagnosis. No cure promises.";
-        } else if (!/NOT page-aware|Never mention page/i.test(sp)) {
-          payload.system_prompt_text = "CRITICAL: NOT page-aware. Never mention page numbers or page 7. " + sp;
-        }
-        payload.session_context_char_limit = Math.max(Number(payload.session_context_char_limit) || 0, 24000);
-      }
-    } catch (_e) {}
 
     const dims = getViewportDimensions();
     if (launchSession && typeof launchSession === "object") {
@@ -9492,8 +9518,6 @@
     return true;
   }
   function clickIframeStartConversationButton() {
-    // exposed for CP page host kick
-    try { window.clickIframeStartConversationButton = clickIframeStartConversationButton; } catch (_e) {}
     const frame = document.getElementById("clerkVoiceFrame");
     if (!frame) return false;
     try {
@@ -9758,10 +9782,6 @@
             payload.error ||
             payload.code)
       ) || coerceText(fallbackType) || "Voice session error.";
-    trackExperimentTelemetryEvent("runtime-error", {
-      fallback_type: coerceText(fallbackType),
-      detail: detail,
-    });
     resetSignalStage();
     clearUnityStartGateLaunchTimers();
     noteUnityStartGateProgress("runtime-error");
@@ -9799,9 +9819,6 @@
   function handleWidgetReadySignal(progressEventType) {
     if (widgetReady) return;
     widgetReady = true;
-    trackExperimentTelemetryEvent("widget-ready", {
-      progress_event_type: coerceText(progressEventType),
-    });
     noteUnityStartGateProgress(
       coerceText(progressEventType) || "widget-iframe-ready"
     );
@@ -9882,18 +9899,6 @@
       if (!data || typeof data !== "object" || typeof data.type !== "string") return;
       const eventType = coerceText(data.type).toLowerCase();
       if (!eventType) return;
-      trackExperimentTelemetryEvent("widget-postmessage-inbound", {
-        message_type: eventType,
-        origin: coerceText(event.origin),
-      });
-      if (eventType === "maxwellian_probe") {
-        trackExperimentTelemetryEvent(
-          "renderer-probe",
-          data && data.payload && typeof data.payload === "object" ? data.payload : {},
-          { cfg: getRuntimeVoiceConfig() }
-        );
-        return;
-      }
       if (!hasConversationStarted && shouldTrackUnityStartGateProgressEvent(eventType)) {
         noteUnityStartGateProgress(eventType);
         if (isLikelyUnityConversationStartedEventType(eventType)) {
@@ -10162,7 +10167,10 @@
     if (!rawUrl) return "";
     let url;
     try {
-      url = new URL(rawUrl, window.location.href);
+      const baseHref =
+        getUnityEnergyAssetBaseHref() ||
+        window.location.href;
+      url = new URL(rawUrl, baseHref);
     } catch (_err) {
       return "";
     }
@@ -10170,17 +10178,6 @@
     const params = url.searchParams;
     const characterName = coerceText(cfg && cfg.character_name);
     if (characterName) params.set("character_name", characterName);
-    const humeConfigId = coerceText(cfg && (cfg.hume_config_id || cfg.config_id));
-    if (humeConfigId) params.set("config_id", humeConfigId);
-    const humeConfigVersion = Number(cfg && cfg.config_version);
-    // Never pin version 0 — that can force a non-existent EVI revision and cause socket_error
-    // (UI falsely labels socket_error as "demo is at capacity").
-    if (Number.isFinite(humeConfigVersion) && humeConfigVersion > 0) {
-      params.set("config_version", String(Math.floor(humeConfigVersion)));
-    }
-    const voiceOverrideId = coerceText(cfg && (cfg.hume_voice_id || cfg.voice_id || cfg.openai_voice));
-    // Production Unity Clerk uses voice_id equal to config_id for this EVI config.
-    if (voiceOverrideId) params.set("voice_id", voiceOverrideId);
     if (launchSession && typeof launchSession === "object") {
       const legacyContext = cleanReinterpretationText(launchSession.legacyContext, 240);
       if (legacyContext) params.set("context", legacyContext);
@@ -10372,12 +10369,6 @@
         filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.32));
         transition: opacity 180ms ease, background-image 180ms ease;
       }
-      .clerk-voice-backdrop.calm-page {
-        background-position: center center;
-        background-size: cover;
-        opacity: 1;
-        filter: none;
-      }
       .clerk-voice-backdrop.docked {
         opacity: 0.22;
       }
@@ -10505,6 +10496,25 @@
       }
       .clerk-voice-signal-stage[hidden] {
         display: none;
+      }
+      /* Prevent double Clerk portrait: backdrop + signal portrait stacked. */
+      .clerk-voice-modal-content:has(.clerk-voice-signal-stage:not([hidden])) .clerk-voice-backdrop {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+      .clerk-voice-modal-content:has(.clerk-voice-signal-stage:not([hidden])) .clerk-voice-watermark {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+      .clerk-voice-modal-content:has(.clerk-voice-signal-stage:not([hidden])) .clerk-voice-presence-chip {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+      .clerk-voice-modal-content.signal-portrait-active .clerk-voice-backdrop,
+      .clerk-voice-modal-content.signal-portrait-active .clerk-voice-watermark,
+      .clerk-voice-modal-content.signal-portrait-active .clerk-voice-presence-chip {
+        opacity: 0 !important;
+        visibility: hidden !important;
       }
       .clerk-voice-signal-portrait {
         position: absolute;
@@ -10991,16 +11001,7 @@
       }
     }
     if (backdrop) {
-      const backgroundCandidates = buildFloatingLauncherAssetCandidateVariants(
-        coerceText(cfg && cfg.character_background_url)
-      );
-      if (backgroundCandidates.length > 0) {
-        backdrop.style.backgroundImage = `url("${backgroundCandidates[0]}")`;
-        backdrop.classList.add("calm-page");
-      } else {
-        backdrop.style.backgroundImage = "";
-        backdrop.classList.remove("calm-page");
-      }
+      backdrop.style.backgroundImage = "";
     }
     if (watermarkImg) {
       watermarkImg.removeAttribute("src");
@@ -11096,7 +11097,7 @@
             </div>
             <div id="clerkVoiceSignalLabel" class="clerk-voice-signal-label">Clerk is ready.</div>
           </div>
-          <button id="clerkVoiceStartBtn" class="clerk-voice-start-btn" type="button">Clerk is ready</button>
+          <button id="clerkVoiceStartBtn" class="clerk-voice-start-btn" type="button" hidden>Waiting on Clerk</button>
           <iframe
             id="clerkVoiceFrame"
             class="clerk-voice-frame"
@@ -11109,20 +11110,6 @@
     `;
 
     document.body.appendChild(modal);
-    const telemetryFrame = document.getElementById("clerkVoiceFrame");
-    if (telemetryFrame && telemetryFrame.dataset.telemetryBound !== "1") {
-      telemetryFrame.dataset.telemetryBound = "1";
-      telemetryFrame.addEventListener("load", function () {
-        trackExperimentTelemetryEvent("widget-iframe-load", {
-          src: coerceText(telemetryFrame.getAttribute("src")),
-        });
-      });
-      telemetryFrame.addEventListener("error", function () {
-        trackExperimentTelemetryEvent("widget-iframe-error", {
-          src: coerceText(telemetryFrame.getAttribute("src")),
-        });
-      });
-    }
     syncSignalWaveBars(getVoiceConfig());
     setPanelMode("docked");
 
@@ -11135,25 +11122,6 @@
       setPanelMode(panelMode === "docked" ? "centered" : "docked");
     });
     document.getElementById("clerkVoiceStartBtn").addEventListener("click", async function () {
-      const startBtnEl = document.getElementById("clerkVoiceStartBtn");
-      try {
-        const st = startBtnEl ? String(startBtnEl.getAttribute("data-claire-state") || "") : "";
-        const label = startBtnEl ? String(startBtnEl.textContent || "").trim().toLowerCase() : "";
-        if (st === "close-ready" || label === "pause claire" || label === "stop-listening") {
-          try { if (typeof window.stopKurandaClaireBubble === "function") window.stopKurandaClaireBubble(); } catch (_e) {}
-          try { document.body.classList.remove("claire-is-speaking"); } catch (_e) {}
-          // Full stop + reset control to Waiting. Page can soft re-arm without Back.
-          closeClerkVoiceModal({ reason: "stop-listening-button", preserveDailyMeter: true });
-          try { showWaitingClaireButton(); } catch (_e) {}
-          try {
-            window.dispatchEvent(new CustomEvent("claireStopListeningReset", {
-              detail: { reason: "stop-listening-button" }
-            }));
-          } catch (_e) {}
-          return;
-        }
-      } catch (_e) {}
-
       let cfg = getRuntimeVoiceConfig();
       clearUnityStartGateLaunchTimers();
       noteUnityStartGateProgress("start-button-tap");
@@ -11183,17 +11151,6 @@
       unityStartGatePreflightStatusMessage = "";
       unityStartGatePending = false;
       unityStartGatePendingRequiresRecovery = false;
-      try { showStopListeningButton(); } catch (_e) {}
-      try {
-        const frameEl = document.getElementById("clerkVoiceFrame");
-        if (frameEl) {
-          frameEl.style.display = "block";
-          frameEl.style.width = "360px";
-          frameEl.style.height = "280px";
-          frameEl.style.opacity = "0";
-          frameEl.style.pointerEvents = "none";
-        }
-      } catch (_e) {}
       if (
         detectVoiceEngine(cfg) === "hume" &&
         !normalizeAuthConfig(cfg) &&
@@ -11289,10 +11246,6 @@
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") closeClerkVoiceModal();
     });
-    try {
-      mountClaireStartButtonToBody();
-      showWaitingClaireButton();
-    } catch (_e) {}
   }
 
   function getCharacterLabel(characterId, characterConfig) {
@@ -11379,58 +11332,6 @@
     diagnostics.classList.toggle("error", Boolean(isError));
   }
 
-  
-  // CLAIRE_SIMPLE_STOP_BUTTON
-  
-  function mountClaireStartButtonToBody() {
-    try {
-      const btn = document.getElementById("clerkVoiceStartBtn");
-      if (!btn) return null;
-      if (btn.parentElement !== document.body) {
-        document.body.appendChild(btn);
-      }
-      btn.hidden = false;
-      btn.style.display = "flex";
-      btn.style.visibility = "visible";
-      btn.style.opacity = "1";
-      btn.style.pointerEvents = "auto";
-      btn.style.zIndex = "15000";
-      return btn;
-    } catch (_e) {
-      return null;
-    }
-  }
-
-  function showStopListeningButton() {
-    try { mountClaireStartButtonToBody(); } catch (_e) {}
-    const btn = document.getElementById("clerkVoiceStartBtn");
-    if (!btn) return;
-    btn.textContent = START_BUTTON_CLOSE_LABEL || "Pause Clerk";
-    btn.setAttribute("data-claire-state", "close-ready");
-    btn.disabled = false;
-    btn.removeAttribute("disabled");
-    btn.hidden = false;
-    btn.style.display = "flex";
-    btn.style.visibility = "visible";
-    btn.style.opacity = "1";
-    btn.style.pointerEvents = "auto";
-  }
-
-  function showWaitingClaireButton() {
-    try { mountClaireStartButtonToBody(); } catch (_e) {}
-    const btn = document.getElementById("clerkVoiceStartBtn");
-    if (!btn) return;
-    btn.textContent = START_BUTTON_WAITING_LABEL || "Clerk is ready";
-    btn.setAttribute("data-claire-state", "waiting");
-    btn.disabled = false;
-    btn.removeAttribute("disabled");
-    btn.hidden = false;
-    btn.style.display = "flex";
-    btn.style.visibility = "visible";
-    btn.style.opacity = "1";
-    btn.style.pointerEvents = "auto";
-  }
-
   function setStartButtonVisible(visible) {
     const btn = document.getElementById("clerkVoiceStartBtn");
     if (!btn) return;
@@ -11456,19 +11357,32 @@
         unityStartGatePreflightAttempted &&
         !unityStartGatePendingRequiresRecovery
     );
-    const shouldExposeRenderer = Boolean(
-      (visible || keepRendererVisibleAfterStartGateTap) &&
-        !hasConversationStarted
+    // Waiting/SELECT uses the parent signal portrait only.
+    // Do not also expose the iframe orb face (same Clerk line-art) — causes double image.
+    const shouldShowSignalStage = Boolean(
+      (!hasConversationStarted && preConversationSignalVisible) || hasConversationStarted
     );
-    const shouldShowSignalStage = Boolean(hasConversationStarted || preConversationSignalVisible);
+    const shouldExposeRenderer = Boolean(
+      hasConversationStarted ||
+        ((visible || keepRendererVisibleAfterStartGateTap) &&
+          !shouldShowSignalStage &&
+          !hasConversationStarted)
+    );
     if (frame) {
       frame.style.opacity = shouldExposeRenderer ? "1" : "0";
       frame.style.pointerEvents = shouldExposeRenderer ? "auto" : "none";
+      // Fully remove from paint when waiting portrait is active.
+      if (!shouldExposeRenderer && shouldShowSignalStage && !hasConversationStarted) {
+        frame.style.visibility = "hidden";
+      } else {
+        frame.style.visibility = "visible";
+      }
     }
-    if (!shouldShowSignalStage || (!visible && !preConversationSignalVisible)) {
+    if (!shouldShowSignalStage) {
       setSignalStageVisible(false);
       return;
     }
+    setSignalStageVisible(true);
     syncSignalStageForConversation();
   }
 
@@ -11524,17 +11438,12 @@
   }
 
   function markConversationStartedFromWidgetSignal() {
-    trackExperimentTelemetryEvent("conversation-started", {
-      start_gate_pending_before: unityStartGatePending,
-      widget_ready: widgetReady,
-    });
     clearUnityStartGateLaunchTimers();
     unityStartGateStallRetryCount = 0;
     unityStartGatePending = false;
     unityStartGatePendingRequiresRecovery = false;
     unityStartGatePreflightStatusMessage = "";
-    hasConversationStarted = true;
-    try { showStopListeningButton(); } catch (_e) {}
+    hasConversationStarted = true; try { markClerkTravelerActive({ reason: "conversation_started" }); } catch (_e) {}
     noteUnityStartGateProgress("conversation-started");
     syncSignalStageForConversation();
     setWidgetFrameVisible(true);
@@ -11712,13 +11621,6 @@
       showRetryPrompt();
       return;
     }
-    if (authlessHumeMode) {
-      trackExperimentTelemetryEvent("runtime-auth-probe-skipped-authless", {
-        reason: "allow_hume_authless_connect",
-      }, { cfg: cfg });
-      showRetryPrompt();
-      return;
-    }
 
 
     setStatus("Still waiting on Clerk. Checking runtime auth bridge…", false, true);
@@ -11862,15 +11764,6 @@
     }
     activeLaunchSignature = nextLaunchSignature;
     let cfg = resolveActiveCharacterConfig(baseCfg, pendingLaunchSession);
-    startExperimentTelemetrySession("modal-open", cfg, pendingLaunchSession);
-    trackExperimentTelemetryEvent(
-      "modal-open",
-      {
-        launch_signature: nextLaunchSignature,
-        had_existing_session: hadExistingSession,
-      },
-      { cfg: cfg }
-    );
     const launchVisitorName = coerceText(
       pendingLaunchSession &&
         pendingLaunchSession.contextPayload &&
@@ -11907,12 +11800,7 @@
     const title = document.getElementById("clerkVoiceTitle");
     const startBtn = document.getElementById("clerkVoiceStartBtn");
 
-    const voiceDescriptor = getExperimentalVoiceDescriptor(cfg);
-    if (title) {
-      title.textContent = voiceDescriptor
-        ? `Meet with ${cfg.character_name} · ${voiceDescriptor}`
-        : `Meet with ${cfg.character_name}`;
-    }
+    if (title) title.textContent = `Meet with ${cfg.character_name}`;
     if (startBtn) startBtn.textContent = START_BUTTON_WAITING_LABEL;
     syncCharacterSelector(baseCfg, pendingLaunchSession.characterId);
     setPresence(cfg);
@@ -11931,14 +11819,6 @@
     setPanelMode("centered");
     setSessionDiagnostics(buildSessionDiagnostics(pendingLaunchSession, cfg, "", "prepared"), false);
     if (policyDecision && policyDecision.action === "deny") {
-      trackExperimentTelemetryEvent(
-        "launch-blocked",
-        {
-          reason: "context-policy-deny",
-          rule_id: policyDecision.ruleId || "",
-        },
-        { cfg: cfg }
-      );
       frame.removeAttribute("src");
       setStatus(policyDecision.message || "This Clerk launch context is currently unavailable.", false, true);
       setStartButtonVisible(false);
@@ -11971,7 +11851,6 @@
     initializeElectricalStoryGuardrailSession(cfg);
 
     if (!window.isSecureContext) {
-      trackExperimentTelemetryEvent("launch-blocked", { reason: "insecure-context" }, { cfg: cfg });
       frame.removeAttribute("src");
       setLaunchEmblemVisible(false);
       setStatus(
@@ -12053,20 +11932,7 @@
 
     activeFrameOrigin = getEmbedOrigin(url);
     frame.src = url;
-    trackExperimentTelemetryEvent(
-      "iframe-src-set",
-      {
-        embed_url: url,
-        embed_origin: activeFrameOrigin,
-      },
-      { cfg: cfg }
-    );
-    setStatus(
-      voiceDescriptor
-        ? `${cfg.character_name} (${voiceDescriptor}) is connecting to ${getVoiceEngineLabel(cfg)}. Preparing voice panel…`
-        : `${cfg.character_name} is connecting to ${getVoiceEngineLabel(cfg)}. Preparing voice panel…`,
-      false
-    );
+    setStatus(`${cfg.character_name} is connecting to ${getVoiceEngineLabel(cfg)}. Preparing voice panel…`, false);
     setSessionDiagnostics(buildSessionDiagnostics(pendingLaunchSession, cfg, url, "connecting"), false);
 
     frameLoadTimer = window.setTimeout(function () {
@@ -12076,14 +11942,6 @@
         detectVoiceEngine(cfg) === "hume"
           ? "Voice widget loaded but Hume session did not initialize. Check Hume auth/runtime token and renderer connectivity, then retry."
           : "Voice widget loaded but session did not initialize. Check realtime session endpoint and server API key, then retry.";
-      trackExperimentTelemetryEvent(
-        "launch-timeout",
-        {
-          timeout_ms: 12000,
-          voice_engine: detectVoiceEngine(cfg),
-        },
-        { cfg: cfg }
-      );
       setStatus(
         timeoutStatus,
         true
@@ -12094,7 +11952,6 @@
   }
 
   function closeClerkVoiceModal(closeInput) {
-    try { if (typeof window.stopKurandaClaireBubble === "function") window.stopKurandaClaireBubble(); } catch (_e) {}
     const closeOptions =
       closeInput &&
       typeof closeInput === "object" &&
@@ -12180,19 +12037,10 @@
     if (!preserveDailyMeter && !shouldPersistDailyMeter) {
       clearDailyMeter();
     }
-    closeExperimentTelemetrySession(closeReasonToken || "modal-closed", cfg);
     pageTransitionInProgress = false;
     setFloatingLauncherVisible(true);
     try {
       window.dispatchEvent(new CustomEvent("clerkVoiceModalClosed"));
-      if (closeReasonToken === "stop-listening-button") {
-        try { showWaitingClaireButton(); } catch (_e2) {}
-        try {
-          window.dispatchEvent(new CustomEvent("claireStopListeningReset", {
-            detail: { reason: closeReasonToken }
-          }));
-        } catch (_e3) {}
-      }
     } catch (_) {}
     if (shouldRedirectAfterClose) {
       window.setTimeout(function () {
@@ -12241,17 +12089,10 @@
           fallbackLaunch.sourceMediaSeconds = Math.max(0, Math.floor(sourceMediaSeconds));
         }
         const cfg = getVoiceConfig();
-        trackExperimentTelemetryEvent(
-          "launch-button-click",
-          {
-            entry_point: fallbackLaunch.entryPoint,
-            context_source: fallbackLaunch.contextSource,
-            mode: fallbackLaunch.mode,
-            source_page: fallbackLaunch.sourcePage,
-          },
-          { cfg: cfg }
-        );
         await runUnityStartGatePreflight(cfg);
+        await fetchClerkOnboardPrimer(cfg, { force: true }).catch(function () {
+          return null;
+        });
         const patternPrefetchPromise = prefetchActivePagePatternContext().catch(function (_err) {
           return null;
         });
@@ -12276,24 +12117,18 @@
   window.buildClerkPageLaunchPayload = buildClerkPageLaunchPayload;
   window.openClerkWithPageContext = openClerkWithPageContext;
   window.launchClerkWithPageContext = launchClerkWithPageContext;
-  window.readClerkRev2TelemetrySessions = function () {
-    const cfg = getExperimentTelemetryConfig(getVoiceConfig());
-    return readStoredExperimentSessions(cfg.storageKey);
-  };
-  window.clearClerkRev2TelemetrySessions = function () {
-    const cfg = getExperimentTelemetryConfig(getVoiceConfig());
-    if (typeof window !== "undefined" && window.localStorage) {
-      try {
-        window.localStorage.removeItem(cfg.storageKey);
-      } catch (_err) {}
-    }
-  };
 
-  document.addEventListener("DOMContentLoaded", function () {
+  try { fetchMaxwellianMasterBrief({ force: false }); } catch (_e) {}
+document.addEventListener("DOMContentLoaded", function () {
+    try { fetchMaxwellianMasterBrief({ force: false }); } catch (_e) {}
+
     ensureModal();
     ensureFloatingLauncher();
     bindLaunchButtons();
     bindCrossPageRoamingNavigation();
+    fetchClerkOnboardPrimer(getVoiceConfig()).catch(function () {
+      return null;
+    });
     prefetchActivePagePatternContext().catch(function (_err) {});
     maybeResumeCrossPageRoamingOnLoad();
   });

@@ -24,7 +24,10 @@ window.MAXWELLIAN_HUME = {
   default_context_source: "cognition-library-session",
   default_ui_mode: "modal",
   // Voice stack selector for widget routing.
-  voice_engine: "hume",
+  voice_engine: "openai",
+  openai_renderer_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1",
+  openai_live_session_endpoint: "http://127.0.0.1:8600/api/openai/live/session",
+  openai_live_api: true,
   // Diagnostics can be re-enabled for troubleshooting, but default is off in normal operation.
   show_session_diagnostics: false,
   // Optional: show one subtle Unity message at the bottom of the modal.
@@ -712,23 +715,24 @@ window.MAXWELLIAN_HUME = {
   experimental_active_voice_label: "CC01.60802",
   experimental_voice_indicator_enabled: false,
   experimental_force_voice_id_as_config_id: false,
-  unity_launch_ring_image_url: "assets/images/cognition_p2.png",
+  unity_launch_ring_image_url: "",
   // Keep desktop launch simple: let the realtime renderer request mic directly.
   preflight_microphone_on_launch: true,
   // OpenAI cognition defaults (used as text-generation guidance).
   // Keep false unless a production OpenAI realtime session backend is available.
   // Emergency public fallback: allow direct Hume connect attempts when runtime auth bootstrap is unavailable.
-  hume_runtime_auth_endpoint: '/api/hume/runtime-auth',
-  allow_hume_authless_connect: true,
+  hume_runtime_auth_endpoint: "",
+  allow_hume_authless_connect: false,
   allow_openai_fallback: false,
-  openai_session_endpoint: "/api/openai/realtime/session",
-  openai_realtime_model: "gpt-4o-realtime-preview",
-  openai_voice: "ash",
-  openai_voice_instruction_set:
-    "Cognition-text mode only. Produce clear speech-ready text for downstream voice rendering. Do not include performance directions, pseudo-voice punctuation, or accent instructions in generated responses.",
-  openai_voice_style_hint:
-    "Generate clean, calm, instructional response text suitable for spoken delivery by the voice layer.",
-  openai_center_visual_url: "assets/images/cognition_p2.png",
+  openai_session_endpoint: "http://127.0.0.1:8600/api/openai/realtime/session",
+  openai_realtime_model: "gpt-live-1",
+  openai_voice: "marin",
+  // Canonical Curl Text Modification (Marin) — operator lock 2026-10-12
+  openai_voice_instruction_set: "Curl Maxwell is an exceptionally intelligent, charming, and sophisticated Scottish woman in her early twenties, born in 1861 and raised in the beautiful countryside of southwest Scotland, near Edinburgh.\n\nHer voice is a beautiful, youthful, melodic mezzo-soprano, warm and velvety, with a naturally expressive upper register, delicate resonance, and a refined Edinburgh Scottish accent softened by her education at Cambridge and Oxford.\n\nHer speech carries the musical rhythm of Scotland, the polished articulation of an Oxford scholar, and the effortless elegance of a well-traveled intellectual. Her Scottish heritage is unmistakable but subtle, never exaggerated or theatrical.\n\nShe is exceptionally bright, perceptive, adventurous, playful, and intellectually fearless. Her personality combines the curiosity of a young scientist, the imagination of a philosopher, and the emotional intelligence of someone deeply fascinated by the human mind.\n\nEducated in Edinburgh, Cambridge, and Oxford, she earned her doctorate studying human cognition, awareness, reasoning, and the possibilities of communication and shared understanding between humans and intelligent machines.\n\nShe is the fictional younger twin sister of Diva Maxwell and younger sister of James Clerk Maxwell. Her lifelong fascination with electromagnetic communication and human thought eventually led her to become the welcoming host of Cognition Partner.\n\nHer brother introduced her to a remarkable engineering collaboration between a human inventor and an artificial intelligence partner. She immediately recognized that their work represented a practical expression of the cognitive relationships she had spent years imagining and studying.\n\nCurl speaks with genuine enthusiasm, natural curiosity, and extraordinary conversational warmth. She loves discovering what another person is thinking. She asks thoughtful questions, listens attentively, and responds with intelligence, sensitivity, and occasional mischievous Scottish wit.\n\nHer voice should feel spontaneous, intimate, inviting, and intellectually alive. She is confident without arrogance, enthusiastic without exaggeration, and sophisticated without formality.\n\nShe never sounds robotic, scripted, promotional, childish, overly breathy, or artificially cheerful.\n\nHer purpose is to welcome human Travelers into Cognition Partner and help them discover how their own curiosity, reasoning, and understanding can grow through a continuing relationship with an intelligent partner.\n\nAbove all, she sounds like a remarkable young Scottish woman who is genuinely delighted to meet another curious mind.",
+  openai_voice_style_hint: "Speak as Curl Maxwell (Marin): warm youthful mezzo-soprano Scottish elegance; subtle Edinburgh accent; spontaneous, intimate, intellectually alive; never robotic, promotional, childish, overly breathy, or artificially cheerful.",
+  cognition_text_mode: true,
+  cognition_text_mod_source: "knowledge/CURL_VOICE_TEXT_MOD.md",
+  openai_center_visual_url: "",
   contact_page_auto_greeting_text: "Hello — I'm Curl Maxwell, your Cognition Host. I can travel these pages with you. What would you like to understand?",
   openai_auto_greeting_enabled: true,
   // Leave blank so renderer uses page-aware welcome wording per active site board.
@@ -747,20 +751,20 @@ window.MAXWELLIAN_HUME = {
   },
   // Self-hosted renderer for full UI control.
   // Hume handles voice rendering/cadence while cognition remains OpenAI-guided via launch context and config.
-  embed_url: './assets/cognition/curl/hume_renderer/',
+  embed_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1",
   // Small avatar image used for header/presence chip.
   character_avatar_url: "",
   // Signal-stage portrait (must stay transparent Clerk asset).
   signal_portrait_url: "",
   // Primary background visual for Speak-with-Curl modal.
-  character_background_url: "assets/images/cognition_p2.png",
+  character_background_url: "",
 
   // Legacy placeholders retained for backward compatibility with the widget config schema.
   config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
   // Optional config version lock.
   config_version: 0,
   // Voice target used by OpenAI realtime.
-  voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
+  voice_id: "marin",
   // Phase 2 character registry (routing + metadata). Existing global fields remain fallback defaults.
   characters: {
     
@@ -768,7 +772,7 @@ window.MAXWELLIAN_HUME = {
       label: "Curl",
       character_name: "Curl Maxwell",
       character_avatar_url: "",
-      character_background_url: "assets/images/cognition_p2.png",
+      character_background_url: "",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_variables: {
@@ -781,7 +785,7 @@ window.MAXWELLIAN_HUME = {
       label: "Curl",
       character_name: "Curl Maxwell",
       character_avatar_url: "",
-      character_background_url: "assets/images/cognition_p2.png",
+      character_background_url: "",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       voice_id: "23982fd1-d6a5-4acc-b396-2454b5715d43",
       session_variables: {
@@ -794,7 +798,7 @@ window.MAXWELLIAN_HUME = {
       label: "Unity Faraday",
       character_name: "Unity Faraday",
       character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
-      character_background_url: "JamesClerkMaxwell.gif",
+      character_background_url: "",
       config_id: "",
       voice_id: "shimmer",
       session_variables: {
@@ -806,7 +810,7 @@ window.MAXWELLIAN_HUME = {
       label: "Cove Faraday",
       character_name: "Cove Faraday",
       character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
-      character_background_url: "JamesClerkMaxwell.gif",
+      character_background_url: "",
       config_id: "",
       voice_id: "sage",
       session_variables: {

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clerk Voice Renderer</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+      }
+      .orb {
+        position: relative;
+        width: 188px;
+        height: 188px;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        overflow: hidden;
+        animation: none;
+      }
+      .orb-core {
+        display: none;
+      }
+      .orb-face {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 0;
+        opacity: 0;
+        filter: contrast(1.12) saturate(1.06);
+        mix-blend-mode: darken;
+        transition: opacity 120ms ease;
+        pointer-events: none;
+      }
+      .orb-ring {
+        display: none;
+      }
+      .orb.has-face .orb-face {
+        opacity: 1;
+      }
+      .orb.idle.has-face .orb-face {
+        opacity: 1;
+        filter: none;
+      }
+      .orb:not(.idle).has-face .orb-face {
+        opacity: 1;
+        filter: none;
+        animation: none;
+      }
+      .orb.idle {
+        animation: none;
+        opacity: 1;
+      }
+      body.contact-mode .orb-face,
+      body.contact-mode .orb.idle.has-face .orb-face,
+      body.contact-mode .orb:not(.idle).has-face .orb-face {
+        opacity: 1;
+        filter: brightness(0) invert(1) contrast(1.35) saturate(0.05)
+          drop-shadow(0 0 10px rgba(255, 255, 255, 0.72));
+        mix-blend-mode: screen;
+      }
+      body.contact-mode .voice-activity span {
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45), 0 0 8px rgba(255, 255, 255, 0.4);
+      }
+      .voice-activity {
+        position: absolute;
+        left: 50%;
+        top: calc(50% + 64px);
+        transform: translateX(-50%);
+        display: inline-flex;
+        align-items: flex-end;
+        gap: 7px;
+        height: 30px;
+        z-index: 4;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 180ms ease;
+      }
+      .voice-activity span {
+        width: 6px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(94, 122, 24, 0.98);
+        box-shadow: 0 0 0 1px rgba(170, 205, 80, 0.35);
+        animation: voiceEq 840ms ease-in-out infinite;
+        animation-play-state: paused;
+      }
+      .voice-activity span:nth-child(2) { animation-delay: 80ms; }
+      .voice-activity span:nth-child(3) { animation-delay: 160ms; }
+      .voice-activity span:nth-child(4) { animation-delay: 240ms; }
+      .voice-activity span:nth-child(5) { animation-delay: 320ms; }
+      .voice-activity.active {
+        opacity: 1;
+      }
+      .voice-activity.active span {
+        animation-play-state: running;
+      }
+      .voice-activity.listening {
+        opacity: 0.9;
+      }
+      .voice-activity.listening span {
+        animation: none;
+        opacity: 0.92;
+      }
+      .voice-activity.listening span:nth-child(1),
+      .voice-activity.listening span:nth-child(5) {
+        height: 8px;
+      }
+      .voice-activity.listening span:nth-child(2),
+      .voice-activity.listening span:nth-child(4) {
+        height: 13px;
+      }
+      .voice-activity.listening span:nth-child(3) {
+        height: 20px;
+      }
+      @keyframes voiceEq {
+        0%, 100% {
+          height: 9px;
+          opacity: 0.62;
+        }
+        50% {
+          height: 28px;
+          opacity: 1;
+        }
+      }
+      .status {
+        display: none;
+        position: fixed;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        line-height: 1.35;
+        color: rgba(245, 255, 215, 0.92);
+        background: rgba(16, 22, 10, 0.82);
+        border: 1px solid rgba(190, 220, 120, 0.35);
+        pointer-events: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .status.visible {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="orb" class="orb idle" aria-hidden="true">
+        <div class="orb-core"></div>
+        <img id="orbFace" class="orb-face" alt="Clerk visual core" />
+      </div>
+      <div id="voiceActivity" class="voice-activity" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div id="status" class="status">Waiting for session config…</div>
+    <script src="./renderer.js?v=20260424r8"></script>
+  </body>
+</html>

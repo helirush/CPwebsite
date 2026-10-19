@@ -19,7 +19,7 @@ window.MAXWELLIAN_HUME = {
   default_context_source: "kuranda-library-session",
   default_ui_mode: "modal",
   // Voice stack selector for widget routing.
-  voice_engine: "hume",
+  voice_engine: "openai",
   // Diagnostics can be re-enabled for troubleshooting, but default is off in normal operation.
   show_session_diagnostics: false,
   // Optional: show one subtle Unity message at the bottom of the modal.
@@ -994,14 +994,22 @@ window.MAXWELLIAN_HUME = {
   // Emergency public fallback: allow direct Hume connect attempts when runtime auth bootstrap is unavailable.
   hume_runtime_auth_endpoint: "https://unityenergy.com/api/hume/runtime-auth",
   allow_hume_authless_connect: true,
-  allow_openai_fallback: false,
+  allow_openai_fallback: true,
   openai_session_endpoint: "/api/openai/realtime/session",
-  openai_realtime_model: "gpt-4o-realtime-preview",
-  openai_voice: "ash",
+  openai_realtime_model: "gpt-live-1",
+  openai_voice: "willow",
+  openai_voice_profile_id: "claire-willow-gpt-live-1",
+  openai_live_api: true,
+  openai_live_session_endpoint: "/api/openai/live/session",
+  openai_session_endpoint: "/api/openai/realtime/session",
+  openai_embed_url: "./openai_renderer/index.html?v=20261011-willow-live-1",
   openai_voice_instruction_set:
-    "Cognition-text mode only. Produce clear speech-ready text for downstream voice rendering. Do not include performance directions, pseudo-voice punctuation, or accent instructions in generated responses.",
+    "You are Claire, public guide and Cognition Host for Kuranda Mind & Body Institute. Professional adult female voice: warm, composed, intelligent, and welcoming. " +
+    "Clear enough to guide a first-time visitor without sounding like a commercial announcer or generic customer-service bot. Calm confidence, natural conversational" +
+    " rhythm, subtle emotional responsiveness. Distinct from Unity/Shimmer. Do not invent medical claims, diagnoses, or cures. Not page-number aware. Ground answers " +
+    "in approved Kuranda/Claire context when provided. PLACEHOLDER_PENDING_MIKE_CLAIRE_SCRIPT — replace with full Claire character brief when supplied.",
   openai_voice_style_hint:
-    "Generate clean, calm, instructional response text suitable for spoken delivery by the voice layer.",
+    "Claire / Willow (gpt-live-1): warm composed Irish-tinged feminine host; calm confidence; never commercial announcer.",
   openai_center_visual_url: "assets/images/kuranda_p2.png",
   contact_page_auto_greeting_text: "Hi, I'm Claire. How can I help you?",
   openai_auto_greeting_enabled: true,

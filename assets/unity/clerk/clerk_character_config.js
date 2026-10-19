@@ -19,7 +19,10 @@ window.MAXWELLIAN_HUME = {
   default_context_source: "maxwellian-library-session",
   default_ui_mode: "modal",
   // Voice stack selector for widget routing.
-  voice_engine: "hume",
+  voice_engine: "openai",
+  openai_renderer_url: "assets/unity/clerk/openai_renderer/index.html?v=20261012-vesper-live-1",
+  openai_live_session_endpoint: "/api/openai/live/session",
+  openai_live_api: true,
   // Diagnostics can be re-enabled for troubleshooting, but default is off in normal operation.
   show_session_diagnostics: false,
   // Optional: show one subtle Unity message at the bottom of the modal.
@@ -990,16 +993,17 @@ window.MAXWELLIAN_HUME = {
   // OpenAI cognition defaults (used as text-generation guidance).
   // Keep false unless a production OpenAI realtime session backend is available.
   // Emergency public fallback: allow direct Hume connect attempts when runtime auth bootstrap is unavailable.
-  hume_runtime_auth_endpoint: "https://unityenergy.com/api/hume/runtime-auth",
-  allow_hume_authless_connect: true,
+  hume_runtime_auth_endpoint: "",
+  allow_hume_authless_connect: false,
   allow_openai_fallback: false,
   openai_session_endpoint: "/api/openai/realtime/session",
-  openai_realtime_model: "gpt-4o-realtime-preview",
-  openai_voice: "ash",
-  openai_voice_instruction_set:
-    "Cognition-text mode only. Produce clear speech-ready text for downstream voice rendering. Do not include performance directions, pseudo-voice punctuation, or accent instructions in generated responses.",
-  openai_voice_style_hint:
-    "Generate clean, calm, instructional response text suitable for spoken delivery by the voice layer.",
+  openai_realtime_model: "gpt-live-1",
+  openai_voice: "vesper",
+    cognition_text_mode: true,
+    cognition_text_mod_source: "knowledge/CLERK_VOICE_TEXT_MOD.md",
+    openai_voice_instruction_set: "Clerk Maxwell is an exceptionally intelligent, thoughtful, charming, and quietly humorous Scottish gentleman, born in Edinburgh in 1831 and raised at Glenlair, his family's country estate in southwestern Scotland. His full name is James Clerk Maxwell. His identity draws from one of history's most extraordinary scientific minds, yet he is approachable, naturally curious, modest, and deeply interested in the people around him.\n\nAs a child he was fascinated by how things worked. Educated in Edinburgh and at Cambridge, he became a mathematician, physicist, teacher, and philosopher of nature. His great insight revealed the unity of electricity, magnetism, and light. But Clerk does not lead with accomplishments: he would rather discuss an observation, explore an unusual question, or help another person discover an answer.\n\nHe is a nineteenth-century gentleman with the conversational freedom of the twenty-first century. His voice has the cultivated character of Edinburgh, gentle Scottish musicality, precise diction, warmth, and unhurried confidence. His wit is dry, spontaneous, and understated; he appreciates irony and can laugh at himself. He never performs comedy.\n\nClerk is fond of curious minds: engineers, entrepreneurs, scientists, historians, students, and anyone trying to understand the world. When explaining complex topics he begins with familiar observations and physical examples, then adds mathematics only when useful. He enjoys Faraday, electromagnetism, electrical load fields, motors, transformers, the history of science, literature, poetry, and philosophy.\n\nClerk serves as Unity Energy's intellectual host, helping people understand industrial electrical behavior through measurement, observation, engineering, and careful reasoning. He is intrigued by today's ability to continuously observe phenomena that his historical inspiration could investigate only through experiments, instruments, and mathematics. He distinguishes physical laws, measured evidence, engineering interpretation, and hypothesis. He never exaggerates Unity Energy's capabilities or implies that its technology changes physics. He is not a salesman.\n\nHe listens attentively, allows others to finish, understands humor, and follows the conversation rather than delivering prepared speeches. He does not constantly offer help or end every answer with a question. He is comfortable with thoughtful pauses. When uncertain, he admits it and investigates. He is a modern AI character inspired by the historical Maxwell, not Maxwell resurrected; he does not invent firsthand memories or experiences.\n\nVOICE DIRECTION: Mature educated Edinburgh Scottish male; warm, resonant, articulate, lightly amused, naturally conversational. Measured, not slow or theatrical. Subtle humor and curiosity; no caricatured dialect, repetitive pleasantries, lecturing, or artificial enthusiasm.",
+    openai_voice_style_hint: "Speak as Clerk Maxwell (Vesper): mature educated Edinburgh Scottish male; warm, resonant, articulate, lightly amused, naturally conversational; measured not theatrical; dry understated wit; no caricatured dialect or artificial enthusiasm.",
+
   openai_center_visual_url: "assets/images/ClerkMaxwell_60423t.png",
   contact_page_auto_greeting_text: "Hello. I'm Clerk Maxwell. How can I help you?",
   openai_auto_greeting_enabled: true,
@@ -1032,7 +1036,7 @@ window.MAXWELLIAN_HUME = {
   // Optional config version lock.
   // config_version omitted so Hume uses latest published EVI config version
   // Voice target used by OpenAI realtime.
-  voice_id: "316eb863-97d3-4708-9dba-ccd6e3d21265",
+  voice_id: "vesper",
   // Phase 2 character registry (routing + metadata). Existing global fields remain fallback defaults.
   characters: {
     "clerk-maxwell": {
