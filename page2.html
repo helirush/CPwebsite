@@ -199,19 +199,12 @@
       pointer-events: auto !important;
     }
     .site-wrap {
-      display: flex !important;
+      display: grid !important;
       height: 100dvh !important;
-      width: 100% !important;
-      max-width: none !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 0 !important;
     }
     .page-card, .cp-r1-card {
-      display: flex !important;
-      min-height: 0 !important;
-      /* width/height/transform owned by cp_viewport_fit.js (1512×982 stage) */
-      margin: 0 !important;
+      height: 100% !important;
+      min-height: 60vh !important;
     }
     .page-image, .cp-r1-image {
       width: 100% !important;
@@ -1004,9 +997,6 @@
 
   
   <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-marin-textmod-1"></script>
-
-<script src="./assets/cognition/cp_viewport_fit.js?v=20261011-bg-crop-sides-2"></script>
-
 <script id="cp-curl-marin-live">
 (function () {
   // GPT Live only — no Hume runtime-auth, no hume_renderer.
