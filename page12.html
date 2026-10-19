@@ -1104,9 +1104,9 @@
   <!-- Curl Maxwell voice stack (GPT Live only — no Hume auth) -->
   <script>
   (function () {
-    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
-    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
-    window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
+    window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
+    window.MAXWELLIAN_runtime_auth_endpoint = '';
+    window.MAXWELLIAN_ACTIVE_runtime_auth_endpoint = '';
     window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
     window.__CURL_FORCE_NO_FLOAT__ = true;
     window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/P261019-curl-promote-2";
@@ -1134,14 +1134,38 @@
   </script>
 
   <!-- hume_auth_bootstrap removed: GPT Live only -->
-  <script src="./assets/cognition/curl/curl_character_config.js?v=20261019-curl-promote-2"></script>
-  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-curl-promote-2"></script>
+  <script src="./assets/cognition/curl/curl_character_config.js?v=20261019-openai-live-only-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-openai-live-only-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
   <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
 
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261019-curl-promote-2"></script>
+  
+<script id="cp-openai-live-only">
+(function () {
+  try {
+    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+    var c = window.MAXWELLIAN_HUME;
+    c.voice_engine = 'openai';
+    c.runtime_auth_bootstrap_enabled = false;
+    c.runtime_auth_endpoint = '';
+    c.hume_runtime_auth_endpoint = '';
+    c.authless_hume_connection = false;
+    c.hume_api_key = '';
+    c.hume_config_id = '';
+    if (!c.openai_session_endpoint) c.openai_session_endpoint = '/api/openai/realtime/session';
+    if (!c.openai_live_session_endpoint) c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.openai_live_api = true;
+    if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
+    if (!c.openai_model) c.openai_model = 'gpt-live-1';
+    if (c.widget_url && /openai_renderer/i.test(String(c.widget_url))) {
+      c.widget_url = String(c.widget_url).replace(/openai_renderer/ig, 'openai_renderer');
+    }
+  } catch (e) {}
+})();
+</script>
+<script src="./assets/cognition/curl/curl_host_controller.js?v=20261019-openai-live-only-1"></script>
 
 <!-- CP_P12_SPEAK_HIT_JS -->
 <script id="cp-p12-speak-hit-js">
@@ -1162,9 +1186,9 @@
 (function () {
   // GPT Live only — no Hume runtime-auth, no hume_renderer.
   try {
-    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
-    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
-    window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
+    window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
+    window.MAXWELLIAN_runtime_auth_endpoint = '';
+    window.MAXWELLIAN_ACTIVE_runtime_auth_endpoint = '';
     window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/P261019-curl-promote-2';
   } catch (e) {}
   function paint(c) {

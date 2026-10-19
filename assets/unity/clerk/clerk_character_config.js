@@ -489,7 +489,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Low-cost retrieval and clarification mode for follow-up conversations on known page/audio/video context.",
       // Optional: set a dedicated lower-cost model profile id here.
-      hume_config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
+      hume_config_id: "",
   config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       // Optional: set a dedicated voice profile id for this intelligence tier.
       voice_id: "316eb863-97d3-4708-9dba-ccd6e3d21265",
@@ -1023,7 +1023,7 @@ window.MAXWELLIAN_HUME = {
   },
   // Self-hosted renderer for full UI control.
   // Hume handles voice rendering/cadence while cognition remains OpenAI-guided via launch context and config.
-  embed_url: "./assets/unity/clerk/hume_renderer/index.html?v=20260810-clerk-claire-parity1",
+  embed_url: "./assets/unity/clerk/openai_renderer/index.html?v=20260810-clerk-claire-parity1",
   // Small avatar image used for header/presence chip.
   character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
   // Signal-stage portrait (must stay transparent Clerk asset).
@@ -1044,7 +1044,7 @@ window.MAXWELLIAN_HUME = {
       character_name: "Clerk Maxwell",
       character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
       character_background_url: "assets/images/ClerkMaxwell_60423t.png",
-      hume_config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
+      hume_config_id: "",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       voice_id: "316eb863-97d3-4708-9dba-ccd6e3d21265",
       session_variables: {

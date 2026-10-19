@@ -992,7 +992,7 @@ window.MAXWELLIAN_HUME = {
   // OpenAI cognition defaults (used as text-generation guidance).
   // Keep false unless a production OpenAI realtime session backend is available.
   // Emergency public fallback: allow direct Hume connect attempts when runtime auth bootstrap is unavailable.
-  hume_runtime_auth_endpoint: "https://unityenergy.com/api/hume/runtime-auth",
+  hume_runtime_auth_endpoint: "",
   allow_hume_authless_connect: true,
   allow_openai_fallback: true,
   openai_session_endpoint: "/api/openai/realtime/session",
@@ -1029,7 +1029,7 @@ window.MAXWELLIAN_HUME = {
   },
   // Self-hosted renderer for full UI control.
   // Hume handles voice rendering/cadence while cognition remains OpenAI-guided via launch context and config.
-  embed_url: "./assets/kuranda/clare/hume_renderer/index.html?v=20260804-0140",
+  embed_url: "./assets/kuranda/clare/openai_renderer/index.html?v=20260804-0140",
   // Small avatar image used for header/presence chip.
   character_avatar_url: "",
   // Signal-stage portrait (must stay transparent Clerk asset).

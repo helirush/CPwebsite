@@ -978,21 +978,21 @@
         coerceText(window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT)
       );
     }
-    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth");
-    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth.json");
-    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth");
-    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth.json");
+    appendRuntimeAuthEndpointCandidate(candidates, "..");
+    appendRuntimeAuthEndpointCandidate(candidates, "...json");
+    appendRuntimeAuthEndpointCandidate(candidates, "");
+    appendRuntimeAuthEndpointCandidate(candidates, ".json");
     const pathPrefixes = getRuntimeAuthEndpointPathPrefixes();
     pathPrefixes.forEach(function (prefix) {
-      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}/api/hume/runtime-auth`);
-      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}/api/hume/runtime-auth.json`);
+      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}`);
+      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}.json`);
     });
     return candidates;
   }
 
   function getRuntimeAuthEndpoint(cfgOrOptions) {
     const candidates = buildRuntimeAuthEndpointCandidates(cfgOrOptions);
-    return candidates[0] || "/api/hume/runtime-auth";
+    return candidates[0] || "";
   }
 
   function getRuntimeAuthEndpointDisplayLabel(cfgOrOptions, endpointOverride) {
@@ -1002,7 +1002,7 @@
         ? coerceText(window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT)
         : "") ||
       getRuntimeAuthEndpoint(cfgOrOptions);
-    if (!endpoint) return "/api/hume/runtime-auth";
+    if (!endpoint) return "";
     if (typeof window === "undefined" || !window.location) return endpoint;
     try {
       const parsed = new URL(endpoint, window.location.href);
@@ -1489,13 +1489,10 @@
   }
 
   function detectVoiceEngine(cfg) {
-    const explicit = coerceText(
-      cfg && (cfg.voice_engine || cfg.voiceEngine || cfg.engine || cfg.voice_stack || cfg.voiceStack)
-    ).toLowerCase();
-    if (explicit === "hume" || explicit === "openai") return explicit;
-    const embedUrl = coerceText(cfg && cfg.embed_url).toLowerCase();
-    if (embedUrl.includes("/hume_renderer/")) return "hume";
-    if (embedUrl.includes("/openai_renderer/")) return "openai";
+    // OPENAI_LIVE_ONLY_20261019 — Hume removed from CP stack
+    try {
+      if (cfg && typeof cfg === "object") cfg.voice_engine = "openai";
+    } catch (_e) {}
     return "openai";
   }
 
@@ -1510,7 +1507,7 @@
     );
     if (!explicitlyEnabled) return false;
     const embedUrl = coerceText(cfg && cfg.embed_url).toLowerCase();
-    if (embedUrl.includes("/hume_renderer/")) {
+    if (embedUrl.includes("/openai_renderer/")) {
       // Current self-hosted Hume renderer requires explicit runtime auth.
       return false;
     }
@@ -1519,7 +1516,7 @@
 
   function getVoiceEngineMissingConfigMessage(cfg) {
     if (detectVoiceEngine(cfg) === "hume") {
-      return "Voice session config is missing. Set Hume auth (accessToken/apiKey) in runtime auth and confirm embed_url points to hume_renderer.";
+      return "Voice session config is missing. Set Hume auth (accessToken/apiKey) in runtime auth and confirm embed_url points to openai_renderer.";
     }
     return "Voice session config is missing. Set openai_session_endpoint and openai_realtime_model in hume_character_config.js.";
   }
@@ -1560,8 +1557,8 @@
     if (explicit) return explicit;
     const embedUrl = coerceText(cfg && cfg.embed_url);
     if (embedUrl && /\/openai_renderer\//i.test(embedUrl)) return embedUrl;
-    if (embedUrl && /\/hume_renderer\//i.test(embedUrl)) {
-      return embedUrl.replace(/\/hume_renderer\//i, "/openai_renderer/");
+    if (embedUrl && /\/openai_renderer\//i.test(embedUrl)) {
+      return embedUrl.replace(/\/openai_renderer\//i, "/openai_renderer/");
     }
     return "/UnityEnergy/openai_renderer/index.html?v=20260423r5";
   }

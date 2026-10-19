@@ -984,7 +984,7 @@
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
         const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
-        const embedUrl = resolveCpClerkRuntimeUrl('hume_renderer/index.html?v=20260811-clerk-intro-spirit1');
+        const embedUrl = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20260811-clerk-intro-spirit1');
         const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260811-clerk-intro-spirit1');
 
         // Critical: page8 is outside Unity allowlist. Disable page lock for CP demo.
@@ -1016,12 +1016,12 @@
         window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
 
         // Use production Unity runtime-auth first so CP host 404 probes do not delay launch.
-        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_HUME.runtime_auth_endpoint = 'https://unityenergy.com/api/hume/runtime-auth';
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
+        window.MAXWELLIAN_HUME.runtime_auth_endpoint = '';
         window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
-        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
-        window.MAXWELLIAN_FALLBACK_RUNTIME_AUTH_ENDPOINT = 'https://unityenergy.com/api/hume/runtime-auth';
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_FALLBACK_RUNTIME_AUTH_ENDPOINT = '';
         window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
 
         // Point assets at Cognition Partner local package paths.
@@ -1171,12 +1171,12 @@
         if (hasRuntimeAuth()) return true;
 
         const endpoints = [
-          'https://unityenergy.com/api/hume/runtime-auth',
-          'https://unityenergy.com/api/hume/runtime-auth.json',
-          '/api/hume/runtime-auth',
-          '/api/hume/runtime-auth.json',
-          new URL('../../../api/hume/runtime-auth', window.location.href).toString(),
-          new URL('../../../api/hume/runtime-auth.json', window.location.href).toString()
+          '',
+          '.json',
+          '',
+          '',
+          new URL('../../..', window.location.href).toString(),
+          new URL('../../..', window.location.href).toString()
         ];
 
         for (let i = 0; i < endpoints.length; i += 1) {
@@ -1643,7 +1643,7 @@
         if (!hasRuntimeAuth()) {
           console.error('[cp-page8] Aborting Clerk launch: no Hume runtime auth.');
           bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Auth unavailable</span><small>Retry</small>';
-          window.alert('Clerk voice auth is not available. Confirm https://unityenergy.com/api/hume/runtime-auth is reachable, then try Clerk is Ready again.');
+          window.alert('Clerk voice auth is not available. Confirm  is reachable, then try Clerk is Ready again.');
           setBottomWaiting();
           return false;
         }

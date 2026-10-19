@@ -994,8 +994,8 @@ Together you become more you.</p>
 
   <script>
     // Local static testing: same-origin auth first, Unity fallback second.
-    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "/api/hume/runtime-auth";
-    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "/api/hume/runtime-auth";
+    window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
+    window.MAXWELLIAN_runtime_auth_endpoint = '';
     window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
     window.__CURL_FORCE_NO_FLOAT__ = true;
     window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/openai_renderer/";
@@ -1006,10 +1006,10 @@ Together you become more you.</p>
     window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
     (function preloadCurlAuth() {
       var endpoints = [
-        "/api/hume/runtime-auth",
-        "/api/hume/runtime-auth.json",
-        "https://unityenergy.com/api/hume/runtime-auth",
-        "https://unityenergy.com/api/hume/runtime-auth.json"
+        '',
+        "",
+        '',
+        ".json"
       ];
       function apply(payload, endpoint) {
         if (!payload || typeof payload !== "object") return false;
@@ -1022,7 +1022,7 @@ Together you become more you.</p>
         window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
         window.MAXWELLIAN_HUME_AUTH = normalized;
         window.MAXWELLIAN_OPENAI_RUNTIME_AUTH = normalized;
-        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = endpoint || "/api/hume/runtime-auth";
+        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = endpoint || '';
         window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
         window.MAXWELLIAN_HUME.auth = normalized;
         window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT;
@@ -1055,9 +1055,8 @@ Together you become more you.</p>
       tryAt(0);
     })();
   </script>
-  <script src="./assets/cognition/curl/hume_auth_bootstrap.js?v=20261019-curl-promote-2"></script>
-  <script src="./assets/cognition/curl/curl_character_config.js?v=20261019-curl-promote-2"></script>
-  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-curl-promote-2"></script>
+<script src="./assets/cognition/curl/curl_character_config.js?v=20261019-openai-live-only-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-openai-live-only-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
   <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
@@ -1082,7 +1081,31 @@ Together you become more you.</p>
   } catch (e) {}
 })();
 </script>
-<script src="./assets/cognition/curl/curl_host_controller.js?v=20261019-curl-promote-2"></script>
+
+<script id="cp-openai-live-only">
+(function () {
+  try {
+    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+    var c = window.MAXWELLIAN_HUME;
+    c.voice_engine = 'openai';
+    c.runtime_auth_bootstrap_enabled = false;
+    c.runtime_auth_endpoint = '';
+    c.hume_runtime_auth_endpoint = '';
+    c.authless_hume_connection = false;
+    c.hume_api_key = '';
+    c.hume_config_id = '';
+    if (!c.openai_session_endpoint) c.openai_session_endpoint = '/api/openai/realtime/session';
+    if (!c.openai_live_session_endpoint) c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.openai_live_api = true;
+    if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
+    if (!c.openai_model) c.openai_model = 'gpt-live-1';
+    if (c.widget_url && /openai_renderer/i.test(String(c.widget_url))) {
+      c.widget_url = String(c.widget_url).replace(/openai_renderer/ig, 'openai_renderer');
+    }
+  } catch (e) {}
+})();
+</script>
+<script src="./assets/cognition/curl/curl_host_controller.js?v=20261019-openai-live-only-1"></script>
 
 </body>
 </html>
