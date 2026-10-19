@@ -9405,6 +9405,26 @@
 
   function buildWidgetConnectConfig(cfg, launchSession) {
     if (!cfg || typeof cfg !== "object") return null;
+    /* CP_OPENAI_LIVE_ACTIVATE_20261019 */
+    try {
+      const apiBase = (typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE)
+        ? String(window.CP_OPENAI_LIVE_API_BASE).replace(/\/+$/, "")
+        : "";
+      if (apiBase) {
+        cfg.openai_session_endpoint = apiBase + "/api/openai/realtime/session";
+        cfg.openai_live_session_endpoint = apiBase + "/api/openai/live/session";
+        cfg.session_endpoint = cfg.openai_session_endpoint;
+        cfg.live_session_endpoint = cfg.openai_live_session_endpoint;
+      }
+      cfg.voice_engine = "openai";
+      cfg.openai_live_api = true;
+      if (!cfg.openai_realtime_model && !cfg.openai_model && !cfg.model) {
+        cfg.openai_realtime_model = "gpt-live-1";
+      }
+      if (!cfg.openai_voice && !cfg.voice_id && !cfg.voice) {
+        cfg.openai_voice = "vesper";
+      }
+    } catch (_e) {}
     if (detectVoiceEngine(cfg) === "hume") {
       return buildHumeConnectConfig(cfg, launchSession);
     }
@@ -11123,7 +11143,7 @@
       clearUnityStartGateLaunchTimers();
       noteUnityStartGateProgress("start-button-tap");
       setLaunchEmblemVisible(true);
-      setWidgetFrameVisible(false);
+      setWidgetFrameVisible(true);
       setStatus("Requesting microphone access…", false, true);
       try {
         await requestTopLevelMicAccess();
@@ -11169,8 +11189,8 @@
         return;
       }
       setCompactSquareFrameSize();
-      setWidgetFrameVisible(false);
-      setLaunchEmblemVisible(true);
+      setWidgetFrameVisible(true);
+      setLaunchEmblemVisible(false);
       expandWidgetFromClient();
       const tapRetrySchedule = getUnityStartGateRetrySchedule(cfg, "tap");
       scheduleIframeStartConversationRetry(
@@ -11359,21 +11379,12 @@
     const shouldShowSignalStage = Boolean(
       (!hasConversationStarted && preConversationSignalVisible) || hasConversationStarted
     );
-    const shouldExposeRenderer = Boolean(
-      hasConversationStarted ||
-        ((visible || keepRendererVisibleAfterStartGateTap) &&
-          !shouldShowSignalStage &&
-          !hasConversationStarted)
-    );
+    const shouldExposeRenderer = true; // CP OpenAI Live: keep iframe active through connect
     if (frame) {
-      frame.style.opacity = shouldExposeRenderer ? "1" : "0";
-      frame.style.pointerEvents = shouldExposeRenderer ? "auto" : "none";
-      // Fully remove from paint when waiting portrait is active.
-      if (!shouldExposeRenderer && shouldShowSignalStage && !hasConversationStarted) {
-        frame.style.visibility = "hidden";
-      } else {
-        frame.style.visibility = "visible";
-      }
+      frame.style.opacity = "1";
+      frame.style.pointerEvents = "auto";
+      frame.style.visibility = "visible";
+      frame.style.display = "";
     }
     if (!shouldShowSignalStage) {
       setSignalStageVisible(false);

@@ -405,6 +405,12 @@
   }
 
   function resolveSessionEndpoint(config) {
+    try {
+      const parentBase = (window.parent && window.parent.CP_OPENAI_LIVE_API_BASE) ? window.parent.CP_OPENAI_LIVE_API_BASE : "";
+      const localBase = window.CP_OPENAI_LIVE_API_BASE || "";
+      const apiBase = String(parentBase || localBase || "").replace(/\/+$/, "");
+      if (apiBase) return apiBase + "/api/openai/realtime/session";
+    } catch (_e) {}
     const candidate = coerceText(
       config && (
         config.sessionEndpoint ||
@@ -873,7 +879,14 @@
         );
       }
 
-      const liveEndpoint =
+      let liveEndpoint = "";
+      try {
+        const parentBase = (window.parent && window.parent.CP_OPENAI_LIVE_API_BASE) ? window.parent.CP_OPENAI_LIVE_API_BASE : "";
+        const localBase = window.CP_OPENAI_LIVE_API_BASE || "";
+        const apiBase = String(parentBase || localBase || "").replace(/\/+$/, "");
+        if (apiBase) liveEndpoint = apiBase + "/api/openai/live/session";
+      } catch (_e) {}
+      liveEndpoint = liveEndpoint ||
         coerceText(state.config.openai_live_session_endpoint) ||
         coerceText(state.config.live_session_endpoint) ||
         (typeof DEFAULT_LIVE_SESSION_ENDPOINT !== "undefined"

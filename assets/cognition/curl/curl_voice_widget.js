@@ -1318,7 +1318,7 @@
       character_background_url: "",
       embed_url: "/UnityEnergy/openai_renderer/index.html?v=20260423r5",
       openai_session_endpoint: "/api/openai/realtime/session",
-      openai_realtime_model: "gpt-4o-realtime-preview",
+      openai_realtime_model: "gpt-live-1",
       openai_voice: "ash",
       allow_openai_fallback: false,
       allow_openai_voice_fallback: false,
@@ -9426,6 +9426,26 @@
 
   function buildWidgetConnectConfig(cfg, launchSession) {
     if (!cfg || typeof cfg !== "object") return null;
+    /* CP_OPENAI_LIVE_ACTIVATE_20261019 */
+    try {
+      const apiBase = (typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE)
+        ? String(window.CP_OPENAI_LIVE_API_BASE).replace(/\/+$/, "")
+        : "";
+      if (apiBase) {
+        cfg.openai_session_endpoint = apiBase + "/api/openai/realtime/session";
+        cfg.openai_live_session_endpoint = apiBase + "/api/openai/live/session";
+        cfg.session_endpoint = cfg.openai_session_endpoint;
+        cfg.live_session_endpoint = cfg.openai_live_session_endpoint;
+      }
+      cfg.voice_engine = "openai";
+      cfg.openai_live_api = true;
+      if (!cfg.openai_realtime_model && !cfg.openai_model && !cfg.model) {
+        cfg.openai_realtime_model = "gpt-live-1";
+      }
+      if (!cfg.openai_voice && !cfg.voice_id && !cfg.voice) {
+        cfg.openai_voice = "marin";
+      }
+    } catch (_e) {}
     if (detectVoiceEngine(cfg) === "hume") {
       return buildHumeConnectConfig(cfg, launchSession);
     }
@@ -9434,10 +9454,10 @@
       "/api/openai/realtime/session";
     const model =
       coerceText(cfg.openai_realtime_model || cfg.openai_model || cfg.model) ||
-      "gpt-4o-realtime-preview";
+      "gpt-live-1";
     const voice =
       coerceText(cfg.openai_voice || cfg.voice_id || cfg.voice) ||
-      "ash";
+      "marin";
     if (!sessionEndpoint || !model) return null;
     const connectConfig = {
       sessionEndpoint: sessionEndpoint,
@@ -11204,7 +11224,7 @@
       clearUnityStartGateLaunchTimers();
       noteUnityStartGateProgress("start-button-tap");
       setLaunchEmblemVisible(true);
-      setWidgetFrameVisible(false);
+      setWidgetFrameVisible(true);
       setStatus("Requesting microphone access…", false, true);
       try {
         await requestTopLevelMicAccess();
@@ -11261,8 +11281,8 @@
         return;
       }
       setCompactSquareFrameSize();
-      setWidgetFrameVisible(false);
-      setLaunchEmblemVisible(true);
+      setWidgetFrameVisible(true);
+      setLaunchEmblemVisible(false);
       expandWidgetFromClient();
       const tapRetrySchedule = getUnityStartGateRetrySchedule(cfg, "tap");
       scheduleIframeStartConversationRetry(
@@ -11502,14 +11522,27 @@
         unityStartGatePreflightAttempted &&
         !unityStartGatePendingRequiresRecovery
     );
+    // OpenAI Live needs the iframe alive through connect + conversation.
+    // Hiding it (opacity 0) during SELECT/connect is a common "almost starts" failure.
+    const openaiLive = true;
     const shouldExposeRenderer = Boolean(
-      (visible || keepRendererVisibleAfterStartGateTap) &&
-        !hasConversationStarted
+      openaiLive
+        ? true
+        : ((visible || keepRendererVisibleAfterStartGateTap) && !hasConversationStarted)
     );
     const shouldShowSignalStage = Boolean(hasConversationStarted || preConversationSignalVisible);
     if (frame) {
       frame.style.opacity = shouldExposeRenderer ? "1" : "0";
       frame.style.pointerEvents = shouldExposeRenderer ? "auto" : "none";
+      if (openaiLive) {
+        frame.style.visibility = "visible";
+        frame.style.display = "";
+        // keep a real box so WebRTC/mic paths are not treated as detached
+        if (!frame.style.width || frame.style.width === "0px") {
+          frame.style.width = "";
+          frame.style.height = "";
+        }
+      }
     }
     if (!shouldShowSignalStage || (!visible && !preConversationSignalVisible)) {
       setSignalStageVisible(false);
