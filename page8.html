@@ -1052,7 +1052,7 @@
       tryAt(0);
     })();
   </script>
-  <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261019-voice-handshake-1"></script>
+  <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261020-visitor-live-worker-1"></script>
 <script src="./assets/cognition/curl/curl_character_config.js?v=20261019-voice-activate-1"></script>
   <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-voice-live-events-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
@@ -1072,8 +1072,8 @@
     c.openai_realtime_model = 'gpt-live-1';
     c.openai_model = 'gpt-live-1';
     c.openai_live_api = true;
-    c.openai_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session';
-    c.openai_live_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/live/session';
+    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
+    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
     c.runtime_auth_bootstrap_enabled = false;
     c.widget_url = c.widget_url || './assets/cognition/curl/openai_renderer/index.html?v=20261019-openai-live-only-1';
   } catch (e) {}
@@ -1092,8 +1092,8 @@
     c.authless_hume_connection = false;
     c.hume_api_key = '';
     c.hume_config_id = '';
-    c.openai_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/realtime/session';
-    c.openai_live_session_endpoint = 'https://thousand-presently-tubes-stranger.trycloudflare.com/api/openai/live/session';
+    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
+    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
     c.openai_live_api = true;
     if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
     if (!c.openai_model) c.openai_model = 'gpt-live-1';

@@ -1,2 +1,2 @@
-/* CP OpenAI Live session API endpoint (single backend for Curl/Clerk/Claire) */
-window.CP_OPENAI_LIVE_API_BASE = 'https://thousand-presently-tubes-stranger.trycloudflare.com';
+/* CP OpenAI Live session API endpoint (durable Cloudflare Worker for public visitors) */
+window.CP_OPENAI_LIVE_API_BASE = 'https://openai-live-session.relay-3b0.workers.dev';
