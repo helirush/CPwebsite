@@ -663,32 +663,43 @@
     const instructions = buildAutoGreetingInstructions(state.config, state.launchSession);
     if (!instructions) return;
     try {
-      // Always use response.create so Live/Realtime both speak immediately.
-      state.dataChannel.send(
-        JSON.stringify({
-          type: "response.create",
-          response: {
-            output_modalities: ["audio"],
-            instructions:
-              "Speak first now. Greet the visitor briefly in character, then listen. " +
-              instructions,
-          },
-        })
-      );
-      // Compatibility fallback for older realtime shape.
+      // GPT-Live datachannel events (not nested response.create).
+      const greetText =
+        "Speak first now. Greet the visitor briefly in character, then listen. " + instructions;
       try {
         state.dataChannel.send(
           JSON.stringify({
-            type: "response.create",
-            response: {
-              modalities: ["audio"],
-              instructions:
-                "Speak first now. Greet the visitor briefly in character, then listen. " +
-                instructions,
-            },
+            type: "session.instructions.append",
+            event_id: "cp_greeting_instr_1",
+            delegation_id: null,
+            content: greetText,
+          })
+        );
+      } catch (_e1) {}
+      try {
+        state.dataChannel.send(
+          JSON.stringify({
+            type: "session.commentary.append",
+            event_id: "cp_greeting_speak_1",
+            delegation_id: null,
+            content: instructions || "Greet the visitor warmly and briefly, then listen.",
           })
         );
       } catch (_e2) {}
+      // Older realtime fallback only if not live.
+      if (!isLiveApi(state.config)) {
+        try {
+          state.dataChannel.send(
+            JSON.stringify({
+              type: "response.create",
+              response: {
+                modalities: ["audio"],
+                instructions: greetText,
+              },
+            })
+          );
+        } catch (_e3) {}
+      }
       state.hasSentInitialGreeting = true;
       try { scheduleDelayedFollowupIfNeeded(); } catch (_e) {}
     } catch (_err) {}
@@ -863,10 +874,11 @@
       state.dataChannel = dataChannel;
       dataChannel.addEventListener("open", function () {
         try { sendSessionUpdate(); } catch (_e) {}
+        setStatus("Live data channel open…", false);
+        // GPT-Live: wait for session.started before application commands.
         window.setTimeout(function () {
           try { sendAutoGreetingIfNeeded(); } catch (_e) {}
-        }, 250);
-        setStatus("Live connection ready.", false);
+        }, 600);
       });
       dataChannel.addEventListener("message", function (messageEvent) {
         let parsed = null;
@@ -875,6 +887,19 @@
         } catch (_err) {
           return;
         }
+        /* CP_LIVE_SESSION_STARTED_20261019 */
+        try {
+          const et = parsed && parsed.type ? String(parsed.type) : "";
+          if (et === "session.started" || et === "session.created") {
+            setStatus("Live session started.", false);
+            window.setTimeout(function () { try { sendAutoGreetingIfNeeded(); } catch (_e) {} }, 120);
+          }
+          if (et === "error" || (parsed && parsed.error)) {
+            const msg = (parsed.error && (parsed.error.message || parsed.error.code)) || parsed.message || "Live session error";
+            setStatus(String(msg), true);
+            postToParent("error", { message: String(msg), event: parsed });
+          }
+        } catch (_e) {}
         handleRealtimeEvent(parsed);
       });
       dataChannel.addEventListener("error", function (event) {
