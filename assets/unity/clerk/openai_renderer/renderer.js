@@ -459,7 +459,7 @@
     return candidates;
   }
 
-  function appendInstructionBlock  function appendInstructionBlock(blocks, value) {
+  function appendInstructionBlock(blocks, value) {
     const text = coerceText(value);
     if (!text) return;
     if (blocks.includes(text)) return;
