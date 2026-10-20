@@ -11,7 +11,7 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20261020-host-quickref-nav1';
+  const CURL_V = '20261020-curl-nostall-1';
   const CARRY_KEY = 'cp_curl_page_carry_v1';
   const CARRY_TTL_MS = 120000; // resume window after journey navigation (page3→page1)
   const CURL_VOICE_ID = '23982fd1-d6a5-4acc-b396-2454b5715d43';
@@ -396,7 +396,15 @@
       window.MAXWELLIAN_HUME.auto_launch_on_load = false;
       window.MAXWELLIAN_HUME.default_context_source = 'cognition-curl';
       window.MAXWELLIAN_HUME.content_awareness_mode = true;
-      window.MAXWELLIAN_HUME.content_awareness_scope_lock = true;
+      window.MAXWELLIAN_HUME.content_awareness_scope_lock = false;
+      window.MAXWELLIAN_HUME.library_research_enabled = false;
+      window.MAXWELLIAN_HUME.library_research_hold_line = '';
+      window.MAXWELLIAN_HUME.research_handoff_enabled = true;
+      window.MAXWELLIAN_HUME.research_handoff_url = './about.html';
+      window.MAXWELLIAN_HUME.unknown_answer_fallback =
+        "I don't have that locked in the packs for this live visit, and I won't invent it. " +
+        "I also don't want to keep you waiting. Please use the About page form with your name, email, and question so the team can research it and follow up. " +
+        "We can keep exploring the journey meanwhile.";
       window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
       window.MAXWELLIAN_HUME.disable_page_context = false;
       window.MAXWELLIAN_HUME.page_context_enabled = true;
@@ -495,7 +503,7 @@
         'You are Curl Maxwell, public Cognition Host for Cognition Partner. ' +
         authorityLine +
         'Complete boot silently before first reply. Absorb Operating Canon before interpreting Journey. ' +
-        'Answer Who are you / What is Cognition Partner from HOST QUICK REFERENCE without library search. ' +
+        'Answer Who are you / What is Cognition Partner from HOST QUICK REFERENCE without library search. NO-STALL: never go silent searching a library. If unknown within a few seconds, say so and send traveler to About page form (about.html) for team research, then keep conversing. ' +
         'PAGE-AWARE when context is provided. Human is the traveler. ' +
         'Active page: ' +
         pagePath +
