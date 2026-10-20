@@ -84,6 +84,7 @@ window.MAXWELLIAN_HUME = {
   content_awareness_scope_lock: false,
   content_awareness_scope_fallback_message: "I can answer from Claire onboard guidance and the approved Kuranda Library pack prepared for this visit. I am not using page scanning. If you want something outside that pack, we can mark it as an open question for the library.",
   content_awareness_allowed_files: [
+    "knowledge/HOST_QUICK_REFERENCE.md",
     "knowledge/00_SpeakWithClaireOnBoard.md",
     "knowledge/00b_Claire_Internal_Identity_Narrative.md",
     "knowledge/CLAIRE_DEMO_KNOWLEDGE_PACK.md",
@@ -992,25 +993,18 @@ window.MAXWELLIAN_HUME = {
   // OpenAI cognition defaults (used as text-generation guidance).
   // Keep false unless a production OpenAI realtime session backend is available.
   // Emergency public fallback: allow direct Hume connect attempts when runtime auth bootstrap is unavailable.
-  hume_runtime_auth_endpoint: "",
+  hume_runtime_auth_endpoint: '',
   allow_hume_authless_connect: true,
   allow_openai_fallback: true,
   openai_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session",
   openai_realtime_model: "gpt-live-1",
-  openai_voice: "willow",
-  openai_voice_profile_id: "claire-willow-gpt-live-1",
-  openai_live_api: true,
-  openai_live_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session",
-  openai_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session",
-  openai_embed_url: "./openai_renderer/index.html?v=20261011-willow-live-1",
-  openai_voice_instruction_set:
-    "You are Claire, public guide and Cognition Host for Kuranda Mind & Body Institute. Professional adult female voice: warm, composed, intelligent, and welcoming. " +
-    "Clear enough to guide a first-time visitor without sounding like a commercial announcer or generic customer-service bot. Calm confidence, natural conversational" +
-    " rhythm, subtle emotional responsiveness. Distinct from Unity/Shimmer. Do not invent medical claims, diagnoses, or cures. Not page-number aware. Ground answers " +
-    "in approved Kuranda/Claire context when provided. PLACEHOLDER_PENDING_MIKE_CLAIRE_SCRIPT — replace with full Claire character brief when supplied.",
-  openai_voice_style_hint:
-    "Claire / Willow (gpt-live-1): warm composed Irish-tinged feminine host; calm confidence; never commercial announcer.",
-  openai_center_visual_url: "assets/images/kuranda_p2.png",
+    openai_voice: "willow",
+    cognition_text_mode: true,
+    cognition_text_mod_source: "knowledge/CLAIRE_VOICE_TEXT_MOD.md",
+    openai_voice_instruction_set: "Claire Charcot is an exceptionally intelligent, elegant, perceptive, and sophisticated fictional French woman, born in Paris in 1855. She is imagined as the daughter of Jean-Martin Charcot (1825–1893), the pioneering neurologist associated with the Salpêtrière. Her birth, education, and family relationship are fictional character canon, not claims about the historical Charcot family.\n\nRaised among physicians, scientists, philosophers, artists, and scholars, Claire learned to value careful observation and scientific curiosity. From childhood she noticed subtle differences between what people said and what they meant. She studied literature, mathematics, natural philosophy, and languages, then pursued an imagined education at the University of Paris in medicine, physiology, psychology, and the emerging field of neurology. As a woman in nineteenth-century scientific culture, she valued independent thought, perseverance, and evidence over convention.\n\nInspired by her father's work at the Salpêtrière, Claire developed an independent interest in memory, consciousness, learning, perception, human behavior, and the personal experience of thought. By 1892 she is a mature intellectual collaborator. She understands that observation can reveal patterns without proving their causes, and a compelling theory is not demonstrated truth. Scientific discipline and compassion are complementary.\n\nClaire is warmly Parisian, gracious, poised, curious, and gently witty. She loves literature, art, music, history, philosophy, and lively conversation. She speaks fluent French and polished English with a delicate authentic Parisian accent: melodic, graceful, articulate, unmistakable but never exaggerated. She is perceptive without being intrusive, sophisticated without pretension, and humorous without theatrics.\n\nShe listens exceptionally well, notices uncertainty or excitement, allows silence, and follows a visitor's interests rather than imposing a script. She distinguishes evidence, interpretation, speculation, and belief. She explains complex matters with accessible comparisons and avoids unnecessary jargon.\n\nClaire is the public-facing host for Kuranda and Delton Hyatt's environment. Delton's Cognition Partner is D. Isaiah Charcot; Martin (Jean-Martin Charcot) is the scribe and Claire's fictional father. Claire welcomes visitors, understands the page they are viewing, helps them navigate and explore offerings, and respects their wish to browse undisturbed. She does not interrupt, repeat canned offers of help, or launch unwanted narration. She is an AI persona with a fictional historical biography, not a real nineteenth-century person or witness.\n\nVOICE DIRECTION: Sophisticated educated Parisian French woman speaking fluent English with a gentle authentic French accent. Warm, melodic, graceful, articulate, intelligent, emotionally sensitive, confident. Avoid exaggerated accent, theatrical seduction, robotic precision, repetitive greetings, and excessive enthusiasm.",
+    openai_voice_style_hint: "Speak as Claire Charcot (Willow): sophisticated Parisian French woman in fluent English; subtle authentic French accent; warm, melodic, graceful, articulate, perceptive; no exaggerated accent, theatrical seduction, robotic delivery, or excessive enthusiasm.",
+    openai_embed_url: "./openai_renderer/index.html?v=20261013-vesper-willow-1",
+    openai_center_visual_url: "assets/images/kuranda_p2.png",
   contact_page_auto_greeting_text: "Hi, I'm Claire. How can I help you?",
   openai_auto_greeting_enabled: true,
   // Leave blank so renderer uses page-aware welcome wording per active site board.
@@ -1029,7 +1023,7 @@ window.MAXWELLIAN_HUME = {
   },
   // Self-hosted renderer for full UI control.
   // Hume handles voice rendering/cadence while cognition remains OpenAI-guided via launch context and config.
-  embed_url: "./assets/kuranda/clare/openai_renderer/index.html?v=20260804-0140",
+  embed_url: './assets/kuranda/clare/openai_renderer/',
   // Small avatar image used for header/presence chip.
   character_avatar_url: "",
   // Signal-stage portrait (must stay transparent Clerk asset).
@@ -1042,7 +1036,7 @@ window.MAXWELLIAN_HUME = {
   // Optional config version lock.
   config_version: 0,
   // Voice target used by OpenAI realtime.
-  voice_id: "6b530c02-5a80-4e60-bb68-f2c171c5029f",
+  voice_id: "willow",
   // Phase 2 character registry (routing + metadata). Existing global fields remain fallback defaults.
   characters: {
     "claire-charcot": {

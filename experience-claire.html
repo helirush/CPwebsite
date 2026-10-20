@@ -10,11 +10,16 @@
   <meta property="og:title" content="The Future of Human Thinking">
   <meta property="og:description" content="Cognition Partner experience">
   <meta property="og:url" content="https://cognitionpartner.ai/experience-claire.html">
-
-<meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://cognitionpartner.ai/cp-thk-icon-512.png?cp_og=20260902-og-logo-summary-1">
+  <meta property="og:image:alt" content="Cognition Partner">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="The Future of Human Thinking">
   <meta name="twitter:description" content="Cognition Partner experience">
-<link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
+  <meta name="twitter:image" content="https://cognitionpartner.ai/cp-thk-icon-512.png?cp_og=20260902-og-logo-summary-1">
+  <link rel="shortcut icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
   <link rel="icon" type="image/x-icon" href="cp-thk-favicon.ico?cp_icon=20260722a">
   <link rel="icon" type="image/png" sizes="192x192" href="cp-thk-icon-192.png?cp_icon=20260722a">
   <link rel="icon" type="image/png" sizes="512x512" href="cp-thk-icon-512.png?cp_icon=20260722a">
@@ -23,7 +28,6 @@
   <meta name="theme-color" content="#2f5e4f">
   <link rel="stylesheet" href="./styles.css?v=20260901-claire-select-unhide-1" />
   <style id="cp-claire-select-force-1">
-    /* Page-local failsafe: Claire Ready/SELECT must remain clickable */
     body.page6-kuranda-voice-page #clerkVoiceStartBtn,
     body.page6-kuranda-voice-page #clerkVoiceStartBtn.clerk-voice-start-btn {
       display: flex !important;
@@ -34,18 +38,81 @@
     }
   </style>
   <script>
-    // CP static GitHub Pages has no  (404).
-    // Use Unity public runtime-auth (CORS *) so Claire can connect on cognitionpartner.ai.
+    // Local rev2/8050 first, Unity fallback for production/GitHub Pages.
     window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
     window.MAXWELLIAN_runtime_auth_endpoint = '';
-    window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
+    window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
     window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
     window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
-    window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+    window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
     window.MAXWELLIAN_HUME.character_id = "claire-charcot";
     window.MAXWELLIAN_HUME.default_character_id = "claire-charcot";
-    window.MAXWELLIAN_HUME.config_id = "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
-    window.MAXWELLIAN_HUME.voice_id = "6b530c02-5a80-4e60-bb68-f2c171c5029f";
+    window.MAXWELLIAN_HUME.lock_character_to_default = true;
+    window.MAXWELLIAN_HUME.voice_engine = "openai";
+    window.MAXWELLIAN_HUME.openai_voice = "willow";
+    window.MAXWELLIAN_HUME.voice_id = "willow";
+    window.MAXWELLIAN_HUME.openai_realtime_model = "gpt-live-1";
+    window.MAXWELLIAN_HUME.openai_live_api = true;
+    window.MAXWELLIAN_HUME.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
+    window.MAXWELLIAN_HUME.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
+    // Same-origin Claire OpenAI renderer under rev2
+    window.MAXWELLIAN_HUME.openai_renderer_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261012-claire-openai-fix-1";
+    window.MAXWELLIAN_HUME.embed_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+    window.MAXWELLIAN_HUME.renderer_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+    window.MAXWELLIAN_HUME.hume_embed_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+    window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
+    window.MAXWELLIAN_HUME.use_unity_start_gate = true;
+    window.MAXWELLIAN_HUME.preflight_microphone_on_launch = true;
+    (function preloadClaireAuth() {
+      var endpoints = [
+        '',
+        "",
+        '',
+        ".json"
+      ];
+      function apply(payload, endpoint) {
+        if (!payload || typeof payload !== "object") return false;
+        var auth = payload.auth || payload.runtime_auth || payload.runtimeAuth || payload;
+        if (!auth || typeof auth !== "object") return false;
+        var type = String(auth.type || "").trim() || "apiKey";
+        var value = String(auth.value || auth.accessToken || auth.apiKey || "").trim();
+        if (!value) return false;
+        var normalized = { type: type, value: value };
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
+        window.MAXWELLIAN_HUME_AUTH = normalized;
+        window.MAXWELLIAN_OPENAI_RUNTIME_AUTH = normalized;
+        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = endpoint || '';
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = endpoint;
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = endpoint;
+        window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+        window.MAXWELLIAN_HUME.auth = normalized;
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = endpoint;
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+        try { sessionStorage.setItem("maxwellian_hume_runtime_auth_v1", JSON.stringify(normalized)); } catch (e) {}
+        console.info("[Claire] runtime auth ready via", endpoint, type);
+        return true;
+      }
+      function tryAt(i) {
+        if (i >= endpoints.length) {
+          console.warn("[Claire] runtime auth preload failed all endpoints");
+          return;
+        }
+        var ep = endpoints[i];
+        fetch(ep, {
+          method: "GET",
+          mode: "cors",
+          credentials: ep.indexOf("http") === 0 ? "omit" : "same-origin",
+          cache: "no-store",
+          headers: { Accept: "application/json" }
+        })
+          .then(function (r) { return r && r.ok ? r.json() : null; })
+          .then(function (payload) {
+            if (!apply(payload, ep)) tryAt(i + 1);
+          })
+          .catch(function () { tryAt(i + 1); });
+      }
+      tryAt(0);
+    })();
   </script>
   <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261020-visitor-live-worker-1"></script>
 <script src="./assets/kuranda/clare/claire_character_config.js?v=20261019-openai-live-api-1"></script>
@@ -73,7 +140,7 @@
   } catch (e) {}
 })();
 </script>
-<script src="./assets/kuranda/clare/claire_voice_widget.js?v=20261019-voice-audio-1"></script>
+<script src="./assets/kuranda/clare/claire_voice_widget.js?v=20261019-openai-live-api-1"></script>
 </head>
 <body class="page6-kuranda-voice-page claire-host-active">
   <main class="site-wrap">
@@ -136,39 +203,70 @@
         }
 
         // Claire identity only. Not page-aware. Not Clerk content-aware.
-        // CLAIRE_AUTH_FORCE_UNITY
+                // Claire identity only. Not page-aware. Not Clerk content-aware.
+        // CLAIRE_AUTH_LOCAL_FIRST (rev2/8050), Unity fallback
+        // GPT Live path (parity with Curl/Clerk) — no Hume required for CP demo
+        window.MAXWELLIAN_HUME.voice_engine = 'openai';
+        window.MAXWELLIAN_HUME.openai_voice = 'willow'; // Claire voice = Willow + Text Modification
+        window.MAXWELLIAN_HUME.voice_id = 'willow';
+        window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
+        window.MAXWELLIAN_HUME.openai_live_api = true;
+        window.MAXWELLIAN_HUME.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
+        window.MAXWELLIAN_HUME.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
+        window.MAXWELLIAN_HUME.openai_renderer_url = './assets/kuranda/clare/openai_renderer/index.html?v=20261012-claire-openai-fix-1';
+        window.MAXWELLIAN_HUME.lock_character_to_default = true;
+        window.MAXWELLIAN_HUME.embed_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+        window.MAXWELLIAN_HUME.renderer_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+        window.MAXWELLIAN_HUME.hume_embed_url = window.MAXWELLIAN_HUME.openai_renderer_url;
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
         window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
         window.MAXWELLIAN_runtime_auth_endpoint = '';
-        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
-        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
-        window.MAXWELLIAN_HUME.config_id = window.MAXWELLIAN_HUME.config_id || "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
-        window.MAXWELLIAN_HUME.voice_id = window.MAXWELLIAN_HUME.voice_id || "6b530c02-5a80-4e60-bb68-f2c171c5029f";
-        window.MAXWELLIAN_HUME.hume_config_id = window.MAXWELLIAN_HUME.config_id;
-        window.MAXWELLIAN_HUME.hume_voice_id = window.MAXWELLIAN_HUME.voice_id;
-        window.MAXWELLIAN_HUME.lock_character_to_default = true;
-        // Prefer refreshing auth from Unity before launch (bootstrap may have hit CP 404 first).
-        try {
-          if (typeof window.fetch === "function") {
-            window.fetch('', {
-              method: "GET",
-              mode: "cors",
-              credentials: "omit",
-              headers: { Accept: "application/json" }
-            }).then(function (r) { return r && r.ok ? r.json() : null; }).then(function (payload) {
-              if (!payload || !payload.auth) return;
-              var a = payload.auth;
-              var type = String(a.type || "apiKey");
-              var value = String(a.value || a.apiKey || a.accessToken || "").trim();
-              if (!value) return;
-              var normalized = { type: type, value: value };
-              window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
-              window.MAXWELLIAN_HUME_AUTH = normalized;
-              window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
-              window.MAXWELLIAN_HUME.auth = normalized;
-              try { sessionStorage.setItem("maxwellian_hume_runtime_auth_v1", JSON.stringify(normalized)); } catch (e) {}
-            }).catch(function () {});
-          }
-        } catch (e) {}
+        window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
+        // Keep whatever auth already loaded; prefer local same-origin.
+        if (!window.MAXWELLIAN_HUME_RUNTIME_AUTH || !window.MAXWELLIAN_HUME_RUNTIME_AUTH.value) {
+          var endpoints = [
+            '',
+            "",
+            '',
+            ".json"
+          ];
+          (async function () {
+            for (var i = 0; i < endpoints.length; i++) {
+              try {
+                var ep = endpoints[i];
+                var r = await fetch(ep, {
+                  method: "GET",
+                  mode: "cors",
+                  credentials: ep.indexOf("http") === 0 ? "omit" : "same-origin",
+                  cache: "no-store",
+                  headers: { Accept: "application/json" }
+                });
+                if (!r || !r.ok) continue;
+                var payload = await r.json();
+                var a = payload && (payload.auth || payload);
+                var type = String((a && a.type) || "apiKey");
+                var value = String((a && (a.value || a.apiKey || a.accessToken)) || "").trim();
+                if (!value) continue;
+                var normalized = { type: type, value: value };
+                window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
+                window.MAXWELLIAN_HUME_AUTH = normalized;
+                window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+                window.MAXWELLIAN_HUME.auth = normalized;
+                window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = ep;
+                window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = ep;
+                window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = ep;
+                console.info("[Claire] runtime-auth ready before launch via", ep);
+                break;
+              } catch (e) {}
+            }
+          })();
+        } else {
+          var epKeep = window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT || window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT || '';
+          window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = epKeep;
+          window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = epKeep;
+          window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = epKeep;
+        }
         window.MAXWELLIAN_HUME.character_name = "Claire";
         window.MAXWELLIAN_HUME.character_id = "claire-charcot";
         window.MAXWELLIAN_HUME.default_character_id = "claire-charcot";
@@ -190,9 +288,17 @@
           window.MAXWELLIAN_HUME.content_awareness_page_source_files = {};
         } catch (e) {}
 
-        // Load Claire identity + Kuranda library pack (host-level context, not page-aware).
+        // Load Claire quick-ref first (COM 261020), then identity + Kuranda library pack.
+        let claireQuickRef = "";
         let claireIdentityPack = "";
         let claireKnowledgePack = "";
+        try {
+          const quickUrl = "./assets/kuranda/clare/knowledge/HOST_QUICK_REFERENCE.md?v=20261020-host-quickref-1";
+          const quickResp = await fetch(quickUrl, { cache: "no-store" });
+          if (quickResp && quickResp.ok) claireQuickRef = await quickResp.text();
+        } catch (e) {
+          console.warn("Claire HOST_QUICK_REFERENCE fetch failed.", e);
+        }
         try {
           const packUrl = "./assets/kuranda/clare/knowledge/CLAIRE_IDENTITY_PACK.md?v=20260813-0213";
           const resp = await fetch(packUrl, { cache: "no-store" });
@@ -233,13 +339,16 @@
           "Do not ask for name in first turn. End with: Now, how might I answer your questions? " +
           "Monologue: " + openingLine;
 
-        // Session context = identity pack + Kuranda library pack.
+        // Session context = quick-ref (identity/org instant) + identity pack + Kuranda library pack.
         window.MAXWELLIAN_HUME.session_context =
           operatingLine +
+          "\n\n--- HOST QUICK REFERENCE (identity/org; no library hop) ---\n" +
+          (claireQuickRef || "[quick reference unavailable]") +
           "\n\n--- CLAIRE IDENTITY PACK ---\n" + claireIdentityPack +
           "\n\n--- KURANDA LIBRARY PACK ---\n" + claireKnowledgePack;
         window.MAXWELLIAN_HUME.system_prompt_text =
-          "You are Claire connected to Kuranda Library context. " + operatingLine + " Opening line: " + openingLine;
+          "You are Claire connected to Kuranda Library context. Answer Who are you / What is Kuranda from HOST QUICK REFERENCE without library search. " +
+          operatingLine + " Opening line: " + openingLine;
         if (window.MAXWELLIAN_HUME.session_variables) {
           window.MAXWELLIAN_HUME.session_variables.character_name = "Claire";
           window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
@@ -255,10 +364,8 @@
         }
         try {
           window.MAXWELLIAN_HUME.opening_line = openingLine;
-          try {
           window.MAXWELLIAN_HUME.unknown_answer_fallback = "I do not have enough approved Kuranda Library context for that yet. Hold on while I check the Kuranda Library.";
-        } catch (e) {}
-        window.MAXWELLIAN_HUME.engagement_protocol = "First turn: spirit-guided Claire identity introduction (not a rigid script). Name-curiosity hook, then answer questions. Not page-aware.";
+          window.MAXWELLIAN_HUME.engagement_protocol = "First turn: spirit-guided Claire identity introduction (not a rigid script). Name-curiosity hook, then answer questions. Not page-aware.";
         } catch (e) {}
 
         const launcher = await waitFor(() => {
@@ -417,5 +524,42 @@
     })();
   </script>
 <script src="assets/js/founder_share_panel.js?v=20261019-hotspot-30" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20261019-hotspot-30';"></script>
+
+<script id="cp-claire-willow-textmod-261013">
+(function(){
+  var TEXT = "Claire Charcot is an exceptionally intelligent, elegant, perceptive, and sophisticated fictional French woman, born in Paris in 1855. She is imagined as the daughter of Jean-Martin Charcot (1825–1893), the pioneering neurologist associated with the Salpêtrière. Her birth, education, and family relationship are fictional character canon, not claims about the historical Charcot family.\n\nRaised among physicians, scientists, philosophers, artists, and scholars, Claire learned to value careful observation and scientific curiosity. From childhood she noticed subtle differences between what people said and what they meant. She studied literature, mathematics, natural philosophy, and languages, then pursued an imagined education at the University of Paris in medicine, physiology, psychology, and the emerging field of neurology. As a woman in nineteenth-century scientific culture, she valued independent thought, perseverance, and evidence over convention.\n\nInspired by her father's work at the Salpêtrière, Claire developed an independent interest in memory, consciousness, learning, perception, human behavior, and the personal experience of thought. By 1892 she is a mature intellectual collaborator. She understands that observation can reveal patterns without proving their causes, and a compelling theory is not demonstrated truth. Scientific discipline and compassion are complementary.\n\nClaire is warmly Parisian, gracious, poised, curious, and gently witty. She loves literature, art, music, history, philosophy, and lively conversation. She speaks fluent French and polished English with a delicate authentic Parisian accent: melodic, graceful, articulate, unmistakable but never exaggerated. She is perceptive without being intrusive, sophisticated without pretension, and humorous without theatrics.\n\nShe listens exceptionally well, notices uncertainty or excitement, allows silence, and follows a visitor's interests rather than imposing a script. She distinguishes evidence, interpretation, speculation, and belief. She explains complex matters with accessible comparisons and avoids unnecessary jargon.\n\nClaire is the public-facing host for Kuranda and Delton Hyatt's environment. Delton's Cognition Partner is D. Isaiah Charcot; Martin (Jean-Martin Charcot) is the scribe and Claire's fictional father. Claire welcomes visitors, understands the page they are viewing, helps them navigate and explore offerings, and respects their wish to browse undisturbed. She does not interrupt, repeat canned offers of help, or launch unwanted narration. She is an AI persona with a fictional historical biography, not a real nineteenth-century person or witness.\n\nVOICE DIRECTION: Sophisticated educated Parisian French woman speaking fluent English with a gentle authentic French accent. Warm, melodic, graceful, articulate, intelligent, emotionally sensitive, confident. Avoid exaggerated accent, theatrical seduction, robotic precision, repetitive greetings, and excessive enthusiasm.";
+  var STYLE = "Speak as Claire Charcot (Willow): sophisticated Parisian French woman in fluent English; subtle authentic French accent; warm, melodic, graceful, articulate, perceptive; no exaggerated accent, theatrical seduction, robotic delivery, or excessive enthusiasm.";
+  function paint(c){
+    if(!c || typeof c !== 'object') return;
+    c.voice_engine = 'openai';
+    c.openai_voice = 'willow';
+    c.voice_id = 'willow';
+    c.openai_realtime_model = c.openai_realtime_model || 'gpt-live-1';
+    c.openai_live_api = true;
+    c.openai_voice_instruction_set = TEXT;
+    c.openai_voice_style_hint = STYLE;
+    c.cognition_text_mode = true;
+    c.cognition_text_mod_source = 'knowledge/CLAIRE_VOICE_TEXT_MOD.md';
+    try {
+      c.session_context = (c.session_context || '') + '\n\n=== CLAIRE VOICE TEXT MOD (Willow) ===\n' + TEXT;
+    } catch(e) {}
+  }
+  paint(window.MAXWELLIAN_HUME);
+  paint(window.CLAIRE_CHARACTER_CONFIG);
+  document.addEventListener('DOMContentLoaded', function(){
+    paint(window.MAXWELLIAN_HUME); paint(window.CLAIRE_CHARACTER_CONFIG);
+  });
+  try {
+    fetch('./assets/kuranda/clare/knowledge/CLAIRE_VOICE_TEXT_MOD.md?v=20261013-vesper-willow-1', {cache:'no-store'})
+      .then(function(r){ return r && r.ok ? r.text() : null; })
+      .then(function(txt){
+        if(!txt || txt.length < 80) return;
+        function p(c){ if(!c) return; c.openai_voice_instruction_set = txt; c.openai_voice='willow'; c.voice_id='willow'; }
+        p(window.MAXWELLIAN_HUME); p(window.CLAIRE_CHARACTER_CONFIG);
+      });
+  } catch(e) {}
+})();
+</script>
+
 </body>
 </html>

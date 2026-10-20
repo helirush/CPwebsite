@@ -91,6 +91,7 @@ window.MAXWELLIAN_HUME = {
   content_awareness_scope_lock: false,
   content_awareness_scope_fallback_message: "I can answer from Clerk onboard guidance and the approved Maxwellian Library pack prepared for this visit. I am not using page scanning. If you want something outside that pack, I can mark it as an open library question.",
   content_awareness_allowed_files: [
+    "knowledge/HOST_QUICK_REFERENCE.md",
     "knowledge/SpeakWithClerkOnBoard.md",
     "knowledge/CLERK_IDENTITY_PACK.md",
     "knowledge/CLERK_DEMO_KNOWLEDGE_PACK.md",

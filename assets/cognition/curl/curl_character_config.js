@@ -84,6 +84,7 @@ window.MAXWELLIAN_HUME = {
   content_awareness_scope_lock: true,
   content_awareness_scope_fallback_message: "I can answer from Curl's Operating Canon, onboard guidance, and the Journey narrative prepared for this visit. If something sits outside that pack, we can treat it as an open question.",
   content_awareness_allowed_files: [
+    "knowledge/HOST_QUICK_REFERENCE.md",
     "knowledge/CURL_BOOT_SEQUENCE.md",
     "knowledge/CURL_OPERATING_CANON.md",
     "knowledge/SpeakWithCurlOnBoard.md",
