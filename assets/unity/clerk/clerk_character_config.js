@@ -20,7 +20,7 @@ window.MAXWELLIAN_HUME = {
   default_ui_mode: "modal",
   // Voice stack selector for widget routing.
   voice_engine: "openai",
-  openai_renderer_url: "assets/unity/clerk/openai_renderer/index.html?v=20261012-vesper-live-1",
+  openai_renderer_url: "assets/unity/clerk/openai_renderer/index.html?v=20261020-clerk-syntax-fix1",
   openai_live_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session",
   openai_live_api: true,
   // Diagnostics can be re-enabled for troubleshooting, but default is off in normal operation.
@@ -1025,7 +1025,7 @@ window.MAXWELLIAN_HUME = {
   },
   // Self-hosted renderer for full UI control.
   // Hume handles voice rendering/cadence while cognition remains OpenAI-guided via launch context and config.
-  embed_url: "./assets/unity/clerk/openai_renderer/index.html?v=20260810-clerk-claire-parity1",
+  embed_url: "./assets/unity/clerk/openai_renderer/index.html?v=20261020-clerk-syntax-fix1",
   // Small avatar image used for header/presence chip.
   character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
   // Signal-stage portrait (must stay transparent Clerk asset).
