@@ -9451,9 +9451,18 @@
     const model =
       coerceText(cfg.openai_realtime_model || cfg.openai_model || cfg.model) ||
       "gpt-live-1";
-    const voice =
-      coerceText(cfg.openai_voice || cfg.voice_id || cfg.voice) ||
-      "vesper";
+    const looksUuidVoice = function (value) {
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(coerceText(value));
+    };
+    let voice = "";
+    const voiceCandidates = [cfg.openai_voice, cfg.voice, cfg.voice_id];
+    for (let vi = 0; vi < voiceCandidates.length; vi += 1) {
+      const cand = coerceText(voiceCandidates[vi]);
+      if (!cand || looksUuidVoice(cand)) continue;
+      voice = cand;
+      break;
+    }
+    if (!voice) voice = "vesper";
     if (!sessionEndpoint || !model) return null;
     const connectConfig = {
       sessionEndpoint: sessionEndpoint,
