@@ -8504,13 +8504,23 @@
   }
 
   function shouldUseUnityStartGate(cfg) {
+    // CP OpenAI Live: never block config handshake behind Unity start gate.
+    // Gate was stranding renderer on "Waiting for session config…".
+    if (cfg && cfg.force_unity_start_gate === true) return true;
+    if (cfg && cfg.use_unity_start_gate === false) return false;
+    try {
+      if (typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE) return false;
+      if (cfg && (cfg.openai_live_api || cfg.voice_engine === "openai" || cfg.openai_session_endpoint || cfg.openai_live_session_endpoint)) {
+        return false;
+      }
+    } catch (_e) {}
     if (cfg && typeof cfg.force_unity_start_gate === "boolean") {
       return cfg.force_unity_start_gate;
     }
     if (cfg && typeof cfg.use_unity_start_gate === "boolean") {
       return cfg.use_unity_start_gate;
     }
-    return isAppleMobileWebKitBrowser();
+    return false;
   }
   function shouldRunMicPreflight(cfg) {
     if (cfg && typeof cfg.preflight_microphone_on_launch === "boolean") {
@@ -9841,7 +9851,7 @@
     );
     clearFrameLoadTimer();
     const cfg = getRuntimeVoiceConfig();
-    if (unityStartGatePending) {
+    if (unityStartGatePending && !(typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE) && detectVoiceEngine(getRuntimeVoiceConfig()) !== "openai") {
       const gateMessage =
         coerceText(unityStartGatePreflightStatusMessage) ||
         "Tap Waiting on Clerk to begin speaking with Clerk.";
@@ -9878,6 +9888,7 @@
     setCompactSquareFrameSize();
     setPanelMode("centered");
     const readyRetrySchedule = getUnityStartGateRetrySchedule(cfg, "ready");
+    expandWidgetFromClient();
     scheduleIframeStartConversationRetry(
       readyRetrySchedule.maxAttempts,
       readyRetrySchedule.delayMs
@@ -11940,6 +11951,27 @@
 
     activeFrameOrigin = getEmbedOrigin(url);
     frame.src = url;
+    /* CP_FORCE_CONFIG_AFTER_SRC_20261019 */
+    window.setTimeout(function () {
+      try {
+        const cfgNow = getRuntimeVoiceConfig();
+        unityStartGatePending = false;
+        const ok = sendWidgetConfig(cfgNow, pendingLaunchSession);
+        if (ok) {
+          expandWidgetFromClient();
+          scheduleIframeStartConversationRetry(30, 200);
+        }
+      } catch (_e) {}
+    }, 400);
+    window.setTimeout(function () {
+      try {
+        const cfgNow = getRuntimeVoiceConfig();
+        unityStartGatePending = false;
+        sendWidgetConfig(cfgNow, pendingLaunchSession);
+        expandWidgetFromClient();
+        scheduleIframeStartConversationRetry(30, 200);
+      } catch (_e) {}
+    }, 1200);
     setStatus(`${cfg.character_name} is connecting to ${getVoiceEngineLabel(cfg)}. Preparing voice panel…`, false);
     setSessionDiagnostics(buildSessionDiagnostics(pendingLaunchSession, cfg, url, "connecting"), false);
 

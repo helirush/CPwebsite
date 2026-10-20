@@ -374,10 +374,10 @@
       window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
       window.MAXWELLIAN_HUME.openai_session_endpoint = '/api/openai/realtime/session';
       window.MAXWELLIAN_HUME.openai_live_session_endpoint = '/api/openai/live/session';
-      window.MAXWELLIAN_HUME.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-      window.MAXWELLIAN_HUME.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-      window.MAXWELLIAN_HUME.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-      window.MAXWELLIAN_HUME.hume_embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+      window.MAXWELLIAN_HUME.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261019-voice-handshake-1';
+      window.MAXWELLIAN_HUME.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261019-voice-handshake-1';
+      window.MAXWELLIAN_HUME.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261019-voice-handshake-1';
+      window.MAXWELLIAN_HUME.hume_embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261019-voice-handshake-1';
       window.MAXWELLIAN_HUME.allow_openai_fallback = true;
 
       // Claire-like start gate + mic path
@@ -750,6 +750,33 @@
         }
         if (statusEl) statusEl.textContent = 'Connecting to Curl…';
         armSelectWatch();
+
+      // CP_SELECT_FORCE_CONFIG: push OpenAI Live config even if start button path is flaky
+      try {
+        if (typeof window.openClerkVoiceModal === 'function') {
+          const apiBase = (window.CP_OPENAI_LIVE_API_BASE || '').replace(/\/+$/, '');
+          window.openClerkVoiceModal({
+            characterId: (typeof CURL_CHARACTER_ID !== 'undefined' ? CURL_CHARACTER_ID : 'curl-maxwell'),
+            uiMode: 'modal',
+            voice_engine: 'openai',
+            openai_live_api: true,
+            openai_voice: 'marin',
+            openai_realtime_model: 'gpt-live-1',
+            openai_session_endpoint: apiBase ? apiBase + '/api/openai/realtime/session' : undefined,
+            openai_live_session_endpoint: apiBase ? apiBase + '/api/openai/live/session' : undefined,
+            preserveRoaming: true,
+            closeExistingSession: false,
+          });
+        }
+        window.setTimeout(function(){
+          try {
+            const b = document.getElementById('clerkVoiceStartBtn');
+            if (b) { b.hidden = false; b.click(); }
+          } catch(_e) {}
+          selectInFlight = false;
+        }, 700);
+      } catch (_e) { selectInFlight = false; }
+
         // Widget's own click handler continues session start after this capture listener.
       } finally {
         // Allow retry after a beat if connect stalls
@@ -851,10 +878,16 @@ if (!launcher) {
     };
 
     const activateSelect = async () => {
-      if (selectInFlight || launchInFlight) {
-        console.info('[Curl] SELECT ignored — already activating');
-        return;
+      if (launchInFlight) {
+        console.info('[Curl] SELECT wait — launch still in flight');
+        try { await waitFor(() => !launchInFlight, 8000); } catch (_e) {}
       }
+      if (selectInFlight) {
+        console.info('[Curl] SELECT re-entry — forcing start path');
+        selectInFlight = false;
+      }
+      selectInFlight = true;
+      try { document.body.classList.add('curl-host-active'); } catch (_e) {}
       let btn = getStartBtn();
       if (!btn) {
         await launchCurl();
