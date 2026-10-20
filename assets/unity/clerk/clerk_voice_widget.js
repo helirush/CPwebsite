@@ -11131,7 +11131,7 @@
             class="clerk-voice-frame"
             title="Meet with Clerk"
             loading="lazy"
-            allow="microphone; autoplay; clipboard-read; clipboard-write"
+            allow="microphone *; autoplay *; camera *; clipboard-read; clipboard-write"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
       </div>

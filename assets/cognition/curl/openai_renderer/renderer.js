@@ -663,29 +663,32 @@
     const instructions = buildAutoGreetingInstructions(state.config, state.launchSession);
     if (!instructions) return;
     try {
-      if (isLiveApi(state.config)) {
-        // GPT-Live: ask the model to speak first via instructions append.
-        state.dataChannel.send(
-          JSON.stringify({
-            type: "session.instructions.append",
-            event_id: "clerk_greeting_1",
-            delegation_id: null,
-            content:
+      // Always use response.create so Live/Realtime both speak immediately.
+      state.dataChannel.send(
+        JSON.stringify({
+          type: "response.create",
+          response: {
+            output_modalities: ["audio"],
+            instructions:
               "Speak first now. Greet the visitor briefly in character, then listen. " +
               instructions,
-          })
-        );
-      } else {
+          },
+        })
+      );
+      // Compatibility fallback for older realtime shape.
+      try {
         state.dataChannel.send(
           JSON.stringify({
             type: "response.create",
             response: {
               modalities: ["audio"],
-              instructions: instructions,
+              instructions:
+                "Speak first now. Greet the visitor briefly in character, then listen. " +
+                instructions,
             },
           })
         );
-      }
+      } catch (_e2) {}
       state.hasSentInitialGreeting = true;
       try { scheduleDelayedFollowupIfNeeded(); } catch (_e) {}
     } catch (_err) {}
@@ -781,7 +784,7 @@
     try { clearDelayedFollowupTimer(); } catch (_e) {}
     try { clearAssistantActivityTimer(); } catch (_e) {}
     try { syncVoiceActivity(); } catch (_e) {}
-    setStatus("Connecting Clerk voice session…", false);
+    setStatus("Connecting voice session…", false);
     setOrbActive(true);
 
     try {
@@ -792,9 +795,42 @@
       state.peerConnection = peerConnection;
 
       const remoteAudio = document.createElement("audio");
+      remoteAudio.id = "cpRemoteAudio";
       remoteAudio.autoplay = true;
       remoteAudio.playsInline = true;
+      remoteAudio.controls = false;
+      remoteAudio.muted = false;
+      remoteAudio.volume = 1;
+      // Must be in DOM for reliable playback in iframe contexts.
+      try {
+        remoteAudio.setAttribute("playsinline", "true");
+        remoteAudio.style.cssText = "position:fixed;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;";
+        (document.body || document.documentElement).appendChild(remoteAudio);
+      } catch (_e) {}
       state.remoteAudio = remoteAudio;
+      const ensureRemotePlay = function (reason) {
+        try {
+          remoteAudio.muted = false;
+          remoteAudio.volume = 1;
+          const p = remoteAudio.play();
+          if (p && typeof p.then === "function") {
+            p.then(function () {
+              state.remoteAudioPlaying = true;
+              postToParent("audio_output", { type: "play_ok", reason: reason || "play" });
+            }).catch(function (err) {
+              postToParent("audio_output", {
+                type: "play_error",
+                reason: reason || "play",
+                message: String((err && err.message) || err || "play failed"),
+              });
+              // retry once shortly
+              window.setTimeout(function () {
+                try { remoteAudio.play().catch(function () {}); } catch (_e2) {}
+              }, 250);
+            });
+          }
+        } catch (_err) {}
+      };
       remoteAudio.addEventListener("playing", function () {
         state.remoteAudioPlaying = true;
         markAssistantActivity(2200);
@@ -813,8 +849,9 @@
           event.streams && event.streams[0]
             ? event.streams[0]
             : new MediaStream([event.track]);
+        try { event.track.enabled = true; } catch (_e) {}
         remoteAudio.srcObject = stream;
-        remoteAudio.play().catch(function () {});
+        ensureRemotePlay("ontrack");
         postToParent("audio_output", { type: "remote_track" });
       };
 
@@ -829,7 +866,7 @@
         window.setTimeout(function () {
           try { sendAutoGreetingIfNeeded(); } catch (_e) {}
         }, 250);
-        setStatus("Vesper Live connection ready.", false);
+        setStatus("Live connection ready.", false);
       });
       dataChannel.addEventListener("message", function (messageEvent) {
         let parsed = null;
@@ -998,7 +1035,8 @@
       state.connecting = false;
       state.listeningForUser = true;
       setOrbActive(true);
-      setStatus("Vesper Live connected.", false);
+      setStatus("Live connected.", false);
+      try { if (state.remoteAudio) { state.remoteAudio.muted=false; state.remoteAudio.volume=1; state.remoteAudio.play().catch(function(){}); } } catch(_e){}
       postToParent("session_started", {
         session_id:
           livePayload && livePayload.session && livePayload.session.id
