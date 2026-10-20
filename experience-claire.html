@@ -299,6 +299,14 @@
         } catch (e) {
           console.warn("Claire HOST_QUICK_REFERENCE fetch failed.", e);
         }
+        let claireFaq = "";
+        try {
+          const faqUrl = "./assets/kuranda/clare/knowledge/HOST_FAQ.md?v=20261020-host-faq-1";
+          const faqResp = await fetch(faqUrl, { cache: "no-store" });
+          if (faqResp && faqResp.ok) claireFaq = await faqResp.text();
+        } catch (e) {
+          console.warn("Claire HOST_FAQ fetch failed.", e);
+        }
         try {
           const packUrl = "./assets/kuranda/clare/knowledge/CLAIRE_IDENTITY_PACK.md?v=20260813-0213";
           const resp = await fetch(packUrl, { cache: "no-store" });
@@ -344,6 +352,8 @@
           operatingLine +
           "\n\n--- HOST QUICK REFERENCE (identity/org; no library hop) ---\n" +
           (claireQuickRef || "[quick reference unavailable]") +
+          "\n\n--- HOST FAQ (instant Q&A) ---\n" +
+          (claireFaq || "[faq unavailable]") +
           "\n\n--- CLAIRE IDENTITY PACK ---\n" + claireIdentityPack +
           "\n\n--- KURANDA LIBRARY PACK ---\n" + claireKnowledgePack;
         window.MAXWELLIAN_HUME.system_prompt_text =

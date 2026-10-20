@@ -84,6 +84,7 @@ window.MAXWELLIAN_HUME = {
   content_awareness_scope_lock: false,
   content_awareness_scope_fallback_message: "I can answer from Claire onboard guidance and the approved Kuranda Library pack prepared for this visit. I am not using page scanning. If you want something outside that pack, we can mark it as an open question for the library.",
   content_awareness_allowed_files: [
+    "knowledge/HOST_FAQ.md",
     "knowledge/HOST_QUICK_REFERENCE.md",
     "knowledge/00_SpeakWithClaireOnBoard.md",
     "knowledge/00b_Claire_Internal_Identity_Narrative.md",

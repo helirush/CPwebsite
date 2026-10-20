@@ -89,6 +89,7 @@ window.MAXWELLIAN_HUME = {
   research_handoff_url: "./about.html",
   research_handoff_prompt: "I don't want to stall while we dig that up. Please go to the About page and fill out the short form with your name, email, and question — the team will research it and follow up. We can keep talking about the journey in the meantime.",
   content_awareness_allowed_files: [
+    "knowledge/HOST_FAQ.md",
     "knowledge/HOST_QUICK_REFERENCE.md",
     "knowledge/CURL_BOOT_SEQUENCE.md",
     "knowledge/CURL_OPERATING_CANON.md",

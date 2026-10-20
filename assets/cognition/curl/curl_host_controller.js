@@ -11,7 +11,7 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20261020-curl-nostall-1';
+  const CURL_V = '20261020-host-faq-1';
   const CARRY_KEY = 'cp_curl_page_carry_v1';
   const CARRY_TTL_MS = 120000; // resume window after journey navigation (page3→page1)
   const CURL_VOICE_ID = '23982fd1-d6a5-4acc-b396-2454b5715d43';
@@ -442,6 +442,7 @@
       } catch (e) {}
 
       let curlQuickRef = '';
+      let curlFaq = '';
       let curlBoot = '';
       let curlOperatingCanon = '';
       let curlOnboard = '';
@@ -472,6 +473,7 @@
       // HOST_QUICK_REFERENCE first (COM 261020) — identity/org answers without library hop.
       [
         curlQuickRef,
+        curlFaq,
         curlBoot,
         curlOperatingCanon,
         curlOnboard,
@@ -481,6 +483,7 @@
         curlKnowledgePack
       ] = await Promise.all([
         fetchKnowledgeTimed('HOST_QUICK_REFERENCE.md'),
+        fetchKnowledgeTimed('HOST_FAQ.md'),
         fetchKnowledgeTimed('CURL_BOOT_SEQUENCE.md'),
         fetchKnowledgeTimed('CURL_OPERATING_CANON.md'),
         fetchKnowledgeTimed('SpeakWithCurlOnBoard.md'),
@@ -495,7 +498,7 @@
         "Hello — I'm Curl Maxwell, your Cognition Host. I can travel these pages with you. What would you like to understand?";
       const authorityLine =
         'SEMANTIC AUTHORITY (highest wins on conflict): ' +
-        '0 HOST QUICK REFERENCE (identity/org instant answers) | ' +
+        '0 HOST QUICK REFERENCE (identity/org) | 0b HOST FAQ (instant Q&A) | ' +
         '1 BOOT SEQUENCE | 2 CURL IDENTITY AND ROLE | 3 CURL OPERATING CANON | ' +
         '4 COGNITION PARTNER CANON/ARCHITECTURE | 5 JOURNEY PAGES 1-13 | ' +
         '6 DEMONSTRATIONS (Kuranda/Claire, Unity/Clerk as examples only) | 7 CURRENT PAGE/SESSION. ';
@@ -526,6 +529,8 @@
         operatingLine +
         '\n\n=== RANK0 HOST QUICK REFERENCE (identity/org; no library hop) ===\n' +
         (curlQuickRef || '[quick reference unavailable — use onboard identity lock]') +
+        '\n\n=== RANK0b HOST FAQ (instant Q&A) ===\n' +
+        (curlFaq || '[faq unavailable]') +
         '\n\n=== RANK1 BOOT SEQUENCE ===\n' +
         curlBoot +
         '\n\n=== RANK2-3 IDENTITY + CURL OPERATING CANON (governs behavior) ===\n' +
