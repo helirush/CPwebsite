@@ -1,1 +1,4 @@
 .DS_Store
+
+# Local SEO promote backups (never publish)
+.seo_promote_bak_*/

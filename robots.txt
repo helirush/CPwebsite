@@ -1,0 +1,9 @@
+# Cognition Partner — public crawl policy (SEO foundation 2026-10-25)
+User-agent: *
+Allow: /
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /*.bak*
+Disallow: /*backup*/
+
+Sitemap: https://cognitionpartner.ai/sitemap.xml

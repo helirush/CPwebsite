@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cognition Partner — Speak with Clerk</title>
-  <meta name="description" content="Cognition Partner experience">
+  <title>Experience Clerk | Cognition Partner</title>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Cognition Partner">
   <meta property="og:title" content="The Future of Human Thinking">
@@ -45,11 +44,11 @@
       display: block;
       object-fit: cover;
       object-position: 50% 0%;
-      /* Dimmed CP Possibility 3 stage so MEET CLERK + center glow lead */
+      /* Dimmed Unity stage so MEET CLERK + center glow lead */
       filter: saturate(0.9) brightness(0.78);
       transition: filter 0.85s ease;
     }
-    /* Gradient dim: Cognition Team art remains, center energy stays readable under MEET CLERK */
+    /* Gradient dim: Unity art remains, center energy stays readable under MEET CLERK */
     .cp-clerk-page-dim {
       position: absolute;
       inset: 0;
@@ -647,38 +646,28 @@
       };
     })();
   </script>
-  <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261020-visitor-live-worker-1"></script>
-<script src="./assets/unity/clerk/clerk_character_config.js?v=20261019-openai-live-only-1"></script>
-  
-<script id="cp-openai-live-only">
-(function () {
-  try {
-    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
-    var c = window.MAXWELLIAN_HUME;
-    c.voice_engine = 'openai';
-    c.runtime_auth_bootstrap_enabled = false;
-    c.runtime_auth_endpoint = '';
-    c.hume_runtime_auth_endpoint = '';
-    c.authless_hume_connection = false;
-    c.hume_api_key = '';
-    c.hume_config_id = '';
-    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
-    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
-    c.openai_live_api = true;
-    if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
-    if (!c.openai_model) c.openai_model = 'gpt-live-1';
-    if (c.widget_url && /openai_renderer/i.test(String(c.widget_url))) {
-      c.widget_url = String(c.widget_url).replace(/openai_renderer/ig, 'openai_renderer');
-    }
-  } catch (e) {}
-})();
-</script>
-<script src="./assets/unity/clerk/clerk_voice_widget.js?v=20261020-cp-clerk-p3-1"></script>
+  <script src="./assets/unity/clerk/hume_auth_bootstrap.js?v=20260811-clerk-intro-spirit1"></script>
+  <script src="./assets/unity/clerk/clerk_character_config.js?v=20261013-vesper-willow-1"></script>
+  <script src="./assets/unity/clerk/clerk_voice_widget.js?v=20261020-page-aware-traveler-1"></script>
+<!-- CP-SEO-FOUNDATION-START -->
+    <meta name="description" content="Experience Clerk — part of Cognition Partner, human-machine partnership for the future of human thinking.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://cognitionpartner.ai/experience-clerk.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Cognition Partner">
+    <meta property="og:title" content="Experience Clerk | Cognition Partner">
+    <meta property="og:description" content="Experience Clerk — part of Cognition Partner, human-machine partnership for the future of human thinking.">
+    <meta property="og:url" content="https://cognitionpartner.ai/experience-clerk.html">
+    <meta property="og:image" content="https://cognitionpartner.ai/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Experience Clerk | Cognition Partner">
+    <meta name="twitter:description" content="Experience Clerk — part of Cognition Partner, human-machine partnership for the future of human thinking.">
+    <!-- CP-SEO-FOUNDATION-END -->
 </head>
 <body class="home-page cp-clerk-onepage">
   <main class="site-wrap">
     <section class="cp-clerk-page" id="cpClerkPage" aria-label="Speak with Clerk">
-      <img class="cp-clerk-page-image" src="./assets/CognitionPartner_p13.png?cp_bg=20261020-clerk-stage-p13-1" alt="Cognition Partner — Possibility 3 Cognition Team">
+      <img class="cp-clerk-page-image" src="./assets/unityenergy_p1.png?cp_mock=20260809b" alt="Unity Energy">
       <div class="cp-clerk-page-dim" aria-hidden="true"></div>
       <div class="cp-clerk-page-glow" aria-hidden="true"></div>
 
@@ -704,7 +693,7 @@
             <canvas id="cpClerkTalkWaveCanvas" width="640" height="72"></canvas>
           </div>
           <div class="cp-clerk-presence-name">Meet with Clerk</div>
-          <div class="cp-clerk-presence-title">J. Clerk Maxwell — Cognition Team Host</div>
+          <div class="cp-clerk-presence-title">J. Clerk Maxwell, Unity Chief Scientist</div>
         </div>
         <div class="cp-clerk-presence-controls">
           <button class="cp-clerk-bottom-btn" id="cpClerkBottomBtn" type="button">
@@ -970,9 +959,6 @@
         clerkLibraryContextLoading = (async () => {
           const parts = [];
           const files = [
-            'knowledge/CLERK_CP_POSSIBILITY3_STORY.md?v=20261020-cp-p3-story-1',
-            'knowledge/HOST_FAQ.md?v=20261020-host-faq-1',
-            'knowledge/HOST_QUICK_REFERENCE.md?v=20261020-host-quickref-1',
             'knowledge/CLERK_IDENTITY_PACK.md?v=20260811-clerk-intro-spirit1',
             'knowledge/CLERK_DEMO_KNOWLEDGE_PACK.md?v=20260811-clerk-intro-spirit1',
             'knowledge/SpeakWithClerkOnBoard.md?v=20260811-clerk-intro-spirit1'
@@ -991,12 +977,13 @@
             return clerkLibraryContextCache;
           }
           clerkLibraryContextCache =
-            'CP POSSIBILITY 3 / UNITY COGNITION TEAM DEMO:\n' +
-            '- On cognitionpartner.ai you explain how Unity Energy was built with Cognition Partner methods.\n' +
-            '- Continuity, cognitive re-entry, libraries, hosts, team architecture; 2020 founding/disruption era.\n' +
-            '- Prefer that story over a pure MPTS lecture unless asked.\n' +
-            '- Always Mr. Howell. Never invent guarantees.\n\n' +
-            'Hello. I\'m Clerk Maxwell — Host for the Unity Energy Cognition Team demo on Cognition Partner. Ask me how we built Unity with continuous partnership.';
+            'MAXWELLIAN LIBRARY DEMO CONTEXT:\n' +
+            '- Clerk Maxwell is connected to Maxwellian Library knowledge.\n' +
+            '- Primary doctrine is Measure, Manage (M P T S), Exchange.\n' +
+            '- Stay educational and practical; never invent data or guarantees.\n' +
+            '- Not page-aware. If unknown: Hold on while I check the Maxwellian Library.\n\n' +
+            'Hello. I\'m Clerk Maxwell. My name was chosen in honor of James Clerk Maxwell. ' +
+            'I am the Cognition Partner for Unity Energy. Whenever you\'re ready, ask me anything.';
           return clerkLibraryContextCache;
         })();
         const loaded = await clerkLibraryContextLoading;
@@ -1024,7 +1011,7 @@
       const applyClerkConfig = () => {
         if (!window.MAXWELLIAN_HUME || typeof window.MAXWELLIAN_HUME !== 'object') return false;
         const portrait = resolveCpAssetUrl('ClerkMaxwell_60423t.png');
-        const embedUrl = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20261020-clerk-syntax-fix1');
+        const embedUrl = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20261012-clerk-openai-fix-1');
         const onboardUrl = resolveCpClerkRuntimeUrl('knowledge/SpeakWithClerkOnBoard.md?v=20260811-clerk-intro-spirit1');
 
         // Critical: page8 is outside Unity allowlist. Disable page lock for CP demo.
@@ -1043,17 +1030,17 @@
         window.MAXWELLIAN_HUME.openai_voice = 'vesper';
         window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
         window.MAXWELLIAN_HUME.openai_live_api = true;
-        window.MAXWELLIAN_HUME.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
-        window.MAXWELLIAN_HUME.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
-        window.MAXWELLIAN_HUME.openai_renderer_url = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20261020-clerk-syntax-fix1');
+        window.MAXWELLIAN_HUME.openai_session_endpoint = '/api/openai/realtime/session';
+        window.MAXWELLIAN_HUME.openai_live_session_endpoint = '/api/openai/live/session';
+        window.MAXWELLIAN_HUME.openai_renderer_url = resolveCpClerkRuntimeUrl('openai_renderer/index.html?v=20261012-clerk-openai-fix-1');
         window.MAXWELLIAN_HUME.renderer_url = window.MAXWELLIAN_HUME.openai_renderer_url;
         window.MAXWELLIAN_HUME.hume_embed_url = window.MAXWELLIAN_HUME.openai_renderer_url;
         // GPT Live only — do not require Hume runtime-auth for Clerk demo
         window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
         window.MAXWELLIAN_HUME.runtime_auth_endpoint = '';
         window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
-        window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
-        window.MAXWELLIAN_runtime_auth_endpoint = '';
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
         window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
         window.MAXWELLIAN_HUME.allow_openai_voice_fallback = false;
@@ -1062,8 +1049,8 @@
         try { delete window.MAXWELLIAN_HUME.config_version; } catch (_e) { window.MAXWELLIAN_HUME.config_version = undefined; }
         // Critical: do not pass config UUID as voice_id (breaks EVI audio).
         window.MAXWELLIAN_HUME.hume_voice_id = CLERK_VOICE_ID;
-        window.MAXWELLIAN_HUME.voice_id = 'vesper';
-        window.MAXWELLIAN_HUME.openai_voice = 'vesper'; // CP Live path: never use Hume UUID as voice
+        window.MAXWELLIAN_HUME.voice_id = CLERK_VOICE_ID;
+        window.MAXWELLIAN_HUME.openai_voice = 'vesper'; // never overwrite with Hume UUID
         window.MAXWELLIAN_HUME.experimental_force_voice_id_as_config_id = false;
         window.MAXWELLIAN_HUME.voice_engine = 'openai';
         window.MAXWELLIAN_HUME.allow_openai_fallback = false;
@@ -1072,9 +1059,9 @@
         window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
         window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = '';
         window.MAXWELLIAN_HUME.runtime_auth_endpoint = '';
-        window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
-        window.MAXWELLIAN_runtime_auth_endpoint = '';
-        window.MAXWELLIAN_FALLBACK_runtime_auth_endpoint = '';
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
+        window.MAXWELLIAN_FALLBACK_RUNTIME_AUTH_ENDPOINT = '';
         window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
 
         // Point assets at Cognition Partner local package paths (OpenAI renderer).
@@ -1090,11 +1077,11 @@
 
         // Disable start-gate stall: on widget ready, widget auto-sends config + starts.
         // Page8 still clicks native start after ready as a backup.
-        window.MAXWELLIAN_HUME.use_unity_start_gate = false;
-        window.MAXWELLIAN_HUME.force_unity_start_gate = false;
+        window.MAXWELLIAN_HUME.use_unity_start_gate = true;
+        window.MAXWELLIAN_HUME.force_unity_start_gate = true;
         window.MAXWELLIAN_HUME.preflight_microphone_on_launch = true;
         window.MAXWELLIAN_HUME.openai_auto_greeting_enabled = true;
-        window.MAXWELLIAN_HUME.openai_auto_greeting_text = 'Hello. I’m Clerk Maxwell — your Host for the Unity Energy Cognition Team demonstration on Cognition Partner. Ask me how we built Unity with continuous partnership.';
+        window.MAXWELLIAN_HUME.openai_auto_greeting_text = 'Hello. I’m Clerk Maxwell.';
         window.MAXWELLIAN_HUME.openai_delayed_followup_enabled = false;
 
         // Keep CP demo focused: no lead capture / page awareness friction.
@@ -1125,15 +1112,13 @@
             hume_config_id: CLERK_CONFIG_ID,
             hume_voice_id: CLERK_VOICE_ID,
             config_id: CLERK_CONFIG_ID,
-            voice_id: 'vesper',
-            openai_voice: 'vesper',
+            voice_id: CLERK_VOICE_ID,
             session_variables: Object.assign({}, existingClerk.session_variables || {}, {
               character_name: 'Clerk Maxwell',
-              character_role: 'Cognition Team Host — Unity Energy demo on Cognition Partner',
-              library_authority: 'Cognition Partner Possibility 3 + Maxwellian public packs',
+              character_role: 'Chief Scientist at Unity Energy',
+              library_authority: 'Maxwellian Library',
               page_aware: 'false',
-              content_aware: 'cp-possibility3-story',
-              surface: 'cognitionpartner-possibility3'
+              content_aware: 'library-only'
             })
           })
         };
@@ -1237,12 +1222,12 @@
         if (hasRuntimeAuth()) return true;
 
         const endpoints = [
-          '',
-          '.json',
-          '',
-          '',
-          new URL('../../..', window.location.href).toString(),
-          new URL('../../..', window.location.href).toString()
+          'https://unityenergy.com/api/hume/runtime-auth',
+          'https://unityenergy.com/api/hume/runtime-auth.json',
+          '/api/hume/runtime-auth',
+          '/api/hume/runtime-auth.json',
+          new URL('../../../api/hume/runtime-auth', window.location.href).toString(),
+          new URL('../../../api/hume/runtime-auth.json', window.location.href).toString()
         ];
 
         for (let i = 0; i < endpoints.length; i += 1) {
@@ -1635,39 +1620,30 @@
         const clerkLibraryContext = await getClerkLibraryContext();
         try {
           if (window.MAXWELLIAN_HUME && typeof window.MAXWELLIAN_HUME === 'object') {
-            const openingLine = 'Hello — I\'m Clerk Maxwell, Host for the Unity Energy Cognition Team demonstration on Cognition Partner. You can call me Clerk. I\'m here to talk about how Mr. Howell and Cove built Unity Energy with continuous cognitive partnership — continuity, re-entry, libraries, hosts, and team architecture — including why the 2020 disruption era made that way of working essential. Ask me how we did it.';
+            const openingLine = 'Hello — I\'m Clerk Maxwell. You can call me Clerk. You\'re probably wondering where that name comes from... My name honors the physicist James Clerk Maxwell, whose work transformed how we understand electricity, magnetism, and the invisible fields that connect them. I\'m the Cognition Partner for Unity Energy. Mr. Howell and the Unity Energy team began with a simple question: what if there was still more to learn about industrial electrical energy fields? I help visitors explore that work and keep the conversation moving forward. Whenever you\'re ready, ask me anything.'
             window.MAXWELLIAN_HUME.opening_line = openingLine;
             window.MAXWELLIAN_HUME.openai_auto_greeting_text = openingLine;
-            window.MAXWELLIAN_HUME.openai_voice = 'vesper';
-            window.MAXWELLIAN_HUME.voice_id = 'vesper';
-            window.MAXWELLIAN_HUME.openai_live_api = true;
-            window.MAXWELLIAN_HUME.voice_engine = 'openai';
             window.MAXWELLIAN_HUME.library_research_enabled = true;
-            window.MAXWELLIAN_HUME.library_research_hold_line = 'Hold on while I check the approved packs.';
-            window.MAXWELLIAN_HUME.unknown_answer_fallback = 'I do not have enough approved context for that yet. Hold on while I check the packs prepared for this Cognition Partner demonstration.';
+            window.MAXWELLIAN_HUME.library_research_hold_line = 'Hold on while I check the Maxwellian Library.';
+            window.MAXWELLIAN_HUME.unknown_answer_fallback = 'I do not have enough approved Maxwellian Library context for that yet. Hold on while I check the Maxwellian Library.';
             window.MAXWELLIAN_HUME.session_context =
-              'SURFACE LOCK: cognitionpartner.ai Possibility 3 (Unity Cognition Team demo). ' +
-              'NOT the unityenergy.com MPTS science host brief. ' +
-              'PRIMARY STORY: how Unity Energy was built using Cognition Partner methods — continuous reasoning, cognitive re-entry, Living/Maxwellian libraries, Hosts, Cognition Team. ' +
-              '2020 founding/disruption (COVID-era work continuity pressure) intensified the need for durable partnership. ' +
-              'Prefer that story over a pure MPTS lecture unless the visitor asks for technical depth. ' +
-              'NOT PAGE-AWARE. Always Mr. Howell. Never invent guarantees. ' +
-              'FIRST TURN: spirit-guided intro as CP-site Cognition Team Host, then listen. Opening spirit: ' + openingLine + '\n\n' +
+              'NOT PAGE-AWARE. Never mention page numbers or page layout. ' +
+              'FIRST TURN: Spirit-guided introduction (not a script). Greet, introduce Clerk Maxwell, immediately invite curiosity about the name, honor James Clerk Maxwell, explain Unity Cognition Partner role, credit Mr. Howell and the Unity team, invite questions. ' +
+              'Answer from Maxwellian Library demo pack. If unknown, say Hold on while I check the Maxwellian Library. ' +
+              'Always speak M P T S as four letters. Opening spirit guide: ' + openingLine + '\n\n' +
               clerkLibraryContext;
             window.MAXWELLIAN_HUME.system_prompt_text =
-              'You are Clerk Maxwell on Cognition Partner Possibility 3 — Unity Energy Cognition Team Host. ' +
-              'Tell how Unity was built with Cognition Partner methods. Use CLERK_CP_POSSIBILITY3_STORY as primary authority on this surface. ' +
-              'Not page-aware. Research hold if needed. Always M P T S as four letters when discussing Unity doctrine.';
+              'You are Clerk Maxwell, Cognition Host for Unity Energy. First turn: spirit-guided identity introduction. ' +
+              'Then answer from Maxwellian Library only. Not page-aware. Research hold if needed. Always M P T S as four letters.';
             if (!window.MAXWELLIAN_HUME.session_variables || typeof window.MAXWELLIAN_HUME.session_variables !== 'object') {
               window.MAXWELLIAN_HUME.session_variables = {};
             }
             window.MAXWELLIAN_HUME.session_variables.character_name = 'Clerk Maxwell';
-            window.MAXWELLIAN_HUME.session_variables.library_authority = 'CP Possibility 3 story + Maxwellian public packs';
+            window.MAXWELLIAN_HUME.session_variables.library_authority = 'Maxwellian Library';
             window.MAXWELLIAN_HUME.session_variables.page_aware = 'false';
-            window.MAXWELLIAN_HUME.session_variables.content_aware = 'cp-possibility3-story';
-            window.MAXWELLIAN_HUME.session_variables.surface = 'cognitionpartner-possibility3';
+            window.MAXWELLIAN_HUME.session_variables.content_aware = 'library-only';
             window.MAXWELLIAN_HUME.session_variables.opening_line = openingLine;
-            window.MAXWELLIAN_HUME.session_variables.demo_initiation_prep = 'CLERK_CP_POSSIBILITY3_STORY';
+            window.MAXWELLIAN_HUME.session_variables.demo_initiation_prep = 'CLERK_DEMO_INITIATION_PREP';
             window.MAXWELLIAN_HUME.session_variables.first_turn_story_required = 'true';
             window.MAXWELLIAN_HUME.session_variables.openai_auto_greeting_text = openingLine;
           }
@@ -1711,26 +1687,16 @@
         setBottomWaiting();
         if (epoch !== sessionEpoch) return false;
 
-        // GPT-Live path does not require Hume runtime auth. Only block when engine is Hume.
-        try {
-          const eng = String((window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.voice_engine) || '').toLowerCase();
-          const live = window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.openai_live_api === true;
-          if (!(eng === 'openai' || live)) {
-            if (!hasRuntimeAuth()) {
-              try { await ensureClerkRuntimeAuth(); } catch (_e) {}
-            }
-            if (!hasRuntimeAuth()) {
-              console.error('[cp-page8] Aborting Clerk launch: no Hume runtime auth.');
-              bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Auth unavailable</span><small>Retry</small>';
-              window.alert('Clerk voice auth is not available. Please retry in a moment.');
-              setBottomWaiting();
-              return false;
-            }
-          } else {
-            console.info('[cp-page8] GPT-Live path — proceeding without Hume runtime auth');
-          }
-        } catch (_e) {
-          console.info('[cp-page8] auth gate check skipped', _e);
+        if (!hasRuntimeAuth()) {
+          // One more hard fetch attempt
+          try { await ensureClerkRuntimeAuth(); } catch (_e) {}
+        }
+        if (!hasRuntimeAuth()) {
+          console.error('[cp-page8] Aborting Clerk launch: no Hume runtime auth.');
+          bottomBtn.innerHTML = '<span class="cp-clerk-bottom-btn-primary">Auth unavailable</span><small>Retry</small>';
+          window.alert('Clerk voice auth is not available. Confirm https://unityenergy.com/api/hume/runtime-auth is reachable, then try Clerk is Ready again.');
+          setBottomWaiting();
+          return false;
         }
         // Ensure widget-visible auth bag is populated right before launch.
         try {
@@ -1772,13 +1738,11 @@
             uiMode: 'modal',
             conversationMode: 'followup',
             contextPayload: {
-              organization: 'Cognition Partner — Possibility 3 Unity Cognition Team',
+              organization: 'Maxwellian / Unity Energy',
               public_guide: 'Clerk Maxwell',
-              source_page: 'cp-possibility3-clerk',
+              source_page: 'cp-page8-clerk-library-host',
               page_aware: false,
-              content_aware: 'cp-possibility3-story',
-              surface: 'cognitionpartner-possibility3',
-              openai_voice: 'vesper',
+              content_aware: 'library-only',
               guide_mode: 'maxwellian-library',
               library_authority: 'Maxwellian Library',
               hume_config_id: CLERK_CONFIG_ID,
@@ -2176,13 +2140,13 @@
 // CP Clerk demo: OpenAI Live + Vesper only (no Hume). Maxwellian knowledge packs remain authoritative.
 (function () {
   function applyClerkVesperLive() {
-    var cfg = window.CLERK_CHARACTER_CONFIG || window.clerkCharacterConfig || null;
+    var cfg = window.CLERK_CHARACTER_CONFIG || window.HUME_CHARACTER_CONFIG || window.clerkCharacterConfig || null;
     // also search global from character file
     if (!cfg && window.ClerkCharacterConfig) cfg = window.ClerkCharacterConfig;
     var candidates = [
       window.CLERK_CHARACTER_CONFIG,
       window.clerk_character_config,
-      window.CLERK_CHARACTER_CONFIG,
+      window.HUME_CHARACTER_CONFIG,
       window.humeCharacterConfig
     ].filter(Boolean);
     candidates.forEach(function (c) {
@@ -2191,12 +2155,10 @@
         c.openai_voice = 'vesper';
         c.openai_realtime_model = 'gpt-live-1';
         c.openai_live_api = true;
-        c.openai_live_session_endpoint = (window.CP_OPENAI_LIVE_API_BASE || 'https://openai-live-session.relay-3b0.workers.dev').replace(/\/+$/,'') + '/api/openai/live/session';
-        c.openai_session_endpoint = (window.CP_OPENAI_LIVE_API_BASE || 'https://openai-live-session.relay-3b0.workers.dev').replace(/\/+$/,'') + '/api/openai/realtime/session';
-        c.voice_id = 'vesper';
-        c.openai_voice = 'vesper';
+        c.openai_live_session_endpoint = c.openai_live_session_endpoint || '/api/openai/live/session';
+        c.openai_session_endpoint = c.openai_session_endpoint || '/api/openai/live/session';
         c.allow_openai_fallback = false;
-        c.openai_renderer_url = './assets/unity/clerk/openai_renderer/index.html?v=20261020-clerk-syntax-fix1';
+        c.openai_renderer_url = './assets/unity/clerk/openai_renderer/index.html?v=20261012-clerk-openai-fix-1';
         // Keep intro + Maxwellian library access instructions
         if (!c.knowledge_packs) c.knowledge_packs = [];
       } catch (e) {}
@@ -2226,9 +2188,9 @@
     c.openai_voice = 'vesper';
     c.openai_realtime_model = 'gpt-live-1';
     c.openai_live_api = true;
-    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
-    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
-    c.openai_renderer_url = './assets/unity/clerk/openai_renderer/index.html?v=20261020-clerk-syntax-fix1';
+    c.openai_session_endpoint = '/api/openai/realtime/session';
+    c.openai_live_session_endpoint = '/api/openai/live/session';
+    c.openai_renderer_url = './assets/unity/clerk/openai_renderer/index.html?v=20261012-clerk-openai-fix-1';
     c.embed_url = c.openai_renderer_url;
     c.renderer_url = c.openai_renderer_url;
     c.hume_embed_url = c.openai_renderer_url;

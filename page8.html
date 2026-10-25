@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cognition Partner — What Should Continue</title>
-  <meta name="description" content="Cognition Partner — What Should Continue">
+  <title>Cognition Partner Experience — Page8 | Cognition Partner</title>
   <meta property="og:type" content="website">
   <meta property="og:title" content="Cognition Partner — What Should Continue">
   <meta property="og:description" content="Cognition Partner — What Should Continue">
@@ -23,7 +22,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20261019-curl-promote-2">
+  <link rel="stylesheet" href="./styles.css?v=20260902-close-curl-final-pos-1">
 
 <!-- CP_R2_JOURNEY_10_LIVE: final authority after styles.css -->
 <style id="cp-journey-10-live">
@@ -183,9 +182,9 @@
       opacity: 1 !important;
       pointer-events: auto !important;
     }
-    .site-wrap { display: flex !important; height: 100dvh !important; width: 100% !important; max-width: none !important; align-items: center !important; justify-content: center !important; padding: 0 !important; }
-    .page-card, .cp-r1-card { display: flex !important; min-height: 0 !important; /* width/height/transform owned by cp_viewport_fit.js?v=20261019-page9-width-lock-1 (1512×982 stage) */ margin: 0 !important; }
-    .page-image, .cp-r1-image { width: 100% !important; height: 100% !important; object-fit: fill !important; display: block !important; }
+    .site-wrap { display: grid !important; height: 100dvh !important; }
+    .page-card, .cp-r1-card { height: 100% !important; min-height: 60vh !important; }
+    .page-image, .cp-r1-image { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block !important; }
     /* Keep overlays hidden ONLY while Curl is idle. When host is active, allow modal. */
     body:not(.curl-host-active) #clerkVoiceModal,
     body:not(.curl-host-active) .clerk-voice-modal,
@@ -329,7 +328,7 @@
 /* Edit these dials — master CSS at end of styles.css reads them */
 :root {
   --cp-curl-orb-x: -50px;
-  --cp-curl-orb-y: -2px;
+  --cp-curl-orb-y: -7px;
   --cp-curl-orb-size-px: 156px;
   --cp-curl-plate-px: 162px;
   --cp-curl-plate-y: 0px;
@@ -348,7 +347,7 @@
 :root {
   --cp-curl-plate-px: 162px;
   --cp-curl-orb-size-px: 156px;
-  --cp-curl-orb-y: -2px;
+  --cp-curl-orb-y: -7px;
   --cp-curl-contrast: 0.78;
 }
 </style>
@@ -412,6 +411,20 @@
     transform: translate(var(--cp-journey-nudge-x), var(--cp-journey-nudge-y)) !important;
   }
 </style>
+<!-- CP-SEO-FOUNDATION-START -->
+    <meta name="description" content="Cognition Partner Experience — Page8 — part of Cognition Partner, human-machine partnership for the future of human thinking.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://cognitionpartner.ai/page8.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Cognition Partner">
+    <meta property="og:title" content="Cognition Partner Experience — Page8 | Cognition Partner">
+    <meta property="og:description" content="Cognition Partner Experience — Page8 — part of Cognition Partner, human-machine partnership for the future of human thinking.">
+    <meta property="og:url" content="https://cognitionpartner.ai/page8.html">
+    <meta property="og:image" content="https://cognitionpartner.ai/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cognition Partner Experience — Page8 | Cognition Partner">
+    <meta name="twitter:description" content="Cognition Partner Experience — Page8 — part of Cognition Partner, human-machine partnership for the future of human thinking.">
+    <!-- CP-SEO-FOUNDATION-END -->
 </head>
 <body class="home-page cp-page8">
   <main class="site-wrap cp-r1-wrap">
@@ -509,10 +522,10 @@
             </div>
           </div>
           <span class="cp-r2-footer-vbar" aria-hidden="true"></span>
-          <button id="cpR8PlayButton" type="button" class="cp-r2-transport-control cp-r2-listen" aria-label="Listen to Why it matters narration. Select LISTEN to continue your journey.">
+          <button id="cpR8PlayButton" type="button" class="cp-r2-transport-control cp-r2-listen" aria-label="Listen to Why it matters narration">
             <span class="cp-r2-transport-icon cp-r2-listen-icon" aria-hidden="true">▶</span>
             <span class="cp-r2-transport-label">LISTEN</span>
-           <span class="cp-start-journey-cue" role="status">Select LISTEN to continue your journey.</span></button>
+          </button>
 
           <div class="cp-r2-audio-scrub" id="cpR8AudioScrub" data-audio="cpR8NarrationAudio">
             <div class="cp-r2-audio-scrub-title" aria-hidden="true">U&nbsp;&nbsp;N&nbsp;&nbsp;D&nbsp;&nbsp;E&nbsp;&nbsp;R&nbsp;&nbsp;S&nbsp;&nbsp;T&nbsp;&nbsp;A&nbsp;&nbsp;N&nbsp;&nbsp;D&nbsp;&nbsp;I&nbsp;&nbsp;N&nbsp;&nbsp;G</div>
@@ -991,11 +1004,11 @@
 
   <script>
     // Local static testing: same-origin auth first, Unity fallback second.
-    window.MAXWELLIAN_hume_runtime_auth_endpoint = '';
-    window.MAXWELLIAN_runtime_auth_endpoint = '';
+    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "/api/hume/runtime-auth";
+    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "/api/hume/runtime-auth";
     window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
     window.__CURL_FORCE_NO_FLOAT__ = true;
-    window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/openai_renderer/index.html?v=20261019-openai-live-only-1";
+    window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/openai_renderer/";
     window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
     window.MAXWELLIAN_HUME.embed_url = window.__CURL_LOCAL_EMBED__;
     window.MAXWELLIAN_HUME.renderer_url = window.__CURL_LOCAL_EMBED__;
@@ -1003,10 +1016,10 @@
     window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
     (function preloadCurlAuth() {
       var endpoints = [
-        '',
-        "",
-        '',
-        ".json"
+        "/api/hume/runtime-auth",
+        "/api/hume/runtime-auth.json",
+        "https://unityenergy.com/api/hume/runtime-auth",
+        "https://unityenergy.com/api/hume/runtime-auth.json"
       ];
       function apply(payload, endpoint) {
         if (!payload || typeof payload !== "object") return false;
@@ -1019,7 +1032,7 @@
         window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
         window.MAXWELLIAN_HUME_AUTH = normalized;
         window.MAXWELLIAN_OPENAI_RUNTIME_AUTH = normalized;
-        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = endpoint || '';
+        window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = endpoint || "/api/hume/runtime-auth";
         window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
         window.MAXWELLIAN_HUME.auth = normalized;
         window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT;
@@ -1052,58 +1065,15 @@
       tryAt(0);
     })();
   </script>
-  <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261020-visitor-live-worker-1"></script>
-<script src="./assets/cognition/curl/curl_character_config.js?v=20261019-voice-activate-1"></script>
-  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-voice-live-events-1"></script>
+  <script src="./assets/cognition/curl/hume_auth_bootstrap.js?v=20260831-curl-select-pos-1"></script>
+  <script src="./assets/cognition/curl/curl_character_config.js?v=20261012-curl-openai-form-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261012-curl-openai-form-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
   <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
 
   
-  
-<script id="cp-curl-marin-live">
-(function () {
-  try {
-    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
-    var c = window.MAXWELLIAN_HUME;
-    c.voice_engine = 'openai';
-    c.openai_voice = 'marin';
-    c.voice_id = 'marin';
-    c.openai_realtime_model = 'gpt-live-1';
-    c.openai_model = 'gpt-live-1';
-    c.openai_live_api = true;
-    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
-    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
-    c.runtime_auth_bootstrap_enabled = false;
-    c.widget_url = c.widget_url || './assets/cognition/curl/openai_renderer/index.html?v=20261019-openai-live-only-1';
-  } catch (e) {}
-})();
-</script>
-
-<script id="cp-openai-live-only">
-(function () {
-  try {
-    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
-    var c = window.MAXWELLIAN_HUME;
-    c.voice_engine = 'openai';
-    c.runtime_auth_bootstrap_enabled = false;
-    c.runtime_auth_endpoint = '';
-    c.hume_runtime_auth_endpoint = '';
-    c.authless_hume_connection = false;
-    c.hume_api_key = '';
-    c.hume_config_id = '';
-    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
-    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
-    c.openai_live_api = true;
-    if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
-    if (!c.openai_model) c.openai_model = 'gpt-live-1';
-    if (c.widget_url && /openai_renderer/i.test(String(c.widget_url))) {
-      c.widget_url = String(c.widget_url).replace(/openai_renderer/ig, 'openai_renderer');
-    }
-  } catch (e) {}
-})();
-</script>
-<script src="./assets/cognition/curl/curl_host_controller.js?v=20261019-voice-live-events-1"></script>
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-openai-form-1"></script>
 
 </body>
 </html>
