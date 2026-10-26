@@ -34,7 +34,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20261012-motto-cover-bg-m1">
+  <link rel="stylesheet" href="./styles.css?v=20261026-size-match-p3-3">
 
 
 
@@ -182,90 +182,7 @@
 
 
 <!-- CP_PAGE_VISIBLE_GUARD: keep canvas visible; allow Curl modal when active -->
-  <style id="cp-page-visible-guard">
-    html, body {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      background: #0f1115 !important;
-      overflow: hidden !important;
-      pointer-events: auto !important;
-    }
-    body > * { visibility: visible !important; }
-    .site-wrap, .page-card, .cp-r1-card, .page-image, .cp-r1-image, main {
-      visibility: visible !important;
-      opacity: 1 !important;
-      pointer-events: auto !important;
-    }
-    .site-wrap {
-      display: flex !important;
-      height: 100dvh !important;
-      width: 100% !important;
-      max-width: none !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 0 !important;
-    }
-    .page-card, .cp-r1-card {
-      display: flex !important;
-      min-height: 0 !important;
-      /* width/height/transform owned by cp_viewport_fit.js (1512×982 stage) */
-      margin: 0 !important;
-    }
-    .page-image, .cp-r1-image {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: fill !important;
-      object-position: center center !important;
-      display: block !important;
-    }
-    /* Keep overlays hidden ONLY while Curl is idle. When host is active, allow modal. */
-    body:not(.curl-host-active) #clerkVoiceModal,
-    body:not(.curl-host-active) .clerk-voice-modal,
-    body:not(.curl-host-active) #clerkVoiceBackdrop,
-    body:not(.curl-host-active) .clerk-voice-backdrop,
-    body:not(.curl-host-active) #clerkFloatingLauncher,
-    body:not(.curl-host-active) .clerk-floating-launcher,
-    body:not(.curl-host-active) [class*="floating-launcher"] {
-      display: none !important;
-      pointer-events: none !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
-      z-index: -1 !important;
-    }
-    body.curl-host-active #clerkVoiceModal,
-    body.curl-host-active .clerk-voice-modal {
-      display: block !important;
-      pointer-events: auto !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      z-index: 12000 !important;
-    }
-    /* 20260831 static/8700: internal backdrop is decorative — never pointer trap */
-    body.curl-host-active #clerkVoiceBackdrop,
-    body.curl-host-active .clerk-voice-backdrop {
-      display: block !important;
-      pointer-events: none !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      z-index: 0 !important;
-    }
-    body.curl-host-active #clerkVoiceStartBtn,
-    body.curl-host-active .clerk-voice-start-btn,
-    body.curl-host-active #clerkVoiceCloseBtn,
-    body.curl-host-active .clerk-voice-close,
-    body.curl-host-active #clerkVoiceFrame {
-      pointer-events: auto !important;
-      z-index: 30 !important;
-      position: relative !important;
-    }
-    /* Curl host always clickable on journey pages */
-    body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
-    body[class*="cp-page"] .cp-r2-media-card--cream > .cp-r2-purpose-host {
-      pointer-events: auto !important;
-      cursor: pointer !important;
-    }
-  </style>
+  
 
 <!-- CP_CURL_TEXT_LIVE: edit these vars; this tag loads AFTER styles.css -->
   <style id="cp-curl-text-live">
@@ -460,6 +377,72 @@
     <meta name="twitter:title" content="Cognition Partner Experience — Page2 | Cognition Partner">
     <meta name="twitter:description" content="Cognition Partner Experience — Page2 — part of Cognition Partner, human-machine partnership for the future of human thinking.">
     <!-- CP-SEO-FOUNDATION-END -->
+<style id="cp-page-visible-guard">
+    html, body {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      background: #0f1115 !important;
+      overflow: hidden !important;
+      pointer-events: auto !important;
+    }
+    body > * { visibility: visible !important; }
+    .site-wrap, .page-card, .cp-r1-card, .page-image, .cp-r1-image, main {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+    .site-wrap { display: grid !important; height: 100dvh !important; }
+    .page-card, .cp-r1-card { height: 100% !important; min-height: 60vh !important; }
+    .page-image, .cp-r1-image { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block !important; }
+    /* Keep overlays hidden ONLY while Curl is idle. When host is active, allow modal. */
+    body:not(.curl-host-active) #clerkVoiceModal,
+    body:not(.curl-host-active) .clerk-voice-modal,
+    body:not(.curl-host-active) #clerkVoiceBackdrop,
+    body:not(.curl-host-active) .clerk-voice-backdrop,
+    body:not(.curl-host-active) #clerkFloatingLauncher,
+    body:not(.curl-host-active) .clerk-floating-launcher,
+    body:not(.curl-host-active) [class*="floating-launcher"] {
+      display: none !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      z-index: -1 !important;
+    }
+    body.curl-host-active #clerkVoiceModal,
+    body.curl-host-active .clerk-voice-modal {
+      display: block !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 12000 !important;
+    }
+    /* 20260831 static/8700: internal backdrop is decorative — never pointer trap */
+    body.curl-host-active #clerkVoiceBackdrop,
+    body.curl-host-active .clerk-voice-backdrop {
+      display: block !important;
+      pointer-events: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 0 !important;
+    }
+    body.curl-host-active #clerkVoiceStartBtn,
+    body.curl-host-active .clerk-voice-start-btn,
+    body.curl-host-active #clerkVoiceCloseBtn,
+    body.curl-host-active .clerk-voice-close,
+    body.curl-host-active #clerkVoiceFrame {
+      pointer-events: auto !important;
+      z-index: 30 !important;
+      position: relative !important;
+    }
+    /* Curl host always clickable on journey pages */
+    body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
+    body[class*="cp-page"] .cp-r2-media-card--cream > .cp-r2-purpose-host {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+  </style>
 </head>
 <body class="home-page cp-page2">
   <main class="site-wrap cp-r1-wrap">
@@ -1017,9 +1000,6 @@
 
   
   <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-marin-textmod-1"></script>
-
-<script src="./assets/cognition/cp_viewport_fit.js?v=20261011-bg-crop-sides-2"></script>
-
 <script id="cp-curl-marin-live">
 (function () {
   // GPT Live only — no Hume runtime-auth, no hume_renderer.

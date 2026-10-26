@@ -22,7 +22,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260924-compact-link-1">
+  <link rel="stylesheet" href="./styles.css?v=20261026-size-match-p3-3">
 
 <!-- CP_R2_JOURNEY_10_LIVE: final authority after styles.css -->
 <style id="cp-journey-10-live">
@@ -429,14 +429,6 @@
   }
 </style>
 
-<style id="cp-compact-link-preview-logos">
-  html body .cp-r1-brand-lockup-logo[style*="background-image"] {
-    width: var(--cp-brand-logo-w, 54px);
-    height: var(--cp-brand-logo-h, 54px);
-    min-width: 42px;
-    min-height: 42px;
-  }
-</style>
 <!-- CP-SEO-FOUNDATION-START -->
     <meta name="description" content="Cognition Partner is human-machine partnership infrastructure for continuity, cognitive re-entry, and high-quality reasoning—built so people stay in charge of purpose and judgment.">
     <meta name="robots" content="index,follow,max-image-preview:large">
@@ -476,6 +468,27 @@
 }
     </script>
     <!-- CP-SEO-FOUNDATION-END -->
+
+
+
+<style id="cp-p1-logo-size-lock-20261026b">
+/* Page1 top lockup logo = journey cream-header logo size (page2–10) */
+html body.cp-page1 .cp-r1-brand-lockup--top .cp-r1-brand-lockup-logo,
+html body.home-page.cp-page1 .cp-r1-brand-lockup--top .cp-r1-brand-lockup-logo,
+html body.cp-page1 .cp-r2-brand-lockup .cp-r1-brand-lockup-logo,
+html body.cp-page1 .cp-r2-top-card .cp-r2-brand-lockup .cp-r1-brand-lockup-logo {
+  width: clamp(99px, 7.85vw, 135px) !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  display: block !important;
+  object-fit: contain !important;
+  flex: 0 0 auto !important;
+}
+</style>
+
 </head>
 <body class="home-page cp-page1">
   <main class="site-wrap cp-r1-wrap">
@@ -483,7 +496,7 @@
       <div class="page-image cp-r1-image" role="img" aria-label="Cognition Partner page 1 revision 6" data-cp-bg="./assets/CognitionPartner_p1r6.png?cp_bg=20260820-p1-r6"></div>
       <div class="cp-r1-top-card cp-r2-top-card" aria-label="Cognition Partner top navigation">
         <a class="cp-r1-brand-lockup cp-r1-brand-lockup--top cp-r2-brand-lockup" href="./index.html" aria-label="Cognition Partner home">
-          <span class="cp-r1-brand-lockup-logo" aria-hidden="true" style="background-image:url('./CP_fatLOGOclear_60716.png?v=20260817-header-logo-dark');background-size:contain;background-repeat:no-repeat;background-position:center;display:inline-block;"></span>
+          <img class="cp-r1-brand-lockup-logo" src="./CP_fatLOGOclear_60716.png?v=20260817-header-logo-dark" alt="" aria-hidden="true">
           <span class="cp-r1-brand-lockup-copy">
             <span class="cp-r1-brand-lockup-wordmark">COGNITION PARTNER<span class="cp-r1-brand-lockup-tm">™</span></span>
             <span class="cp-r1-brand-lockup-tagline">Your Partner. Your Journey. Your Life.</span>
@@ -574,6 +587,8 @@
           </div>
           <span class="cp-r2-footer-vbar" aria-hidden="true"></span>
           <button id="cpR1PlayButton" type="button" class="cp-r2-transport-control cp-r2-listen" aria-label="Listen to Why it matters narration">
+<span class="cp-start-journey-cue" role="status">Select LISTEN to begin your journey.</span>
+
             <span class="cp-r2-transport-icon cp-r2-listen-icon" aria-hidden="true">▶</span>
             <span class="cp-r2-transport-label">LISTEN</span>
           </button>
@@ -639,7 +654,7 @@
       
             <div class="cp-r1-bottom-logo-card cp-r1-bottom-logo-card--hero" aria-label="Cognition Partner brand">
         <a class="cp-r1-brand-lockup cp-r1-brand-lockup--bottom cp-r1-brand-lockup--above-banner cp-r1-brand-lockup--hero" href="./index.html" aria-label="Cognition Partner home">
-        <span class="cp-r1-brand-lockup-logo" aria-hidden="true" style="background-image:url('./CPlogo_60715.png?v=20260810-p1-r4');background-size:contain;background-repeat:no-repeat;background-position:center;display:inline-block;"></span>
+        <img class="cp-r1-brand-lockup-logo" src="./CP_fatLOGOclear_60716.png?v=20260817-header-logo-dark" alt="" aria-hidden="true">
         <span class="cp-r1-brand-lockup-copy">
           <span class="cp-r1-brand-lockup-wordmark">COGNITION <span class="cp-r1-brand-lockup-wordmark-gold">PARTNER</span><span class="cp-r1-brand-lockup-tm">™</span></span>
           <span class="cp-r1-brand-lockup-rule" aria-hidden="true"></span>
@@ -1555,7 +1570,6 @@
 
   
   <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-openai-form-1"></script>
-
 </body>
 </html>
 

@@ -2,3 +2,7 @@
 
 # Local SEO promote backups (never publish)
 .seo_promote_bak_*/
+
+# Local CP layout promote backups
+.seo_layout_promote_bak_*/
+**/seo_layout_promote_bak_*/
