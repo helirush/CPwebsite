@@ -4709,7 +4709,8 @@ body.home-page.curl-host-active .clerk-voice-modal-content {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  pointer-events: none !important;
+  /* Must allow SELECT clicks; none here blocked page1 session start in some browsers */
+  pointer-events: auto !important;
 }
 body.cp-page1.curl-host-active .clerk-voice-modal-header,
 body.cp-page1.curl-host-active .clerk-voice-launch-emblem,
@@ -6556,7 +6557,7 @@ body[class*="cp-page"] .cp-r2-footer-transport .cp-r2-prev .cp-r2-transport-subl
   --cp-curl-orb-contrast: 1.05;   /* 0.8 flat … 1.0 normal … 1.3 punchy */
   --cp-curl-orb-saturate: 1.0;    /* 0.7 muted … 1.0 normal … 1.3 vivid */
   /* CURL host text block (right of orb) */
-  --cp-curl-text-x: -40px;     /* whole text block left/right */
+  --cp-curl-text-x: -15px;     /* whole text block left/right */
   --cp-curl-text-y: 0px;       /* whole text block up/down */
   --cp-curl-l1-size: 10px;     /* UNDERSTAND WITH */
   --cp-curl-l1-weight: 400;
@@ -6803,7 +6804,7 @@ body[class*="cp-page"] .cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring {
    Edit ONLY these :root values for the 4 Curl text lines.
    ============================================================ */
 :root {
-  --cp-curl-text-x: -40px;
+  --cp-curl-text-x: -15px;
   --cp-curl-text-y: 0px;
   --cp-curl-l1-size: 12px;
   --cp-curl-l1-weight: 600;
@@ -13640,3 +13641,360 @@ html body.home-page .cp-r2-listen:focus-within .cp-start-journey-cue {
   transform: translateX(-50%) translateY(-2px) !important;
 }
 
+
+/* ============================================================
+   CP_R2_CURL_SATURN_FINAL_LOCK_20261103
+   Restore classic Curl Saturn rings (Claire-parity elliptical tilt).
+   Later RGB/selected recipes must not flatten speak rings.
+   Contract:
+     idle     -> breath only, no rings
+     selected -> bright lock, no speak rings
+     speaking -> 6 tilted Saturn rings (gold/ice/blue/violet)
+   ============================================================ */
+:root {
+  --cp-curl-saturn-gold: 232, 176, 74;
+  --cp-curl-saturn-blue: 120, 200, 255;
+  --cp-curl-saturn-ice: 190, 245, 255;
+  --cp-curl-saturn-violet: 160, 140, 255;
+  --cp-curl-saturn-tilt-x: 68deg;
+  --cp-curl-saturn-tilt-z: -24deg;
+  --cp-curl-saturn-period: 2.55s;
+}
+
+html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-wrap {
+  overflow: visible !important;
+  isolation: isolate !important;
+  perspective: 900px !important;
+  transform-style: preserve-3d !important;
+}
+
+/* No rings unless speaking */
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host:not(.is-speaking) .cp-r2-purpose-ring {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  animation: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+@keyframes cpCurlSaturnRingFinal {
+  0% {
+    opacity: 0.15;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(var(--cp-curl-saturn-tilt-z)) scale(0.78, 0.42);
+    filter: brightness(1);
+  }
+  16% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) + 6deg)) scale(0.96, 0.52);
+    filter: brightness(1.35);
+  }
+  42% {
+    opacity: 0.62;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) + 14deg)) scale(1.18, 0.64);
+    filter: brightness(1.18);
+  }
+  72% {
+    opacity: 0.22;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) + 22deg)) scale(1.42, 0.78);
+    filter: brightness(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) + 30deg)) scale(1.68, 0.92);
+    filter: brightness(1);
+  }
+}
+@keyframes cpCurlSaturnRingBrightFinal {
+  0% {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) - 4deg)) scale(0.74, 0.4);
+    filter: brightness(1.05);
+  }
+  14% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) + 8deg)) scale(0.98, 0.54);
+    filter: brightness(1.65);
+    box-shadow:
+      0 0 16px rgba(var(--cp-curl-saturn-gold), 0.85),
+      0 0 30px rgba(var(--cp-curl-saturn-blue), 0.5);
+  }
+  40% {
+    opacity: 0.72;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) + 16deg)) scale(1.2, 0.66);
+    filter: brightness(1.35);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotateX(var(--cp-curl-saturn-tilt-x)) rotateZ(calc(var(--cp-curl-saturn-tilt-z) + 32deg)) scale(1.72, 0.94);
+    filter: brightness(1);
+  }
+}
+
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring,
+html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
+  transform-style: preserve-3d !important;
+  background: transparent !important;
+  /* Kill flat scale-only recipes */
+  animation: cpCurlSaturnRingFinal var(--cp-curl-saturn-period, 2.55s) cubic-bezier(0.37, 0, 0.63, 1) infinite !important;
+}
+
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring--1,
+html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring--1 {
+  width: 128% !important; height: 128% !important;
+  border: 2px solid rgba(var(--cp-curl-saturn-gold), 0.95) !important;
+  animation-name: cpCurlSaturnRingBrightFinal !important;
+  animation-delay: 0s !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring--2,
+html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring--2 {
+  width: 152% !important; height: 152% !important;
+  border: 1.5px solid rgba(var(--cp-curl-saturn-blue), 0.88) !important;
+  animation-delay: 0.32s !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring--3,
+html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring--3 {
+  width: 178% !important; height: 178% !important;
+  border: 2px solid rgba(var(--cp-curl-saturn-ice), 0.92) !important;
+  animation-name: cpCurlSaturnRingBrightFinal !important;
+  animation-delay: 0.64s !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring--4,
+html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring--4 {
+  width: 208% !important; height: 208% !important;
+  border: 1.4px solid rgba(var(--cp-curl-saturn-gold), 0.75) !important;
+  animation-delay: 0.96s !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring--5,
+html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring--5 {
+  width: 242% !important; height: 242% !important;
+  border: 1.8px solid rgba(var(--cp-curl-saturn-violet), 0.85) !important;
+  animation-name: cpCurlSaturnRingBrightFinal !important;
+  animation-delay: 1.28s !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring--6,
+html body[class*="cp-page"].curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring--6 {
+  width: 280% !important; height: 280% !important;
+  border: 1.25px solid rgba(var(--cp-curl-saturn-blue), 0.62) !important;
+  animation-delay: 1.6s !important;
+}
+
+/* Speaking orb: no selected-pulse fight */
+html body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-orb {
+  animation: none !important;
+  filter: brightness(1.32) saturate(1.18) !important;
+  z-index: 8 !important;
+}
+
+
+/* CP_R2_NO_CLOSE_CHIP_PAGE1 removed — page1 matches page2 Close Curl */
+
+
+/* CP_R2_PAGE1_CLOSE_CURL_LIKE_PAGE2 20261103-curl-page1-like-page2-1
+   Page1 must show Close Curl like page2 when host is active. */
+html body.cp-page1.curl-host-active #cpCurlFailsafeClose,
+html body.cp-page1.curl-host-active .cp-curl-failsafe-close,
+html body.home-page.cp-page1.curl-host-active #cpCurlFailsafeClose {
+  display: inline-flex !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 12020 !important;
+}
+/* Keep Saturn rings while speaking on page1 */
+html body.cp-page1 #cpPurposeHostButton.cp-r2-purpose-host.is-speaking .cp-r2-purpose-ring,
+html body.cp-page1.curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+
+/* ============================================================
+   20261103-p1-equals-p2-voice-1
+   Page1 must behave like page2 for Curl voice.
+   Neutralize unique body.cp-page1 voice/modal/frame locks that
+   page2 never gets. Keep Saturn orb graphics.
+   ============================================================ */
+
+/* Don't zero-size the modal shell on page1 (breaks iframe session) */
+html body.cp-page1 #clerkVoiceModal,
+html body.cp-page1 .clerk-voice-modal,
+html body.cp-page1 #clerkVoiceBackdrop,
+html body.cp-page1 .clerk-voice-backdrop {
+  /* when idle, still hide visually but keep in DOM layout-capable */
+}
+html body.cp-page1:not(.curl-host-active) #clerkVoiceModal,
+html body.cp-page1:not(.curl-host-active) .clerk-voice-modal {
+  display: none !important;
+  pointer-events: none !important;
+  /* DO NOT force width/height 0 — that poisoned later activation on page1 */
+  width: auto !important;
+  height: auto !important;
+  inset: auto !important;
+  z-index: -1 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+html body.cp-page1.curl-host-active #clerkVoiceModal,
+html body.cp-page1.curl-host-active .clerk-voice-modal,
+html body.cp-page1.curl-host-active #clerkVoiceModal.active,
+html body.cp-page1.curl-host-active .clerk-voice-modal.active {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: min(360px, calc(100vw - 24px)) !important;
+  max-height: min(420px, calc(100vh - 24px)) !important;
+  inset: auto !important;
+  right: 18px !important;
+  bottom: 118px !important;
+  left: auto !important;
+  top: auto !important;
+  z-index: 12000 !important;
+  background: transparent !important;
+}
+
+html body.cp-page1.curl-host-active .clerk-voice-modal-content {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html body.cp-page1.curl-host-active #clerkVoiceFrame,
+html body.cp-page1.curl-host-active .clerk-voice-frame {
+  display: block !important;
+  position: fixed !important;
+  left: 12px !important;
+  top: 12px !important;
+  width: 360px !important;
+  height: 280px !important;
+  min-width: 360px !important;
+  min-height: 280px !important;
+  opacity: 0.02 !important;
+  pointer-events: none !important;
+  border: 0 !important;
+  z-index: 1 !important;
+}
+
+html body.cp-page1.curl-host-active #clerkVoiceStartBtn,
+html body.cp-page1.curl-host-active #clerkVoiceStartBtn.clerk-voice-start-btn,
+html body.cp-page1.curl-host-active .clerk-voice-start-btn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 16000 !important;
+  position: fixed !important;
+}
+
+/* Match page2: show Close Curl when host active */
+html body.cp-page1.curl-host-active #cpCurlFailsafeClose {
+  display: inline-flex !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 12020 !important;
+}
+
+/* Saturn rings on page1 while speaking — same as other pages */
+html body.cp-page1 #cpPurposeHostButton.is-speaking .cp-r2-purpose-ring,
+html body.cp-page1.curl-is-speaking #cpPurposeHostButton .cp-r2-purpose-ring {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+
+
+/* CLAIRE_BLUE_SPEAKING_RINGS_LOCK */
+/* 20261103-claire-blue-rings-1 — blue pulse rings while Claire speaks */
+html body.page6-kuranda-voice-page.claire-is-speaking .kuranda-speaking-bubble,
+html body.page6-kuranda-voice-page .kuranda-speaking-bubble.is-speaking {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+  z-index: 40 !important;
+}
+html body.page6-kuranda-voice-page.claire-is-speaking .kuranda-speaking-ring,
+html body.page6-kuranda-voice-page .kuranda-speaking-bubble.is-speaking .kuranda-speaking-ring {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  border-color: rgba(130, 210, 255, 0.92) !important;
+  box-shadow:
+    0 0 0 1px rgba(160, 230, 255, 0.35),
+    0 0 18px rgba(80, 180, 255, 0.45),
+    0 0 36px rgba(40, 140, 255, 0.28) !important;
+  animation-name: kurandaVoicePulse !important;
+  animation-duration: 2.55s !important;
+  animation-timing-function: ease-in-out !important;
+  animation-iteration-count: infinite !important;
+}
+html body.page6-kuranda-voice-page.claire-is-speaking .kuranda-speaking-ring:nth-child(odd),
+html body.page6-kuranda-voice-page .kuranda-speaking-bubble.is-speaking .kuranda-speaking-ring:nth-child(odd) {
+  animation-name: kurandaVoicePulseBright !important;
+  border-color: rgba(170, 236, 255, 0.98) !important;
+}
+html body.page6-kuranda-voice-page.claire-is-speaking .kuranda-speaking-bar,
+html body.page6-kuranda-voice-page .kuranda-speaking-bubble.is-speaking .kuranda-speaking-bar {
+  display: block !important;
+  opacity: 1 !important;
+  background: linear-gradient(180deg, rgba(190, 240, 255, 0.95), rgba(60, 160, 255, 0.75)) !important;
+}
+
+
+/* CP_CURL_ORB_PLATE_GEOMETRY_LOCK_ALL_PAGES */
+/* 20261103-reason-text-right-25-1
+   Curl outermost plate + orb geometry identical on every CP page.
+   Kicker copy is REASON WITH (HTML). */
+html body[class*="cp-page"] {
+  --cp-curl-orb-x: -50px;
+  --cp-curl-orb-y: -2px;
+  --cp-curl-orb-size: 156px;
+  --cp-curl-plate-size: 162px;
+  --cp-curl-text-x: -15px;
+}
+html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-plate,
+html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-wrap {
+  /* plate is the outermost white platform — lock diameter */
+}
+html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-plate {
+  width: var(--cp-curl-plate-size) !important;
+  height: var(--cp-curl-plate-size) !important;
+  min-width: var(--cp-curl-plate-size) !important;
+  min-height: var(--cp-curl-plate-size) !important;
+  max-width: var(--cp-curl-plate-size) !important;
+  max-height: var(--cp-curl-plate-size) !important;
+  border-radius: 50% !important;
+  transform: translateY(0) !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-wrap {
+  width: var(--cp-curl-plate-size) !important;
+  height: var(--cp-curl-plate-size) !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb {
+  width: var(--cp-curl-orb-size) !important;
+  height: var(--cp-curl-orb-size) !important;
+  transform: translate(var(--cp-curl-orb-x), var(--cp-curl-orb-y)) !important;
+}
+html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-copy {
+  transform: translateX(var(--cp-curl-text-x)) !important;
+}

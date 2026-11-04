@@ -20,7 +20,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="cp-thk-apple-touch-icon.png?cp_icon=20260722a">
   <link rel="manifest" href="site.webmanifest?cp_icon=20260722a">
   <meta name="theme-color" content="#2f5e4f">
-  <link rel="stylesheet" href="./styles.css?v=20260901-claire-select-unhide-1" />
+  <link rel="stylesheet" href="./styles.css?v=20261103-claire-blue-rings-1" />
   <style id="cp-claire-select-force-1">
     /* Page-local failsafe: Claire Ready/SELECT must remain clickable */
     body.page6-kuranda-voice-page #clerkVoiceStartBtn,
@@ -33,22 +33,56 @@
     }
   </style>
   <script>
-    // CP static GitHub Pages has no /api/hume/runtime-auth (404).
-    // Use Unity public runtime-auth (CORS *) so Claire can connect on cognitionpartner.ai.
-    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
-    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
-    window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
+    /* Possibility 2 Claire — Clerk-parity OpenAI Live (Willow)
+       Reference: experience-clerk.html working path on :8600 */
     window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
-    window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = "https://unityenergy.com/api/hume/runtime-auth";
-    window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
+    window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
+    window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "";
+    window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "";
+    window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = "";
+    window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
+        window.MAXWELLIAN_HUME.voice_engine = "openai";
+    window.MAXWELLIAN_HUME.openai_live_api = true;
+    window.MAXWELLIAN_HUME.openai_voice = "willow";
+    window.MAXWELLIAN_HUME.voice_id = "willow";
+    window.MAXWELLIAN_HUME.openai_realtime_model = "gpt-live-1";
+    window.MAXWELLIAN_HUME.openai_live_session_endpoint = "/api/openai/live/session";
+    window.MAXWELLIAN_HUME.openai_session_endpoint = "/api/openai/realtime/session";
+    window.MAXWELLIAN_HUME.clerk_voice_blocked_pages = [];
+    window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
+    window.MAXWELLIAN_HUME.preflight_microphone_on_launch = false; // mic on SELECT (Curl lesson)
+    window.MAXWELLIAN_HUME.use_unity_start_gate = true;
+    window.MAXWELLIAN_HUME.status_waiting = "Claire is ready";
+    window.MAXWELLIAN_HUME.status_speaking = "Claire is speaking";
+    window.MAXWELLIAN_HUME.start_button_waiting_label = "Claire is ready";
+    window.MAXWELLIAN_HUME.start_button_stop_label = "Stop Listening";
+    window.MAXWELLIAN_HUME.openai_live_api = true;
+    window.MAXWELLIAN_HUME.openai_voice = "willow";
+    window.MAXWELLIAN_HUME.openai_realtime_model = "gpt-live-1";
+    window.MAXWELLIAN_HUME.allow_openai_fallback = false;
+    window.MAXWELLIAN_HUME.openai_session_endpoint = "/api/openai/realtime/session";
+    window.MAXWELLIAN_HUME.openai_live_session_endpoint = "/api/openai/live/session";
+    window.MAXWELLIAN_HUME.openai_renderer_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+    window.MAXWELLIAN_HUME.openai_embed_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+    window.MAXWELLIAN_HUME.embed_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+    window.MAXWELLIAN_HUME.renderer_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+    window.MAXWELLIAN_HUME.hume_embed_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
     window.MAXWELLIAN_HUME.character_id = "claire-charcot";
     window.MAXWELLIAN_HUME.default_character_id = "claire-charcot";
-    window.MAXWELLIAN_HUME.config_id = "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
-    window.MAXWELLIAN_HUME.voice_id = "6b530c02-5a80-4e60-bb68-f2c171c5029f";
+    window.MAXWELLIAN_HUME.character_name = "Claire";
+    window.MAXWELLIAN_HUME.voice_id = "willow";
+    window.MAXWELLIAN_HUME.config_id = "";
+    window.MAXWELLIAN_HUME.hume_voice_id = "";
+    window.MAXWELLIAN_HUME.hume_config_id = "";
+    window.MAXWELLIAN_HUME.floating_launcher_enabled = false;
+    window.MAXWELLIAN_HUME.use_unity_start_gate = true;
+    window.MAXWELLIAN_HUME.preflight_microphone_on_launch = false;
+    window.MAXWELLIAN_HUME.start_button_waiting_label = "Claire is ready";
+    window.MAXWELLIAN_HUME.start_button_close_label = "Pause Claire";
   </script>
-  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20260831-claire-auth-unity-1"></script>
-  <script src="./assets/kuranda/clare/claire_character_config.js?v=20260831-claire-auth-unity-1"></script>
-  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20260831-claire-auth-unity-1"></script>
+  <script src="./assets/kuranda/clare/hume_auth_bootstrap.js?v=20261103-claire-curl-parity-1"></script>
+  <script src="./assets/kuranda/clare/claire_character_config.js?v=20261103-claire-blue-rings-1"></script>
+  <script src="./assets/kuranda/clare/claire_voice_widget.js?v=20261103-claire-blue-rings-1"></script>
 <!-- CP-SEO-FOUNDATION-START -->
     <meta name="description" content="Experience Claire — part of Cognition Partner, human-machine partnership for the future of human thinking.">
     <meta name="robots" content="index,follow,max-image-preview:large">
@@ -67,9 +101,9 @@
 <body class="page6-kuranda-voice-page claire-host-active">
   <main class="site-wrap">
     <section class="page-card">
-      <img class="page-image" src="./assets/kuranda_p2.png?v=20260830-two-step-hosts-1" alt="Kuranda page 2 with Claire voice experience" />
+      <img class="page-image" src="./assets/kuranda_p2.png?v=20261103-claire-start-fix-1" alt="Kuranda page 2 with Claire voice experience" />
       <div class="page5-kuranda-nav" aria-label="Page navigation controls">
-        <a class="page5-kuranda-nav-link" id="page7-return-link" href="./experience-claire-entry.html?v=20260830-two-step-hosts-1" aria-label="Return to Kuranda page 1">Back</a>
+        <a class="page5-kuranda-nav-link" id="page7-return-link" href="./experience-claire-entry.html?v=20261103-claire-start-fix-1" aria-label="Return to Kuranda page 1">Back</a>
         <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
       </div>
                   <div class="kuranda-speaking-bubble" id="kuranda-speaking-bubble" aria-hidden="true">
@@ -96,11 +130,47 @@
     (() => {
       const returnLink = document.getElementById("page7-return-link");
       const bubbleEl = document.getElementById("kuranda-speaking-bubble");
-      if (!returnLink || !bubbleEl) return;
+      // Do not abort Claire launch if nav/bubble markup is incomplete.
 
       const setSpeaking = (on) => {
+        if (!bubbleEl) return;
         bubbleEl.classList.toggle("is-speaking", Boolean(on));
       };
+
+
+      const hardStopClaireVoice = () => {
+        try { if (typeof window.stopKurandaClaireBubble === "function") window.stopKurandaClaireBubble(); } catch (e) {}
+        try { document.body.classList.remove("claire-is-speaking", "claire-host-active", "curl-host-active", "curl-is-speaking"); } catch (e) {}
+        try {
+          if (window.ClerkVoiceWidget) {
+            if (typeof window.ClerkVoiceWidget.close === "function") window.ClerkVoiceWidget.close();
+            if (typeof window.ClerkVoiceWidget.closeModal === "function") window.ClerkVoiceWidget.closeModal();
+            if (typeof window.ClerkVoiceWidget.endSession === "function") window.ClerkVoiceWidget.endSession();
+            if (typeof window.ClerkVoiceWidget.pause === "function") window.ClerkVoiceWidget.pause();
+          }
+        } catch (e) {}
+        try {
+          const closeBtn = document.getElementById("clerkVoiceCloseBtn");
+          if (closeBtn) closeBtn.click();
+        } catch (e) {}
+        try {
+          const modal = document.getElementById("clerkVoiceModal") || document.querySelector(".clerk-voice-modal");
+          if (modal) {
+            modal.classList.remove("is-open", "active", "show");
+            modal.setAttribute("aria-hidden", "true");
+            modal.style.display = "none";
+          }
+        } catch (e) {}
+        try {
+          document.querySelectorAll("audio, video").forEach(function (el) {
+            try { el.pause(); } catch (e2) {}
+          });
+        } catch (e) {}
+      };
+
+      // Always tear down voice when leaving page 2 (Back / Home / refresh)
+      window.addEventListener("pagehide", hardStopClaireVoice);
+      window.addEventListener("beforeunload", hardStopClaireVoice);
 
       const waitFor = async (testFn, timeoutMs = 10000) => {
         const start = Date.now();
@@ -124,38 +194,36 @@
           return;
         }
 
-        // Claire identity only. Not page-aware. Not Clerk content-aware.
-        // CLAIRE_AUTH_FORCE_UNITY
-        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
-        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "https://unityenergy.com/api/hume/runtime-auth";
-        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = "https://unityenergy.com/api/hume/runtime-auth";
-        window.MAXWELLIAN_HUME.allow_hume_authless_connect = true;
-        window.MAXWELLIAN_HUME.config_id = window.MAXWELLIAN_HUME.config_id || "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf";
-        window.MAXWELLIAN_HUME.voice_id = window.MAXWELLIAN_HUME.voice_id || "6b530c02-5a80-4e60-bb68-f2c171c5029f";
-        window.MAXWELLIAN_HUME.hume_config_id = window.MAXWELLIAN_HUME.config_id;
-        window.MAXWELLIAN_HUME.hume_voice_id = window.MAXWELLIAN_HUME.voice_id;
+        // Claire identity only. Not page-aware.
+        // OpenAI Live (Willow) — same transport as working experience-clerk (Vesper).
+        window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = "";
+        window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "";
+        window.MAXWELLIAN_HUME.hume_runtime_auth_endpoint = "";
+        window.MAXWELLIAN_HUME.allow_hume_authless_connect = false;
+        window.MAXWELLIAN_HUME.voice_engine = "openai";
+        window.MAXWELLIAN_HUME.openai_live_api = true;
+        window.MAXWELLIAN_HUME.openai_voice = "willow";
+        window.MAXWELLIAN_HUME.openai_realtime_model = "gpt-live-1";
+        window.MAXWELLIAN_HUME.allow_openai_fallback = false;
+        window.MAXWELLIAN_HUME.openai_session_endpoint = "/api/openai/realtime/session";
+        window.MAXWELLIAN_HUME.openai_live_session_endpoint = "/api/openai/live/session";
+        window.MAXWELLIAN_HUME.openai_renderer_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+        window.MAXWELLIAN_HUME.openai_embed_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+        window.MAXWELLIAN_HUME.embed_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+        window.MAXWELLIAN_HUME.renderer_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+        window.MAXWELLIAN_HUME.hume_embed_url = "./assets/kuranda/clare/openai_renderer/index.html?v=20261103-claire-blue-rings-1";
+        window.MAXWELLIAN_HUME.voice_id = "willow";
+        window.MAXWELLIAN_HUME.config_id = "";
+        window.MAXWELLIAN_HUME.hume_voice_id = "";
+        window.MAXWELLIAN_HUME.hume_config_id = "";
         window.MAXWELLIAN_HUME.lock_character_to_default = true;
-        // Prefer refreshing auth from Unity before launch (bootstrap may have hit CP 404 first).
+        window.MAXWELLIAN_HUME.use_unity_start_gate = true;
+        window.MAXWELLIAN_HUME.preflight_microphone_on_launch = false;
+        window.MAXWELLIAN_HUME.start_button_waiting_label = "Claire is ready";
+        window.MAXWELLIAN_HUME.start_button_close_label = "Pause Claire";
         try {
-          if (typeof window.fetch === "function") {
-            window.fetch("https://unityenergy.com/api/hume/runtime-auth", {
-              method: "GET",
-              mode: "cors",
-              credentials: "omit",
-              headers: { Accept: "application/json" }
-            }).then(function (r) { return r && r.ok ? r.json() : null; }).then(function (payload) {
-              if (!payload || !payload.auth) return;
-              var a = payload.auth;
-              var type = String(a.type || "apiKey");
-              var value = String(a.value || a.apiKey || a.accessToken || "").trim();
-              if (!value) return;
-              var normalized = { type: type, value: value };
-              window.MAXWELLIAN_HUME_RUNTIME_AUTH = normalized;
-              window.MAXWELLIAN_HUME_AUTH = normalized;
-              window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
-              window.MAXWELLIAN_HUME.auth = normalized;
-              try { sessionStorage.setItem("maxwellian_hume_runtime_auth_v1", JSON.stringify(normalized)); } catch (e) {}
-            }).catch(function () {});
+          if (window.ClerkVoiceWidget && typeof window.ClerkVoiceWidget.setEngine === "function") {
+            window.ClerkVoiceWidget.setEngine("openai");
           }
         } catch (e) {}
         window.MAXWELLIAN_HUME.character_name = "Claire";
@@ -258,10 +326,12 @@
         }, 8000);
 
         if (!launcher) {
-          console.error("Claire voice launcher unavailable.");
+          console.error("[Claire] voice launcher unavailable after package load.");
+          setSpeaking(true);
           return;
         }
 
+        console.info("[Claire] launching OpenAI Live Willow session via", launcher.name || "launcher");
         try {
           const result = launcher({
             characterId: "claire-charcot",
@@ -273,6 +343,16 @@
             disablePageContext: true,
             includePageContext: false,
             contextPayload: {
+              voice_engine_preference: "openai",
+              openai_voice: "willow",
+              voice_id: "willow",
+              openai_realtime_model: "gpt-live-1",
+              openai_live_session_endpoint: "/api/openai/live/session",
+              openai_realtime_model: "gpt-live-1",
+              openai_live_session_endpoint: (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.openai_live_session_endpoint) || "/api/openai/live/session",
+              openai_session_endpoint: (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.openai_session_endpoint) || "/api/openai/realtime/session",
+              openai_renderer_url: (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.openai_renderer_url) || "./assets/kuranda/clare/openai_renderer/index.html",
+              embed_url: (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.embed_url) || "./assets/kuranda/clare/openai_renderer/index.html",
               organization: "Kuranda Mind & Body",
               public_guide: "Claire",
               page_aware: false,
@@ -308,29 +388,75 @@
       setSpeaking(false);
 
       // Listen for widget speech/close signals.
+      const armClaireSpeaking = function (on) {
+        try { setSpeaking(Boolean(on)); } catch (e) {}
+        try {
+          document.body.classList.toggle("claire-is-speaking", Boolean(on));
+          document.body.classList.toggle("claire-host-active", true);
+        } catch (e) {}
+        try {
+          if (typeof window.startKurandaClaireBubble === "function" && on) window.startKurandaClaireBubble();
+          if (typeof window.stopKurandaClaireBubble === "function" && !on) window.stopKurandaClaireBubble();
+        } catch (e) {}
+      };
+
       window.addEventListener("message", function (event) {
         const data = event && event.data;
         if (!data || typeof data !== "object") return;
-        const t = String(data.type || "").toLowerCase();
+        const t = String(data.type || data.event || "").toLowerCase();
         if (!t) return;
-        if (t === "transcript_message" || t === "assistant_message" || t === "audio_start" || t.includes("assistant_speak") || t.includes("tts_start")) {
-          // Animate while Claire output is flowing.
+        // OpenAI Live renderer + widget speech signals
+        if (
+          t === "audio_start" ||
+          t === "audio_output" ||
+          t === "assistant_speak_start" ||
+          t === "transcript_message" ||
+          t === "assistant_message" ||
+          t.includes("assistant_speak") ||
+          t.includes("tts_start") ||
+          t.includes("audio_output_start") ||
+          t.includes("response.audio")
+        ) {
           if (data.payload && (data.payload.role === "user" || data.payload.speaker === "user")) {
-            // user speech: keep orb calm/frozen
-            setSpeaking(false);
-            document.body.classList.remove("claire-is-speaking");
+            armClaireSpeaking(false);
           } else {
-            setSpeaking(true);
-            document.body.classList.add("claire-is-speaking");
+            armClaireSpeaking(true);
           }
           return;
         }
-        if (t === "audio_end" || t === "assistant_end" || t.includes("tts_end") || t === "collapse_widget") {
-          setSpeaking(false);
-          document.body.classList.remove("claire-is-speaking");
+        if (
+          t === "audio_end" ||
+          t === "assistant_end" ||
+          t === "assistant_speak_end" ||
+          t.includes("tts_end") ||
+          t.includes("audio_output_end") ||
+          t === "collapse_widget" ||
+          t.includes("session_stopped")
+        ) {
+          armClaireSpeaking(false);
           return;
         }
       });
+
+      // Parent-level custom events (widget may rebroadcast)
+      window.addEventListener("clerk-voice-audio-start", function () { armClaireSpeaking(true); });
+      window.addEventListener("hume-audio-start", function () { armClaireSpeaking(true); });
+      window.addEventListener("clerk-voice-audio-stop", function () { armClaireSpeaking(false); });
+      window.addEventListener("hume-audio-stop", function () { armClaireSpeaking(false); });
+
+      // SELECT label → speaking cue (Curl pattern): Stop Listening / Pause Claire
+      const watchStartBtn = function () {
+        const btn = document.getElementById("clerkVoiceStartBtn");
+        if (!btn || btn.dataset.claireRingWatch === "1") return;
+        btn.dataset.claireRingWatch = "1";
+        const mo = new MutationObserver(function () {
+          const label = String(btn.textContent || "").toLowerCase();
+          if (/stop listening|pause claire|pause curl/.test(label)) armClaireSpeaking(true);
+        });
+        mo.observe(btn, { characterData: true, childList: true, subtree: true });
+      };
+      watchStartBtn();
+      window.setInterval(watchStartBtn, 1200);
 
       // If modal closes, freeze bubble.
       document.addEventListener("click", function (e) {
@@ -341,6 +467,26 @@
           document.body.classList.remove("claire-is-speaking");
         }
       }, true);
+
+      // Bind Back to hard-stop voice before traverse to page 1
+      try {
+        if (returnLink && returnLink.dataset.claireBackBound !== "1") {
+          returnLink.dataset.claireBackBound = "1";
+          returnLink.addEventListener("click", function (ev) {
+            try { hardStopClaireVoice(); } catch (e) {}
+            // allow default navigation; add cache buster
+            try {
+              ev.preventDefault();
+              hardStopClaireVoice();
+              window.setTimeout(function () {
+                window.location.href = "./experience-claire-entry.html?v=20261103-claire-start-fix-1&from=claire-back";
+              }, 40);
+            } catch (e) {
+              // fall through
+            }
+          });
+        }
+      } catch (e) {}
 
       window.setTimeout(() => {
         void launchClaire();
@@ -375,7 +521,11 @@
         }
       };
       window.addEventListener("claireStopListeningReset", function () {
-        window.setTimeout(function () { void softRearmClaire(); }, 60);
+        if (document.visibilityState === "hidden") return;
+        window.setTimeout(function () {
+          if (document.visibilityState === "hidden") return;
+          void softRearmClaire();
+        }, 60);
       });
       window.addEventListener("clerkVoiceModalClosed", function () {
         // If stop left us on Waiting, keep orb frozen and control ready.

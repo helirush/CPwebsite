@@ -34,7 +34,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20261012-motto-cover-bg-m1">
+  <link rel="stylesheet" href="./styles.css?v=20261103-reason-text-right-25-1">
 
 
 
@@ -182,7 +182,7 @@
 
 
 <!-- CP_PAGE_VISIBLE_GUARD: keep canvas visible; allow Curl modal when active -->
-  <style id="cp-page-visible-guard">
+  <style>
     html, body {
       display: block !important;
       visibility: visible !important;
@@ -193,32 +193,30 @@
     }
     body > * { visibility: visible !important; }
     .site-wrap, .page-card, .cp-r1-card, .page-image, .cp-r1-image, main {
+      display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
       pointer-events: auto !important;
     }
+    /* Match journey pages 1–10/12/13 shell width (not page11 viewport_fit stage) */
     .site-wrap {
-      display: flex !important;
+      display: grid !important;
       height: 100dvh !important;
-      width: 100% !important;
-      max-width: none !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 0 !important;
+      width: min(100vw, 2600px) !important;
+      max-width: min(100vw, 2600px) !important;
+      margin: 0 auto !important;
+      padding: clamp(8px, 1.1vh, 14px) clamp(10px, 1.5vw, 20px) !important;
+      transform: none !important;
     }
     .page-card, .cp-r1-card {
-      display: flex !important;
-      min-height: 0 !important;
-      /* width/height/transform owned by cp_viewport_fit.js (1512×982 stage) */
-      margin: 0 !important;
-    }
-    .page-image, .cp-r1-image {
-      width: 100% !important;
       height: 100% !important;
-      object-fit: fill !important;
-      object-position: center center !important;
-      display: block !important;
+      min-height: 60vh !important;
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 auto !important;
+      transform: none !important;
     }
+    .page-image, .cp-r1-image { width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: center center !important; display: block !important; }
     /* Keep overlays hidden ONLY while Curl is idle. When host is active, allow modal. */
     body:not(.curl-host-active) #clerkVoiceModal,
     body:not(.curl-host-active) .clerk-voice-modal,
@@ -270,7 +268,7 @@
 <!-- CP_CURL_TEXT_LIVE: edit these vars; this tag loads AFTER styles.css -->
   <style id="cp-curl-text-live">
     :root {
-      --cp-curl-text-x: -40px;
+      --cp-curl-text-x: -15px;
       --cp-curl-text-y: 0px;
       --cp-curl-l1-size: 12px;
       --cp-curl-l1-weight: 600;
@@ -588,7 +586,7 @@
           </a>
           </div>
 
-        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Speak with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
+        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Reason with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
           <span class="cp-r2-purpose-orb-wrap" aria-hidden="true">
             <span class="cp-r2-purpose-orb-plate" aria-hidden="true"></span>
             <img class="cp-r2-purpose-orb" src="./assets/curl/curl_orb_live_20260820-172503_1d0b8b7e31.png" alt="" />
@@ -601,7 +599,7 @@
             <span class="cp-r2-purpose-glitter"></span>
             </span>
           <span class="cp-r2-purpose-copy">
-            <span class="cp-r2-purpose-kicker">UNDERSTAND WITH</span>
+            <span class="cp-r2-purpose-kicker">REASON WITH</span>
             <span class="cp-r2-purpose-name"><span class="cp-r2-purpose-name-brand">CURL.</span></span>
             <span class="cp-r2-purpose-role">Curl Maxwell · Cognition Host</span>
             <span class="cp-r2-purpose-hint">Tap or speak anytime.</span>
@@ -1045,7 +1043,7 @@
     window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
     window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
     window.__CURL_FORCE_NO_FLOAT__ = true;
-    window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1";
+    window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-clerk-parity-1';
     window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
     var c = window.MAXWELLIAN_HUME;
     c.voice_engine = 'openai';
@@ -1070,17 +1068,14 @@
   </script>
 
   <!-- hume_auth_bootstrap removed: GPT Live only -->
-  <script src="./assets/cognition/curl/curl_character_config.js?v=20261012-curl-marin-textmod-1"></script>
-  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261012-curl-front-noicon-j1"></script>
+  <script src="./assets/cognition/curl/curl_character_config.js?v=20261103-p1-unblock-index-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261103-p1-unblock-index-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
   <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
 
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-marin-textmod-1"></script>
-
-<script src="./assets/cognition/cp_viewport_fit.js?v=20261011-bg-crop-sides-2"></script>
-
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261103-p1-unblock-index-1"></script>
 <script id="cp-curl-marin-live">
 (function () {
   // GPT Live only — no Hume runtime-auth, no hume_renderer.
@@ -1088,7 +1083,7 @@
     window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
     window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
     window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
-    window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+    window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-clerk-parity-1';
   } catch (e) {}
   function paint(c) {
     if (!c || typeof c !== 'object') return;
@@ -1104,10 +1099,10 @@
     c.openai_session_endpoint = '/api/openai/realtime/session';
     c.openai_live_session_endpoint = '/api/openai/live/session';
     c.sessionEndpoint = '/api/openai/realtime/session';
-    c.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-    c.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-    c.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-    c.hume_embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.openai_renderer_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.embed_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.renderer_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.hume_embed_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
     c.hume_runtime_auth_endpoint = '';
     c.allow_hume_authless_connect = false;
     c.allow_openai_fallback = true;
@@ -1126,6 +1121,45 @@
   setTimeout(apply, 200);
 })();
 </script>
+
+
+<style id="cp-page11-width-match-peers">
+  /* 20261103-page11-width-match-1: page11 header/footer/background width must match other cp-pages */
+  html body.cp-page11 .site-wrap.cp-r1-wrap,
+  html body.cp-page11 .site-wrap {
+    display: grid !important;
+    height: 100dvh !important;
+    width: min(100vw, 2600px) !important;
+    max-width: min(100vw, 2600px) !important;
+    margin: 0 auto !important;
+    padding: clamp(8px, 1.1vh, 14px) clamp(10px, 1.5vw, 20px) !important;
+    transform: none !important;
+  }
+  html body.cp-page11 .page-card.cp-r1-card,
+  html body.cp-page11 .page-card,
+  html body.cp-page11 .cp-r1-card {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 60vh !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+  html body.cp-page11 .page-image,
+  html body.cp-page11 .cp-r1-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+  html body.cp-page11 .cp-r1-top-card,
+  html body.cp-page11 .cp-r2-top-card,
+  html body.cp-page11 .cp-r2-media-card,
+  html body.cp-page11 .cp-r2-footer-motto-band {
+    width: auto !important;
+    max-width: none !important;
+  }
+</style>
 
 </body>
 </html>

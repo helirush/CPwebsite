@@ -20,8 +20,8 @@ window.MAXWELLIAN_HUME = {
   default_ui_mode: "modal",
   // Voice stack selector for widget routing.
   voice_engine: "openai",
-  openai_renderer_url: "assets/unity/clerk/openai_renderer/index.html?v=20261020-clerk-syntax-fix1",
-  openai_live_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session",
+  openai_renderer_url: "assets/unity/clerk/openai_renderer/index.html?v=20261012-vesper-live-1",
+  openai_live_session_endpoint: "/api/openai/live/session",
   openai_live_api: true,
   // Diagnostics can be re-enabled for troubleshooting, but default is off in normal operation.
   show_session_diagnostics: false,
@@ -91,8 +91,6 @@ window.MAXWELLIAN_HUME = {
   content_awareness_scope_lock: false,
   content_awareness_scope_fallback_message: "I can answer from Clerk onboard guidance and the approved Maxwellian Library pack prepared for this visit. I am not using page scanning. If you want something outside that pack, I can mark it as an open library question.",
   content_awareness_allowed_files: [
-    "knowledge/HOST_FAQ.md",
-    "knowledge/HOST_QUICK_REFERENCE.md",
     "knowledge/SpeakWithClerkOnBoard.md",
     "knowledge/CLERK_IDENTITY_PACK.md",
     "knowledge/CLERK_DEMO_KNOWLEDGE_PACK.md",
@@ -491,7 +489,7 @@ window.MAXWELLIAN_HUME = {
       description:
         "Low-cost retrieval and clarification mode for follow-up conversations on known page/audio/video context.",
       // Optional: set a dedicated lower-cost model profile id here.
-      hume_config_id: "",
+      hume_config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
   config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       // Optional: set a dedicated voice profile id for this intelligence tier.
       voice_id: "316eb863-97d3-4708-9dba-ccd6e3d21265",
@@ -998,7 +996,7 @@ window.MAXWELLIAN_HUME = {
   hume_runtime_auth_endpoint: "",
   allow_hume_authless_connect: false,
   allow_openai_fallback: false,
-  openai_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session",
+  openai_session_endpoint: "/api/openai/realtime/session",
   openai_realtime_model: "gpt-live-1",
   openai_voice: "vesper",
     cognition_text_mode: true,
@@ -1025,7 +1023,7 @@ window.MAXWELLIAN_HUME = {
   },
   // Self-hosted renderer for full UI control.
   // Hume handles voice rendering/cadence while cognition remains OpenAI-guided via launch context and config.
-  embed_url: "./assets/unity/clerk/openai_renderer/index.html?v=20261020-clerk-syntax-fix1",
+  embed_url: "./assets/unity/clerk/hume_renderer/index.html?v=20260810-clerk-claire-parity1",
   // Small avatar image used for header/presence chip.
   character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
   // Signal-stage portrait (must stay transparent Clerk asset).
@@ -1046,7 +1044,7 @@ window.MAXWELLIAN_HUME = {
       character_name: "Clerk Maxwell",
       character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
       character_background_url: "assets/images/ClerkMaxwell_60423t.png",
-      hume_config_id: "",
+      hume_config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       config_id: "242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf",
       voice_id: "316eb863-97d3-4708-9dba-ccd6e3d21265",
       session_variables: {

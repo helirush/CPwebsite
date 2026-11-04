@@ -34,7 +34,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20261026-size-match-p3-3">
+  <link rel="stylesheet" href="./styles.css?v=20261103-reason-text-right-25-1">
 
 
 
@@ -187,7 +187,7 @@
 <!-- CP_CURL_TEXT_LIVE: edit these vars; this tag loads AFTER styles.css -->
   <style id="cp-curl-text-live">
     :root {
-      --cp-curl-text-x: -40px;
+      --cp-curl-text-x: -15px;
       --cp-curl-text-y: 0px;
       --cp-curl-l1-size: 12px;
       --cp-curl-l1-weight: 600;
@@ -570,7 +570,7 @@
           </a>
           </div>
 
-        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Speak with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
+        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Reason with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
           <span class="cp-r2-purpose-orb-wrap" aria-hidden="true">
             <span class="cp-r2-purpose-orb-plate" aria-hidden="true"></span>
             <img class="cp-r2-purpose-orb" src="./assets/curl/curl_orb_live_20260820-172503_1d0b8b7e31.png" alt="" />
@@ -583,7 +583,7 @@
             <span class="cp-r2-purpose-glitter"></span>
             </span>
           <span class="cp-r2-purpose-copy">
-            <span class="cp-r2-purpose-kicker">UNDERSTAND WITH</span>
+            <span class="cp-r2-purpose-kicker">REASON WITH</span>
             <span class="cp-r2-purpose-name"><span class="cp-r2-purpose-name-brand">CURL.</span></span>
             <span class="cp-r2-purpose-role">Curl Maxwell · Cognition Host</span>
             <span class="cp-r2-purpose-hint">Tap or speak anytime.</span>
@@ -1027,7 +1027,7 @@
     window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
     window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = false;
     window.__CURL_FORCE_NO_FLOAT__ = true;
-    window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1";
+    window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-clerk-parity-1';
     window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
     var c = window.MAXWELLIAN_HUME;
     c.voice_engine = 'openai';
@@ -1052,14 +1052,14 @@
   </script>
 
   <!-- hume_auth_bootstrap removed: GPT Live only -->
-  <script src="./assets/cognition/curl/curl_character_config.js?v=20261012-curl-marin-textmod-1"></script>
-  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261012-curl-front-noicon-j1"></script>
+  <script src="./assets/cognition/curl/curl_character_config.js?v=20261103-p1-unblock-index-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261103-p1-unblock-index-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
   <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
 
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-marin-textmod-1"></script>
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261103-p1-unblock-index-1"></script>
 <script id="cp-curl-marin-live">
 (function () {
   // GPT Live only — no Hume runtime-auth, no hume_renderer.
@@ -1067,7 +1067,7 @@
     window.MAXWELLIAN_HUME_RUNTIME_AUTH_ENDPOINT = '';
     window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = '';
     window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT = '';
-    window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+    window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-clerk-parity-1';
   } catch (e) {}
   function paint(c) {
     if (!c || typeof c !== 'object') return;
@@ -1083,10 +1083,10 @@
     c.openai_session_endpoint = '/api/openai/realtime/session';
     c.openai_live_session_endpoint = '/api/openai/live/session';
     c.sessionEndpoint = '/api/openai/realtime/session';
-    c.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-    c.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-    c.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-    c.hume_embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.openai_renderer_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.embed_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.renderer_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
+    c.hume_embed_url = './assets/cognition/curl/openai_renderer/?v=20261103-curl-clerk-parity-1index.html?v=20261012-no-hume-curl-clerk-i1';
     c.hume_runtime_auth_endpoint = '';
     c.allow_hume_authless_connect = false;
     c.allow_openai_fallback = true;

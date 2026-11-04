@@ -39,7 +39,7 @@
 <body class="home-page page5-kuranda-page">
   <main class="site-wrap">
     <section class="page-card">
-      <img class="page-image" src="./assets/kuranda_p1.png?v=20260830-two-step-hosts-1" alt="Kuranda Mind and Body Institute page 1" />
+      <img class="page-image" src="./assets/kuranda_p1.png?v=20261103-claire-blue-rings-1" alt="Kuranda Mind and Body Institute page 1" />
       <div class="page5-kuranda-nav" aria-label="Page navigation controls">
         <a class="page5-kuranda-nav-link" href="./page12.html?v=20260824-p12-r6-3" aria-label="Return to Partner + Host (page 12)">Back</a>
         <a class="page5-kuranda-nav-link" href="./index.html" aria-label="Return home">Home</a>
@@ -53,54 +53,42 @@
   <script src="assets/js/founder_share_panel.js?v=20261019-hotspot-30" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20261019-hotspot-30';"></script>
   <script>
     (() => {
+      // Page 1 entry: clear leftover Claire/Clerk modal state from page 2 back-nav.
+      try {
+        document.body.classList.remove(
+          "claire-is-speaking",
+          "claire-host-active",
+          "curl-host-active",
+          "curl-is-speaking"
+        );
+      } catch (e) {}
+      try {
+        const modal =
+          document.getElementById("clerkVoiceModal") ||
+          document.querySelector(".clerk-voice-modal");
+        if (modal) {
+          modal.classList.remove("is-open", "active", "show");
+          modal.setAttribute("aria-hidden", "true");
+          modal.style.display = "none";
+        }
+      } catch (e) {}
+
+      // MEET CLAIRE button id is meet-claire-button (not page6-meet-claire).
+      // Always hard-navigate to page 2 with a fresh cache stamp — do not depend on
+      // stale clare_hume_config.json demo_page_url values.
+      const CLAIRE_EXPERIENCE_URL =
+        "./experience-claire.html?v=20261103-claire-blue-rings-1&from=entry";
       const meetClaireButton = document.getElementById("meet-claire-button");
-      if (!meetClaireButton) return;
-
-      const configCandidates = [
-        "./assets/kuranda/clare/clare_hume_config.json?v=20260804-0058",
-        "../../../../Kuranda/Claire/clare_hume_config.json?v=20260804-0058"
-      ];
-
-      let fileConfig = null;
-      let fileConfigLoaded = false;
-
-      const normalizeConfig = (rawConfig = {}) => {
-        const demoPageUrl =
-          typeof rawConfig.demo_page_url === "string" && rawConfig.demo_page_url.trim()
-            ? rawConfig.demo_page_url.trim()
-            : "./experience-claire.html?v=20260830-two-step-hosts-1";
-        return { demoPageUrl };
-      };
-
-      const loadFileConfig = async ({ forceReload = false } = {}) => {
-        if (forceReload) {
-          fileConfig = null;
-          fileConfigLoaded = false;
-        }
-        if (fileConfigLoaded) return fileConfig;
-        fileConfigLoaded = true;
-        for (const candidateUrl of configCandidates) {
-          try {
-            const response = await fetch(candidateUrl, { cache: "no-store" });
-            if (!response.ok) continue;
-            const payload = await response.json();
-            fileConfig = normalizeConfig(payload);
-            break;
-          } catch (_) {}
-        }
-        return fileConfig;
-      };
-
-      const resolveLaunchConfig = async ({ forceReload = false } = {}) => {
-        const loadedFileConfig = await loadFileConfig({ forceReload });
-        if (loadedFileConfig) return loadedFileConfig;
-        return normalizeConfig(window.CLAIRE_HUME_CONFIG || {});
-      };
-
-      // MEET CLAIRE is the only start control. It opens Kuranda page 2 / Claire trial.
-      meetClaireButton.addEventListener("click", async () => {
-        const config = await resolveLaunchConfig({ forceReload: true });
-        window.location.href = config.demoPageUrl || "./experience-claire.html?v=20260830-two-step-hosts-1";
+      if (!meetClaireButton) {
+        console.error("[Claire entry] meet-claire-button missing");
+        return;
+      }
+      meetClaireButton.addEventListener("click", (event) => {
+        try {
+          event.preventDefault();
+          event.stopPropagation();
+        } catch (e) {}
+        window.location.assign(CLAIRE_EXPERIENCE_URL);
       });
     })();
   </script>

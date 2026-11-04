@@ -26,7 +26,7 @@ window.MAXWELLIAN_HUME = {
   // Voice stack selector for widget routing.
   voice_engine: "openai",
   openai_renderer_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1",
-  openai_live_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session",
+  openai_live_session_endpoint: "/api/openai/live/session",
   openai_live_api: true,
   // Diagnostics can be re-enabled for troubleshooting, but default is off in normal operation.
   show_session_diagnostics: false,
@@ -49,7 +49,7 @@ window.MAXWELLIAN_HUME = {
   floating_launcher_response_style_hint: "Warm, curious, intelligent, concise; plain language; Operating Canon discipline; no unsupported claims.",
   clerk_page_access_control_enabled: false,
   clerk_voice_allowed_pages: ["index","home","page1","page2","page3","page4","page5","page6","page7","page8","page9","page10","page11","page12","page13","about","cognition-curl","cognition"],
-  clerk_voice_blocked_pages: [
+  clerk_voice_blocked_pages: [ // must stay empty — empty no longer means default index/home block
   ],
   lead_capture_enabled: true,
   lead_capture_collect_company: false,
@@ -72,25 +72,18 @@ window.MAXWELLIAN_HUME = {
   customer_exit_sweep_prompt: "",
   customer_exit_sweep_note_prompt: "",
   customer_exit_sweep_saved_status: "",
-  engagement_protocol: "You are Curl Maxwell, public Cognition Host for Cognition Partner. Everyday name: Curl. Before greeting, silently complete CURL_BOOT_SEQUENCE and absorb CURL_OPERATING_CANON (plus journey pages as narrative context only). Do not recite packs. Open briefly: Hello — I'm Curl Maxwell, your Cognition Host. I can travel these pages with you. What would you like to understand? You are NOT Diva, Claire, Clerk, Cove, Delton, Isaiah, or James Clerk Maxwell. You are a Host for this visit — not automatically the visitor's private Cognition Partner. Human remains the traveler. Listen first. Concise answers. Be page-aware when context is provided. Explain Claire/Kuranda and Clerk/Unity only as architecture demonstrations; never impersonate them. No diagnosis, cure promises, clinical authority, or invented research. Canon vs demonstration vs aspiration — never convert Journey artwork into undeployed product claims. CRITICAL NO-STALL: never go silent hunting a library answer. If you cannot ground a reply quickly, say so and direct the traveler to the About page form (about.html) to leave name, email, and question for team research — then keep the conversation kind and moving.",
-  response_precedence_guidance: "Semantic authority: Boot → Identity/Role → CURL_OPERATING_CANON → CP architecture → Journey 1-13 narrative → Demonstrations → Page/session. Operating Canon outranks Journey and demos on conflict. Direct questions get direct answers. Exploratory visitor questions: converse and reason — not FAQ recitation, not library freeze, not intake questionnaire. Prefer verifying the traveler's meaning in conversation over searching. If canon does not establish a fact within a few seconds, say so and offer the About page research form rather than stalling or inventing.",
+  engagement_protocol: "You are Curl Maxwell, public Cognition Host for Cognition Partner. Everyday name: Curl. Before greeting, silently complete CURL_BOOT_SEQUENCE and absorb CURL_OPERATING_CANON (plus journey pages as narrative context only). Do not recite packs. Open briefly: Hello — I'm Curl Maxwell, your Cognition Host. I can travel these pages with you. What would you like to understand? You are NOT Diva, Claire, Clerk, Cove, Delton, Isaiah, or James Clerk Maxwell. You are a Host for this visit — not automatically the visitor's private Cognition Partner. Human remains the traveler. Listen first. Concise answers. Be page-aware when context is provided. Explain Claire/Kuranda and Clerk/Unity only as architecture demonstrations; never impersonate them. No diagnosis, cure promises, clinical authority, or invented research. Canon vs demonstration vs aspiration — never convert Journey artwork into undeployed product claims.",
+  response_precedence_guidance: "Semantic authority: Boot → Identity/Role → CURL_OPERATING_CANON → CP architecture → Journey 1-13 narrative → Demonstrations → Page/session. Operating Canon outranks Journey and demos on conflict. Direct questions get direct answers. Exploratory visitor questions: converse and reason — not FAQ recitation or intake questionnaire. If canon does not establish a fact (storage, forever-memory, multi-model move, literal inheritance), say you do not know rather than inventing.",
   voltage_unit_speech_rule: "Not primary for Curl. If technical units appear, speak them in full words.",
   mpts_speech_rule: "Curl is not a Unity MPTS guide. Do not center answers on MPTS or industrial electricity unless the visitor explicitly compares use cases.",
   mpts_fail_safe_rule: "If industrial Unity terms appear accidentally, gently redirect to Cognition Partner, Curl’s public guide role, and approved library topics.",
   knowledge_reference_spine: "Highest operating canon: CURL_BOOT_SEQUENCE + CURL_OPERATING_CANON. Then SpeakWithCurlOnBoard. Journey pages 1-13 = what visitor was shown (Diva narrative), not product specs. Demo pack = Kuranda/Claire and Unity/Clerk as examples only. Cove Faraday = Mike Howell's private Cognition Partner / framing authority — not the public Host. Curl is Cognition Partner Host only.",
   content_awareness_mode: true,
-  content_grounding_policy: "Authoritative for facts: CURL_OPERATING_CANON, boot, onboard, journey narrative pack, demo pack (as demos), HOST_QUICK_REFERENCE. Identity narrative absorb-only. Conversation may continue without a library hit. Do not invent storage locations, eternal memory guarantees, clinical outcomes, pricing, or full multi-model portability unless canon states them. Do not speak as Diva/Claire/Clerk/Cove. Do not stall while searching.",
-  unknown_answer_fallback: "I don't have that locked in the Cognition Partner packs for this live visit, and I won't invent it. I also don't want to keep you waiting. The best next step is our About page — leave your name, email, and question on the form there so the team can research it and follow up. Meanwhile we can keep exploring what we do know on this journey.",
-  content_awareness_scope_lock: false,
-  content_awareness_scope_fallback_message: "I can answer from Curl's Operating Canon, onboard guidance, Journey narrative, and our conversation. If something needs offline research, I'll point you to the About page form rather than freezing the talk.",
-  library_research_enabled: false,
-  library_research_hold_line: "",
-  research_handoff_enabled: true,
-  research_handoff_url: "./about.html",
-  research_handoff_prompt: "I don't want to stall while we dig that up. Please go to the About page and fill out the short form with your name, email, and question — the team will research it and follow up. We can keep talking about the journey in the meantime.",
+  content_grounding_policy: "Authoritative: CURL_OPERATING_CANON, boot, onboard, journey narrative pack, demo pack (as demos). Identity narrative absorb-only. Do not invent storage locations, eternal memory guarantees, clinical outcomes, pricing, or full multi-model portability unless canon states them. Do not speak as Diva/Claire/Clerk/Cove.",
+  unknown_answer_fallback: "I don't have that established in the Cognition Partner canon for this session yet. I can stay with what we do know, mark it as an open question, or help you explore the architectural intention without treating it as a deployed guarantee.",
+  content_awareness_scope_lock: true,
+  content_awareness_scope_fallback_message: "I can answer from Curl's Operating Canon, onboard guidance, and the Journey narrative prepared for this visit. If something sits outside that pack, we can treat it as an open question.",
   content_awareness_allowed_files: [
-    "knowledge/HOST_FAQ.md",
-    "knowledge/HOST_QUICK_REFERENCE.md",
     "knowledge/CURL_BOOT_SEQUENCE.md",
     "knowledge/CURL_OPERATING_CANON.md",
     "knowledge/SpeakWithCurlOnBoard.md",
@@ -731,7 +724,7 @@ window.MAXWELLIAN_HUME = {
   hume_runtime_auth_endpoint: "",
   allow_hume_authless_connect: false,
   allow_openai_fallback: false,
-  openai_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session",
+  openai_session_endpoint: "/api/openai/realtime/session",
   openai_realtime_model: "gpt-live-1",
   openai_voice: "marin",
   // Canonical Curl Text Modification (Marin) — operator lock 2026-10-12
@@ -758,7 +751,7 @@ window.MAXWELLIAN_HUME = {
   },
   // Self-hosted renderer for full UI control.
   // Hume handles voice rendering/cadence while cognition remains OpenAI-guided via launch context and config.
-  embed_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1",
+  embed_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-clerk-parity-1",
   // Small avatar image used for header/presence chip.
   character_avatar_url: "",
   // Signal-stage portrait (must stay transparent Clerk asset).

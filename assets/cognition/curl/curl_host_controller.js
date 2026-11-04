@@ -11,7 +11,7 @@
 (function () {
   window.__CURL_HOST_CONTROLLER__ = true;
   const CURL_PKG = './assets/cognition/curl';
-  const CURL_V = '20261020-host-faq-1';
+  const CURL_V = '20261103-p1-unblock-index-1';
   const CARRY_KEY = 'cp_curl_page_carry_v1';
   const CARRY_TTL_MS = 120000; // resume window after journey navigation (page3→page1)
   const CURL_VOICE_ID = '23982fd1-d6a5-4acc-b396-2454b5715d43';
@@ -88,14 +88,14 @@
     const setPurposeState = (state) => {
       purposeBtn.dataset.purposeState = state;
       purposeBtn.classList.toggle('is-idle', state === 'idle');
-      purposeBtn.classList.toggle('is-selected', state === 'selected' || state === 'connecting' || state === 'speaking');
-      purposeBtn.classList.toggle('is-armed', state === 'selected' || state === 'connecting' || state === 'speaking');
+      purposeBtn.classList.toggle('is-selected', state === 'selected' || state === 'connecting');
+      purposeBtn.classList.toggle('is-armed', state === 'selected' || state === 'connecting');
       purposeBtn.classList.toggle('is-connecting', state === 'connecting');
       purposeBtn.classList.toggle('is-speaking', state === 'speaking');
       purposeBtn.classList.toggle('is-breathing', state === 'idle');
       purposeBtn.classList.toggle('is-ready-pulse', state === 'selected' || state === 'connecting');
       document.body.classList.toggle('curl-host-active', state !== 'idle');
-      document.body.classList.toggle('curl-is-selected', state === 'selected' || state === 'connecting' || state === 'speaking');
+      document.body.classList.toggle('curl-is-selected', state === 'selected' || state === 'connecting');
       document.body.classList.toggle('curl-is-connecting', state === 'connecting');
       document.body.classList.toggle('curl-is-speaking', state === 'speaking');
       // curl-rgb-state-bridge
@@ -371,24 +371,34 @@
       window.MAXWELLIAN_HUME.voice_engine = 'openai';
       window.MAXWELLIAN_HUME.openai_live_api = true;
       window.MAXWELLIAN_HUME.openai_voice = 'marin';
+      window.MAXWELLIAN_HUME.openai_auto_greeting_enabled = true;
       window.MAXWELLIAN_HUME.openai_realtime_model = 'gpt-live-1';
-      window.MAXWELLIAN_HUME.openai_session_endpoint = 'http://127.0.0.1:8600/api/openai/realtime/session';
-      window.MAXWELLIAN_HUME.openai_live_session_endpoint = 'http://127.0.0.1:8600/api/openai/live/session';
-      window.MAXWELLIAN_HUME.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-      window.MAXWELLIAN_HUME.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-      window.MAXWELLIAN_HUME.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
-      window.MAXWELLIAN_HUME.hume_embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261012-no-hume-curl-clerk-i1';
+      window.MAXWELLIAN_HUME.openai_session_endpoint = '/api/openai/realtime/session';
+      window.MAXWELLIAN_HUME.openai_live_session_endpoint = '/api/openai/live/session';
+      window.MAXWELLIAN_HUME.openai_renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-p3-working-1';
+      window.MAXWELLIAN_HUME.embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-p3-working-1';
+      window.MAXWELLIAN_HUME.renderer_url = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-p3-working-1';
+      window.MAXWELLIAN_HUME.hume_embed_url = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-p3-working-1';
       window.MAXWELLIAN_HUME.allow_openai_fallback = true;
 
       // Claire-like start gate + mic path
       window.MAXWELLIAN_HUME.use_unity_start_gate = true;
-      window.MAXWELLIAN_HUME.preflight_microphone_on_launch = false; // mic only on SELECT
+      window.MAXWELLIAN_HUME.preflight_microphone_on_launch = true; // mic only on SELECT
+      // Page1 is index.html — never inherit Unity widget default that blocks index/home.
+      window.MAXWELLIAN_HUME.clerk_voice_blocked_pages = [];
+      window.MAXWELLIAN_HUME.clerk_page_access_control_enabled = false;
+      window.MAXWELLIAN_HUME.clerk_voice_allowed_pages = [
+        'index', 'home', 'page1', 'page2', 'page3', 'page4', 'page5', 'page6',
+        'page7', 'page8', 'page9', 'page10', 'page11', 'page12', 'page13', 'about',
+        'cognition-curl', 'cognition'
+      ];
       window.MAXWELLIAN_HUME.character_name = 'Curl Maxwell';
       window.MAXWELLIAN_HUME.character_id = CURL_CHARACTER_ID;
       window.MAXWELLIAN_HUME.default_character_id = CURL_CHARACTER_ID;
       window.MAXWELLIAN_HUME.lock_character_to_default = true;
       window.MAXWELLIAN_HUME.voice_id = 'marin';
       window.MAXWELLIAN_HUME.openai_voice = 'marin';
+      window.MAXWELLIAN_HUME.openai_auto_greeting_enabled = true;
       window.MAXWELLIAN_HUME.config_id = CURL_CONFIG_ID;
       window.MAXWELLIAN_HUME.hume_voice_id = '';
       window.MAXWELLIAN_HUME.hume_config_id = CURL_CONFIG_ID;
@@ -615,6 +625,7 @@
           window.MAXWELLIAN_HUME.openai_voice_instruction_set = curlVoiceTextMod;
           window.MAXWELLIAN_HUME.openai_voice_style_hint = "Speak as Curl Maxwell (Marin): warm youthful mezzo-soprano Scottish elegance; subtle Edinburgh accent; spontaneous, intimate, intellectually alive; never robotic, promotional, childish, overly breathy, or artificially cheerful.";
           window.MAXWELLIAN_HUME.openai_voice = 'marin';
+      window.MAXWELLIAN_HUME.openai_auto_greeting_enabled = true;
           window.MAXWELLIAN_HUME.voice_id = 'marin';
         }
       } catch (e) {}
@@ -838,8 +849,8 @@ if (!launcher) {
             includePageContext: true,
             contextPayload: {
               voice_engine_preference: 'openai',
-              openai_live_session_endpoint: 'http://127.0.0.1:8600/api/openai/live/session',
-              openai_session_endpoint: 'http://127.0.0.1:8600/api/openai/realtime/session',
+              openai_live_session_endpoint: '/api/openai/live/session',
+              openai_session_endpoint: '/api/openai/realtime/session',
               openai_voice: 'marin',
               openai_realtime_model: 'gpt-live-1',
               organization: 'Cognition Partner',
@@ -986,7 +997,12 @@ purposeBtn.addEventListener('click', async () => {
             ) {
               return;
             }
-            console.info('[Curl] outside-page dismiss');
+            const _stOut = purposeBtn.dataset.purposeState || 'idle';
+            if (_stOut !== 'speaking') {
+              // Keep SELECT ready; do not kill host before speech (page1 break).
+              return;
+            }
+            console.info('[Curl] outside-page dismiss while speaking');
             endCurl();
           }
         },
@@ -1018,6 +1034,13 @@ purposeBtn.addEventListener('click', async () => {
           endCurl();
         });
         document.body.appendChild(chip);
+        try {
+          chip.style.left = '12px';
+          chip.style.right = 'auto';
+          chip.style.top = '12px';
+          chip.style.bottom = 'auto';
+          chip.style.transform = 'none';
+        } catch (e) {}
       }
     };
     window.setInterval(ensureCloseChip, 800);

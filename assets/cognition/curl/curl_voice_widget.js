@@ -20,6 +20,7 @@
  * character_id: curl-maxwell | host UI label: PURPOSE
  */
 (function () {
+  // CURL_WIDGET_AUDIO_FIX 20261103-curl-page2-parity-1
   let frameLoadTimer = null;
   let frameMessagingBound = false;
   let activeFrameOrigin = "";
@@ -993,10 +994,10 @@
     const candidates = [];
     // Claire/Clerk parity for local static hosts: absolute Unity auth FIRST.
     // LOCAL STATIC FIRST for python http.server testing
-    appendRuntimeAuthEndpointCandidate(candidates, "");
-    appendRuntimeAuthEndpointCandidate(candidates, ".json");
-    appendRuntimeAuthEndpointCandidate(candidates, "https://unityenergy.com");
-    appendRuntimeAuthEndpointCandidate(candidates, "https://unityenergy.com.json");
+    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth.json");
+    appendRuntimeAuthEndpointCandidate(candidates, "https://unityenergy.com/api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "https://unityenergy.com/api/hume/runtime-auth.json");
     appendRuntimeAuthEndpointCandidate(candidates, explicit);
     appendRuntimeAuthEndpointCandidate(candidates, globalOverride);
     if (typeof window !== "undefined") {
@@ -1006,21 +1007,21 @@
       );
     }
     // Local relative paths last (404 on python http.server)
-    appendRuntimeAuthEndpointCandidate(candidates, "..");
-    appendRuntimeAuthEndpointCandidate(candidates, "...json");
-    appendRuntimeAuthEndpointCandidate(candidates, "");
-    appendRuntimeAuthEndpointCandidate(candidates, ".json");
+    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth.json");
+    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth.json");
     const pathPrefixes = getRuntimeAuthEndpointPathPrefixes();
     pathPrefixes.forEach(function (prefix) {
-      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}`);
-      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}.json`);
+      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}/api/hume/runtime-auth`);
+      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}/api/hume/runtime-auth.json`);
     });
     return candidates;
   }
 
   function getRuntimeAuthEndpoint(cfgOrOptions) {
     const candidates = buildRuntimeAuthEndpointCandidates(cfgOrOptions);
-    return candidates[0] || "";
+    return candidates[0] || "/api/hume/runtime-auth";
   }
 
   function getRuntimeAuthEndpointDisplayLabel(cfgOrOptions, endpointOverride) {
@@ -1030,7 +1031,7 @@
         ? coerceText(window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT)
         : "") ||
       getRuntimeAuthEndpoint(cfgOrOptions);
-    if (!endpoint) return "";
+    if (!endpoint) return "/api/hume/runtime-auth";
     if (typeof window === "undefined" || !window.location) return endpoint;
     try {
       const parsed = new URL(endpoint, window.location.href);
@@ -1187,7 +1188,7 @@
       floating_launcher_response_style_hint: "",
       clerk_page_access_control_enabled: false,
       clerk_voice_allowed_pages: [],
-      clerk_voice_blocked_pages: ["index", "home"],
+      clerk_voice_blocked_pages: [], // CP Curl: page1 is index.html — never default-block index/home
       lead_capture_enabled: true,
       lead_capture_collect_company: true,
       lead_capture_prompt_intent: true,
@@ -1316,9 +1317,9 @@
       ],
       character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
       character_background_url: "",
-      embed_url: "/UnityEnergy/openai_renderer/index.html?v=20260423r5",
+      embed_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-restore-1",
       openai_session_endpoint: "/api/openai/realtime/session",
-      openai_realtime_model: "gpt-live-1",
+      openai_realtime_model: "gpt-4o-realtime-preview",
       openai_voice: "ash",
       allow_openai_fallback: false,
       allow_openai_voice_fallback: false,
@@ -1517,10 +1518,13 @@
   }
 
   function detectVoiceEngine(cfg) {
-    // OPENAI_LIVE_ONLY_20261019 — Hume removed from CP stack
-    try {
-      if (cfg && typeof cfg === "object") cfg.voice_engine = "openai";
-    } catch (_e) {}
+    const explicit = coerceText(
+      cfg && (cfg.voice_engine || cfg.voiceEngine || cfg.engine || cfg.voice_stack || cfg.voiceStack)
+    ).toLowerCase();
+    if (explicit === "hume" || explicit === "openai") return explicit;
+    const embedUrl = coerceText(cfg && cfg.embed_url).toLowerCase();
+    if (embedUrl.includes("/hume_renderer/")) return "hume";
+    if (embedUrl.includes("/openai_renderer/")) return "openai";
     return "openai";
   }
 
@@ -1535,7 +1539,7 @@
     );
     if (!explicitlyEnabled) return false;
     const embedUrl = coerceText(cfg && cfg.embed_url).toLowerCase();
-    if (embedUrl.includes("/openai_renderer/")) {
+    if (embedUrl.includes("/hume_renderer/")) {
       // Current self-hosted Hume renderer requires explicit runtime auth.
       return false;
     }
@@ -1544,7 +1548,7 @@
 
   function getVoiceEngineMissingConfigMessage(cfg) {
     if (detectVoiceEngine(cfg) === "hume") {
-      return "Voice session config is missing. Set Hume auth (accessToken/apiKey) in runtime auth and confirm embed_url points to openai_renderer.";
+      return "Voice session config is missing. Set Hume auth (accessToken/apiKey) in runtime auth and confirm embed_url points to hume_renderer.";
     }
     return "Voice session config is missing. Set openai_session_endpoint and openai_realtime_model in hume_character_config.js.";
   }
@@ -1585,10 +1589,10 @@
     if (explicit) return explicit;
     const embedUrl = coerceText(cfg && cfg.embed_url);
     if (embedUrl && /\/openai_renderer\//i.test(embedUrl)) return embedUrl;
-    if (embedUrl && /\/openai_renderer\//i.test(embedUrl)) {
-      return embedUrl.replace(/\/openai_renderer\//i, "/openai_renderer/");
+    if (embedUrl && /\/hume_renderer\//i.test(embedUrl)) {
+      return embedUrl.replace(/\/hume_renderer\//i, "/openai_renderer/");
     }
-    return "/UnityEnergy/openai_renderer/index.html?v=20260423r5";
+    return "./assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-restore-1";
   }
 
   function buildOpenAiFallbackConfig(cfg) {
@@ -4219,7 +4223,9 @@
     const enabled = Boolean(source.clerk_page_access_control_enabled);
     const allowedPages = normalizeClerkPageSlugList(source.clerk_voice_allowed_pages);
     const configuredBlockedPages = normalizeClerkPageSlugList(source.clerk_voice_blocked_pages);
-    const blockedPages = configuredBlockedPages.length > 0 ? configuredBlockedPages : ["index", "home"];
+    // Explicit empty array means "block nothing". Do NOT fall back to index/home —
+    // that silently killed Curl on CP page1 (index.html) while page2+ worked.
+    const blockedPages = configuredBlockedPages;
     return {
       enabled: enabled,
       allowedPages: allowedPages,
@@ -8277,23 +8283,13 @@
   }
 
   function shouldUseUnityStartGate(cfg) {
-    // CP OpenAI Live: never block config handshake behind Unity start gate.
-    // Gate was stranding renderer on "Waiting for session config…".
-    if (cfg && cfg.force_unity_start_gate === true) return true;
-    if (cfg && cfg.use_unity_start_gate === false) return false;
-    try {
-      if (typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE) return false;
-      if (cfg && (cfg.openai_live_api || cfg.voice_engine === "openai" || cfg.openai_session_endpoint || cfg.openai_live_session_endpoint)) {
-        return false;
-      }
-    } catch (_e) {}
     if (cfg && typeof cfg.force_unity_start_gate === "boolean") {
       return cfg.force_unity_start_gate;
     }
     if (cfg && typeof cfg.use_unity_start_gate === "boolean") {
       return cfg.use_unity_start_gate;
     }
-    return false;
+    return isAppleMobileWebKitBrowser();
   }
   function shouldRunMicPreflight(cfg) {
     if (cfg && typeof cfg.preflight_microphone_on_launch === "boolean") {
@@ -9436,26 +9432,6 @@
 
   function buildWidgetConnectConfig(cfg, launchSession) {
     if (!cfg || typeof cfg !== "object") return null;
-    /* CP_OPENAI_LIVE_ACTIVATE_20261019 */
-    try {
-      const apiBase = (typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE)
-        ? String(window.CP_OPENAI_LIVE_API_BASE).replace(/\/+$/, "")
-        : "";
-      if (apiBase) {
-        cfg.openai_session_endpoint = apiBase + "/api/openai/realtime/session";
-        cfg.openai_live_session_endpoint = apiBase + "/api/openai/live/session";
-        cfg.session_endpoint = cfg.openai_session_endpoint;
-        cfg.live_session_endpoint = cfg.openai_live_session_endpoint;
-      }
-      cfg.voice_engine = "openai";
-      cfg.openai_live_api = true;
-      if (!cfg.openai_realtime_model && !cfg.openai_model && !cfg.model) {
-        cfg.openai_realtime_model = "gpt-live-1";
-      }
-      if (!cfg.openai_voice && !cfg.voice_id && !cfg.voice) {
-        cfg.openai_voice = "marin";
-      }
-    } catch (_e) {}
     if (detectVoiceEngine(cfg) === "hume") {
       return buildHumeConnectConfig(cfg, launchSession);
     }
@@ -9464,10 +9440,10 @@
       "/api/openai/realtime/session";
     const model =
       coerceText(cfg.openai_realtime_model || cfg.openai_model || cfg.model) ||
-      "gpt-live-1";
+      "gpt-4o-realtime-preview";
     const voice =
       coerceText(cfg.openai_voice || cfg.voice_id || cfg.voice) ||
-      "marin";
+      "ash";
     if (!sessionEndpoint || !model) return null;
     const connectConfig = {
       sessionEndpoint: sessionEndpoint,
@@ -9885,7 +9861,7 @@
     );
     clearFrameLoadTimer();
     const cfg = getRuntimeVoiceConfig();
-    if (unityStartGatePending && !(typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE) && detectVoiceEngine(getRuntimeVoiceConfig()) !== "openai") {
+    if (unityStartGatePending) {
       const gateMessage =
         coerceText(unityStartGatePreflightStatusMessage) ||
         "Tap Waiting on Clerk to begin speaking with Clerk.";
@@ -9922,7 +9898,6 @@
     setCompactSquareFrameSize();
     setPanelMode("centered");
     const readyRetrySchedule = getUnityStartGateRetrySchedule(cfg, "ready");
-    expandWidgetFromClient();
     scheduleIframeStartConversationRetry(
       readyRetrySchedule.maxAttempts,
       readyRetrySchedule.delayMs
@@ -10237,13 +10212,28 @@
   }
 
   function composeEmbedUrl(cfg, launchSession) {
-    const rawUrl = (cfg.embed_url || "").trim();
-    if (!rawUrl) return "";
+    // Curl OpenAI Live: accept any of the renderer URL keys (page1 had empty embed_url only).
+    let rawUrl = (
+      (cfg && (cfg.embed_url || cfg.openai_embed_url || cfg.openai_renderer_url || cfg.renderer_url || cfg.hume_embed_url)) ||
+      ""
+    ).toString().trim();
+    if (!rawUrl) {
+      rawUrl = "./assets/cognition/curl/openai_renderer/index.html";
+    }
+    // Fix common mangled concatenations from older page stamps
+    rawUrl = rawUrl.replace(/parity-1index\.html/g, "parity-1&_=");
+    if (rawUrl.indexOf("openai_renderer") === -1 && /curl/i.test(String((cfg && cfg.character_id) || (cfg && cfg.character_name) || ""))) {
+      rawUrl = "./assets/cognition/curl/openai_renderer/index.html";
+    }
     let url;
     try {
       url = new URL(rawUrl, window.location.href);
     } catch (_err) {
-      return "";
+      try {
+        url = new URL("./assets/cognition/curl/openai_renderer/index.html", window.location.href);
+      } catch (_err2) {
+        return "";
+      }
     }
 
     const params = url.searchParams;
@@ -11179,7 +11169,7 @@
             class="clerk-voice-frame"
             title="Meet with Clerk"
             loading="lazy"
-            allow="microphone *; autoplay *; camera *; clipboard-read; clipboard-write"
+            allow="microphone; autoplay; clipboard-read; clipboard-write"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
       </div>
@@ -11232,10 +11222,38 @@
       } catch (_e) {}
 
       let cfg = getRuntimeVoiceConfig();
+      // CURL HARD LOCK: never take Hume path on Cognition Partner host.
+      try {
+        cfg = cfg && typeof cfg === "object" ? cfg : {};
+        cfg.voice_engine = "openai";
+        cfg.openai_live_api = true;
+        cfg.openai_voice = cfg.openai_voice || "marin";
+        cfg.voice_id = "marin";
+        cfg.openai_realtime_model = cfg.openai_realtime_model || "gpt-live-1";
+        cfg.openai_session_endpoint = cfg.openai_session_endpoint || "/api/openai/realtime/session";
+        cfg.openai_live_session_endpoint = cfg.openai_live_session_endpoint || "/api/openai/live/session";
+        const rurl = "./assets/cognition/curl/openai_renderer/index.html";
+        cfg.embed_url = cfg.embed_url || cfg.openai_embed_url || cfg.openai_renderer_url || rurl;
+        cfg.openai_embed_url = cfg.openai_embed_url || cfg.embed_url;
+        cfg.openai_renderer_url = cfg.openai_renderer_url || cfg.embed_url;
+        cfg.renderer_url = cfg.renderer_url || cfg.embed_url;
+        cfg.hume_embed_url = cfg.embed_url;
+        cfg.hume_runtime_auth_endpoint = "";
+        cfg.allow_hume_authless_connect = false;
+        cfg.allow_openai_fallback = true;
+        cfg.openai_auto_greeting_enabled = true;
+        if (window.MAXWELLIAN_HUME && window.MAXWELLIAN_HUME.opening_line) {
+          cfg.openai_auto_greeting_text = window.MAXWELLIAN_HUME.opening_line;
+          cfg.opening_line = window.MAXWELLIAN_HUME.opening_line;
+          cfg.session_context = window.MAXWELLIAN_HUME.session_context || cfg.session_context;
+          cfg.system_prompt_text = window.MAXWELLIAN_HUME.system_prompt_text || cfg.system_prompt_text;
+        }
+        window.MAXWELLIAN_HUME = Object.assign({}, window.MAXWELLIAN_HUME || {}, cfg);
+      } catch (_lockErr) {}
       clearUnityStartGateLaunchTimers();
       noteUnityStartGateProgress("start-button-tap");
       setLaunchEmblemVisible(true);
-      setWidgetFrameVisible(true);
+      setWidgetFrameVisible(false);
       setStatus("Requesting microphone access…", false, true);
       try {
         await requestTopLevelMicAccess();
@@ -11292,8 +11310,8 @@
         return;
       }
       setCompactSquareFrameSize();
-      setWidgetFrameVisible(true);
-      setLaunchEmblemVisible(false);
+      setWidgetFrameVisible(false);
+      setLaunchEmblemVisible(true);
       expandWidgetFromClient();
       const tapRetrySchedule = getUnityStartGateRetrySchedule(cfg, "tap");
       scheduleIframeStartConversationRetry(
@@ -11533,27 +11551,14 @@
         unityStartGatePreflightAttempted &&
         !unityStartGatePendingRequiresRecovery
     );
-    // OpenAI Live needs the iframe alive through connect + conversation.
-    // Hiding it (opacity 0) during SELECT/connect is a common "almost starts" failure.
-    const openaiLive = true;
     const shouldExposeRenderer = Boolean(
-      openaiLive
-        ? true
-        : ((visible || keepRendererVisibleAfterStartGateTap) && !hasConversationStarted)
+      (visible || keepRendererVisibleAfterStartGateTap) &&
+        !hasConversationStarted
     );
     const shouldShowSignalStage = Boolean(hasConversationStarted || preConversationSignalVisible);
     if (frame) {
       frame.style.opacity = shouldExposeRenderer ? "1" : "0";
       frame.style.pointerEvents = shouldExposeRenderer ? "auto" : "none";
-      if (openaiLive) {
-        frame.style.visibility = "visible";
-        frame.style.display = "";
-        // keep a real box so WebRTC/mic paths are not treated as detached
-        if (!frame.style.width || frame.style.width === "0px") {
-          frame.style.width = "";
-          frame.style.height = "";
-        }
-      }
     }
     if (!shouldShowSignalStage || (!visible && !preConversationSignalVisible)) {
       setSignalStageVisible(false);
@@ -12143,27 +12148,6 @@
 
     activeFrameOrigin = getEmbedOrigin(url);
     frame.src = url;
-    /* CP_FORCE_CONFIG_AFTER_SRC_20261019 */
-    window.setTimeout(function () {
-      try {
-        const cfgNow = getRuntimeVoiceConfig();
-        unityStartGatePending = false;
-        const ok = sendWidgetConfig(cfgNow, pendingLaunchSession);
-        if (ok) {
-          expandWidgetFromClient();
-          scheduleIframeStartConversationRetry(30, 200);
-        }
-      } catch (_e) {}
-    }, 400);
-    window.setTimeout(function () {
-      try {
-        const cfgNow = getRuntimeVoiceConfig();
-        unityStartGatePending = false;
-        sendWidgetConfig(cfgNow, pendingLaunchSession);
-        expandWidgetFromClient();
-        scheduleIframeStartConversationRetry(30, 200);
-      } catch (_e) {}
-    }, 1200);
     trackExperimentTelemetryEvent(
       "iframe-src-set",
       {

@@ -92,22 +92,35 @@
   }
 
   function markAssistantActivity(holdMs) {
+    const wasSpeaking = Boolean(state.assistantSpeaking);
     state.assistantSpeaking = true;
     state.listeningForUser = false;
     syncVoiceActivity();
-    clearAssistantActivityTimer();
-    const holdDuration = Number.isFinite(holdMs)
-      ? Math.max(300, Math.floor(holdMs))
-      : ASSISTANT_ACTIVITY_DEFAULT_HOLD_MS;
+    if (!wasSpeaking) {
+      try {
+        postToParent("audio_start", { speaker: "assistant", source: "openai-live-renderer" });
+        postToParent("assistant_speak_start", { speaker: "assistant" });
+      } catch (_ePost) {}
+    }
+    if (assistantActivityTimer) {
+      window.clearTimeout(assistantActivityTimer);
+      assistantActivityTimer = null;
+    }
+    const hold = Number.isFinite(holdMs) ? Math.max(250, Math.floor(holdMs)) : ASSISTANT_ACTIVITY_RELEASE_MS;
     assistantActivityTimer = window.setTimeout(function () {
-      if (state.activeResponseAudio.size > 0 || state.remoteAudioPlaying) {
-        markAssistantActivity(holdDuration);
-        return;
-      }
+      assistantActivityTimer = null;
+      if (state.activeResponseAudio.size > 0 || state.remoteAudioPlaying) return;
+      const was = Boolean(state.assistantSpeaking);
       state.assistantSpeaking = false;
-      state.listeningForUser = state.connected;
+      state.listeningForUser = true;
       syncVoiceActivity();
-    }, holdDuration);
+      if (was) {
+        try {
+          postToParent("audio_end", { speaker: "assistant", source: "openai-live-renderer" });
+          postToParent("assistant_speak_end", { speaker: "assistant" });
+        } catch (_ePost2) {}
+      }
+    }, hold);
   }
 
   function getLaunchContextTokens(config, launchSession) {
@@ -175,7 +188,9 @@
     if (!state.dataChannel || state.dataChannel.readyState !== "open") return false;
     if (!isIntentionalInterruptTranscript(transcriptText)) return false;
     try {
-      state.dataChannel.send(JSON.stringify({ type: "response.cancel" }));
+      if (!isLiveApi(state.config)) {
+        state.dataChannel.send(JSON.stringify({ type: "response.cancel" }));
+      }
       return true;
     } catch (_err) {
       return false;
@@ -299,12 +314,29 @@
     window.parent.postMessage({ type: type, payload: payload }, "*");
   }
 
+  function sanitizeVoiceErrorMessage(rawMessage) {
+    let message = coerceText(rawMessage);
+    if (!message) return "Unknown OpenAI live voice error.";
+    if (/Unsupported method|Error code:\s*501|do not support this operation/i.test(message)) {
+      return (
+        "Voice API server is not running (HTTP 501 on POST). " +
+        "Run: python3 openai_realtime_server.py --port 8600 from UnityEnergy, " +
+        "then use http://127.0.0.1:8600/UnityEnergy/contact-us.html"
+      );
+    }
+    if (message.indexOf("<html") >= 0 || message.indexOf("<!DOCTYPE") >= 0) {
+      return "Voice session endpoint returned an HTML error page. Start openai_realtime_server.py on port 8600.";
+    }
+    return message;
+  }
+
   function postError(errorLike) {
-    const message =
+    const message = sanitizeVoiceErrorMessage(
       coerceText(errorLike && errorLike.message) ||
-      coerceText(typeof errorLike === "string" ? errorLike : "") ||
-      "Unknown OpenAI realtime error.";
-    postToParent("error", { message: message, source: "openai-realtime-renderer" });
+        coerceText(typeof errorLike === "string" ? errorLike : "") ||
+        "Unknown OpenAI live voice error."
+    );
+    postToParent("error", { message: message, source: "openai-live-renderer" });
     setStatus(message, true);
   }
 
@@ -368,14 +400,21 @@
   }
 
   function resolveVoice(config) {
-    const candidate = coerceText(
-      config && (
-        config.voice ||
-        config.openai_voice ||
-        config.voice_id
-      )
-    );
-    return candidate || DEFAULT_VOICE;
+    const looksLikeUuid = function (value) {
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(coerceText(value));
+    };
+    const preferred = [
+      config && config.openai_voice,
+      config && config.voice,
+      config && config.voice_id,
+    ];
+    for (let i = 0; i < preferred.length; i += 1) {
+      const candidate = coerceText(preferred[i]);
+      if (!candidate) continue;
+      if (looksLikeUuid(candidate)) continue; // Hume IDs are not OpenAI voice names
+      return candidate;
+    }
+    return DEFAULT_VOICE;
   }
 
   function resolveSessionEndpoint(config) {
@@ -398,21 +437,38 @@
       if (candidates.includes(normalized)) return;
       candidates.push(normalized);
     };
-    pushCandidate(primary);
-    if (!primary.startsWith("/")) {
-      return candidates;
-    }
     const locationHost = coerceText(window.location && window.location.hostname).toLowerCase();
     const locationPort = coerceText(window.location && window.location.port);
     const locationProtocol = coerceText(window.location && window.location.protocol) || "http:";
-    if (locationHost && locationPort && locationPort !== "8600") {
-      pushCandidate(`${locationProtocol}//${locationHost}:8600${primary}`);
-      if (locationProtocol !== "http:") {
-        pushCandidate(`http://${locationHost}:8600${primary}`);
+    const isLocalHost =
+      locationHost === "127.0.0.1" ||
+      locationHost === "localhost" ||
+      locationHost === "0.0.0.0" ||
+      locationHost.endsWith(".local");
+    const onVoicePort = locationPort === "8600";
+    // Local CP pages are often served by plain http.server (:8001) which 501s POST.
+    // Prefer the OpenAI Live/Realtime process on :8600 FIRST.
+    if (isLocalHost && !onVoicePort) {
+      if (primary.startsWith("/")) {
+        pushCandidate(`http://127.0.0.1:8600${primary}`);
+        pushCandidate(`http://localhost:8600${primary}`);
+        if (locationHost && locationHost !== "127.0.0.1" && locationHost !== "localhost") {
+          pushCandidate(`${locationProtocol}//${locationHost}:8600${primary}`);
+        }
+      } else if (/\/api\/openai\//.test(primary) && primary.indexOf(":8600") === -1) {
+        // absolute but wrong origin — still try 8600 path
+        try {
+          const u = new URL(primary, window.location.href);
+          pushCandidate(`http://127.0.0.1:8600${u.pathname}`);
+          pushCandidate(`http://localhost:8600${u.pathname}`);
+        } catch (_e) {}
       }
     }
-    pushCandidate(`http://127.0.0.1:8600${primary}`);
-    pushCandidate(`http://localhost:8600${primary}`);
+    pushCandidate(primary);
+    if (primary.startsWith("/") && isLocalHost) {
+      pushCandidate(`http://127.0.0.1:8600${primary}`);
+      pushCandidate(`http://localhost:8600${primary}`);
+    }
     return candidates;
   }
   function appendInstructionBlock(blocks, value) {
@@ -593,15 +649,26 @@
       const instructions = buildDelayedFollowupInstructions(state.config, state.launchSession);
       if (!instructions) return;
       try {
-        state.dataChannel.send(
-          JSON.stringify({
-            type: "response.create",
-            response: {
-              modalities: ["text", "audio"],
-              instructions: instructions,
-            },
-          })
-        );
+        if (isLiveApi(state.config)) {
+          state.dataChannel.send(
+            JSON.stringify({
+              type: "session.instructions.append",
+              event_id: "live_followup_1",
+              delegation_id: null,
+              content: instructions,
+            })
+          );
+        } else {
+          state.dataChannel.send(
+            JSON.stringify({
+              type: "response.create",
+              response: {
+                modalities: ["text", "audio"],
+                instructions: instructions,
+              },
+            })
+          );
+        }
         state.hasSentDelayedFollowup = true;
       } catch (_err) {}
     }, delayMs);
@@ -614,19 +681,37 @@
     const instructions = buildAutoGreetingInstructions(state.config, state.launchSession);
     if (!instructions) return;
     try {
-      state.dataChannel.send(
-        JSON.stringify({
-          type: "response.create",
-          response: {
-            modalities: ["text", "audio"],
-            instructions: instructions,
-          },
-        })
-      );
+      const forceSpeak =
+        "Speak first NOW. The visitor already activated you. " +
+        "Ignore any prior rule to remain silent after Diva or wait for engagement — activation already happened. " +
+        "Deliver your short opening introduction in character, then listen. ";
+      if (isLiveApi(state.config)) {
+        // GPT-Live (Clerk gold path): instructions.append only.
+        // Nested response.create { response: ... } yields: Unknown parameter: 'response'.
+        state.dataChannel.send(
+          JSON.stringify({
+            type: "session.instructions.append",
+            event_id: "claire_greeting_1",
+            delegation_id: null,
+            content: forceSpeak + instructions,
+          })
+        );
+      } else {
+        state.dataChannel.send(
+          JSON.stringify({
+            type: "response.create",
+            response: {
+              modalities: ["audio", "text"],
+              instructions: forceSpeak + instructions,
+            },
+          })
+        );
+      }
       state.hasSentInitialGreeting = true;
-      scheduleDelayedFollowupIfNeeded();
+      try { scheduleDelayedFollowupIfNeeded(); } catch (_e) {}
     } catch (_err) {}
   }
+
 
   async function createEphemeralSession(config, launchSession) {
     const endpoint = resolveSessionEndpoint(config);
@@ -695,6 +780,252 @@
     );
     if (fromConfig) return fromConfig;
     return "";
+  }
+
+
+  async function startRealtimeSession() {
+    if (state.connecting || state.connected) return;
+    if (!state.config || typeof state.config !== "object") return;
+    if (!window.RTCPeerConnection) {
+      postError("WebRTC is not available in this browser.");
+      return;
+    }
+
+    state.connecting = true;
+    state.hasSentInitialGreeting = false;
+    state.hasSentDelayedFollowup = false;
+    state.hasReceivedUserInput = false;
+    state.assistantSpeaking = false;
+    state.listeningForUser = false;
+    state.assistantSpeechStartedAt = 0;
+    state.remoteAudioPlaying = false;
+    try { clearDelayedFollowupTimer(); } catch (_e) {}
+    try { clearAssistantActivityTimer(); } catch (_e) {}
+    try { syncVoiceActivity(); } catch (_e) {}
+    setStatus("Connecting Clerk voice session…", false);
+    setOrbActive(true);
+
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.mediaStream = mediaStream;
+
+      const peerConnection = new RTCPeerConnection();
+      state.peerConnection = peerConnection;
+
+      const remoteAudio = document.createElement("audio");
+      remoteAudio.autoplay = true;
+      remoteAudio.playsInline = true;
+      state.remoteAudio = remoteAudio;
+      remoteAudio.addEventListener("playing", function () {
+        state.remoteAudioPlaying = true;
+        markAssistantActivity(2200);
+      });
+      remoteAudio.addEventListener("pause", function () {
+        state.remoteAudioPlaying = false;
+        markAssistantActivity(800);
+      });
+      remoteAudio.addEventListener("ended", function () {
+        state.remoteAudioPlaying = false;
+        markAssistantActivity(800);
+      });
+
+      peerConnection.ontrack = function (event) {
+        const stream =
+          event.streams && event.streams[0]
+            ? event.streams[0]
+            : new MediaStream([event.track]);
+        remoteAudio.srcObject = stream;
+        remoteAudio.play().catch(function () {});
+        postToParent("audio_output", { type: "remote_track" });
+      };
+
+      mediaStream.getTracks().forEach(function (track) {
+        peerConnection.addTrack(track, mediaStream);
+      });
+
+      const dataChannel = peerConnection.createDataChannel("oai-events");
+      state.dataChannel = dataChannel;
+      dataChannel.addEventListener("open", function () {
+        try { sendSessionUpdate(); } catch (_e) {}
+        window.setTimeout(function () {
+          try { sendAutoGreetingIfNeeded(); } catch (_e) {}
+        }, 250);
+        setStatus("Vesper Live connection ready.", false);
+      });
+      dataChannel.addEventListener("message", function (messageEvent) {
+        let parsed = null;
+        try {
+          parsed = JSON.parse(messageEvent.data);
+        } catch (_err) {
+          return;
+        }
+        handleRealtimeEvent(parsed);
+      });
+      dataChannel.addEventListener("error", function (event) {
+        postError(event && event.error ? event.error : "Live data channel error.");
+      });
+
+      const offer = await peerConnection.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: false,
+      });
+      await peerConnection.setLocalDescription(offer);
+
+      await new Promise(function (resolve) {
+        let settled = false;
+        const finish = function () {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        if (peerConnection.iceGatheringState === "complete") {
+          finish();
+          return;
+        }
+        peerConnection.addEventListener("icecandidate", function (event) {
+          if (!event.candidate) finish();
+        });
+        peerConnection.addEventListener("icegatheringstatechange", function () {
+          if (peerConnection.iceGatheringState === "complete") finish();
+        });
+        setTimeout(finish, 6000);
+      });
+      await new Promise(function (r) { setTimeout(r, 200); });
+
+      const offerSdp =
+        (peerConnection.localDescription && peerConnection.localDescription.sdp) || "";
+      if (!coerceText(offerSdp) || offerSdp.length < 200 || offerSdp.indexOf("m=audio") < 0) {
+        throw new Error(
+          "WebRTC SDP offer incomplete (len=" + offerSdp.length + "). Allow microphone and retry."
+        );
+      }
+
+      const liveEndpoint =
+        coerceText(state.config.openai_live_session_endpoint) ||
+        coerceText(state.config.live_session_endpoint) ||
+        (typeof DEFAULT_LIVE_SESSION_ENDPOINT !== "undefined"
+          ? DEFAULT_LIVE_SESSION_ENDPOINT
+          : "/api/openai/live/session");
+      const instructions = buildInstructionText(state.config, state.launchSession);
+      const model = resolveModel(state.config) || "gpt-live-1";
+      const voice = resolveVoice(state.config) || "vesper";
+      // Same-origin relative /api/... fails with HTTP 501 under plain http.server (e.g. :8001).
+      // Try 8600 candidates so voice works even if the page was opened on another local port.
+      const liveEndpointCandidates = buildSessionEndpointCandidates(liveEndpoint);
+      const liveBody = JSON.stringify({
+        sdp: offerSdp,
+        model: model,
+        voice: voice,
+        instructions: instructions,
+      });
+      let liveResponse = null;
+      let liveText = "";
+      let livePayload = null;
+      let lastLiveError = null;
+      for (let i = 0; i < liveEndpointCandidates.length; i += 1) {
+        const endpointCandidate = liveEndpointCandidates[i];
+        try {
+          const response = await fetch(endpointCandidate, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: liveBody,
+          });
+          const responseText = await response.text();
+          let parsed = null;
+          try {
+            parsed = JSON.parse(responseText);
+          } catch (_e) {
+            parsed = null;
+          }
+          const raw = coerceText(responseText);
+          const looksLikeStaticServer =
+            response.status === 501 ||
+            /Unsupported method|Error code:\s*501|do not support this operation/i.test(raw) ||
+            (response.status >= 400 && raw.indexOf("<html") >= 0 && !parsed);
+          if (looksLikeStaticServer) {
+            lastLiveError = {
+              status: response.status,
+              text: raw,
+              endpoint: endpointCandidate,
+              static: true,
+            };
+            continue;
+          }
+          liveResponse = response;
+          liveText = responseText;
+          livePayload = parsed;
+          break;
+        } catch (fetchErr) {
+          lastLiveError = {
+            status: 0,
+            text: coerceText(fetchErr && fetchErr.message) || "fetch failed",
+            endpoint: endpointCandidate,
+            static: false,
+          };
+        }
+      }
+      if (!liveResponse) {
+        const hint =
+          "Voice API server is not running (got HTTP 501 on POST). " +
+          "In Terminal run: cd ~/eestream/eWebmaster/UnityEnergy && python3 openai_realtime_server.py --port 8600 " +
+          "then open http://127.0.0.1:8600/UnityEnergy/contact-us.html (not plain http.server).";
+        if (lastLiveError && lastLiveError.static) {
+          throw new Error(hint);
+        }
+        throw new Error(
+          hint +
+            (lastLiveError && lastLiveError.text
+              ? " Last attempt: " + lastLiveError.text
+              : "")
+        );
+      }
+      if (!liveResponse.ok) {
+        let msg =
+          (livePayload && livePayload.error && (livePayload.error.message || livePayload.error)) ||
+          "";
+        const raw = coerceText(liveText);
+        // python -m http.server returns HTML 501 for POST — wrong process.
+        if (!msg && /Unsupported method|Error code: 501|do not support this operation/i.test(raw)) {
+          msg =
+            "Voice API server is not running (got HTTP 501 on POST). " +
+            "In Terminal run: cd ~/eestream/eWebmaster/UnityEnergy && python3 openai_realtime_server.py --port 8600 " +
+            "then open http://127.0.0.1:8600/UnityEnergy/contact-us.html (not plain http.server).";
+        } else if (!msg && raw && raw.indexOf("<html") >= 0) {
+          msg =
+            "Live session endpoint returned HTML instead of JSON (HTTP " +
+            liveResponse.status +
+            "). Start openai_realtime_server.py on port 8600.";
+        } else if (!msg) {
+          msg = raw || ("Live session create failed (" + liveResponse.status + ").");
+        }
+        throw new Error(typeof msg === "string" ? msg : JSON.stringify(msg));
+      }
+      const answerSdp =
+        (livePayload && livePayload.transport && livePayload.transport.sdp) ||
+        (livePayload && livePayload.sdp) ||
+        "";
+      if (!coerceText(answerSdp)) {
+        throw new Error("Live session response missing SDP answer.");
+      }
+      await peerConnection.setRemoteDescription({ type: "answer", sdp: answerSdp });
+      state.connected = true;
+      state.connecting = false;
+      state.listeningForUser = true;
+      setOrbActive(true);
+      setStatus("Vesper Live connected.", false);
+      postToParent("session_started", {
+        session_id:
+          livePayload && livePayload.session && livePayload.session.id
+            ? livePayload.session.id
+            : "",
+      });
+      emitExpandedFrame();
+    } catch (err) {
+      state.connecting = false;
+      state.connected = false;
+      postError(err);
+      try { closeRealtimeSession(); } catch (_e) {}
+    }
   }
 
   function closeRealtimeSession() {
@@ -853,183 +1184,35 @@
     }
   }
 
+  function isLiveApi(config) {
+    const cfg = config && typeof config === "object" ? config : state.config || {};
+    if (cfg.openai_live_api === false) return false;
+    const model = coerceText(cfg.openai_realtime_model || cfg.model || "");
+    if (String(model).indexOf("gpt-live") >= 0) return true;
+    if (coerceText(cfg.openai_live_session_endpoint) || coerceText(cfg.live_session_endpoint)) return true;
+    // Default Clerk eWebmaster path uses Live.
+    return true;
+  }
+
   function sendSessionUpdate() {
     if (!state.dataChannel || state.dataChannel.readyState !== "open") return;
+    // Live: session already configured server-side with Vesper + instructions.
+    if (isLiveApi(state.config)) return;
     const config = state.config && typeof state.config === "object" ? state.config : {};
     const launchSession = state.launchSession && typeof state.launchSession === "object" ? state.launchSession : {};
-    const sessionUpdate = {
-      type: "session.update",
-      session: {
-        voice: resolveVoice(config),
-        instructions: buildInstructionText(config, launchSession),
-        modalities: ["text", "audio"],
-        turn_detection: normalizeTurnDetection(config.turnDetection),
-        input_audio_transcription: { model: "gpt-4o-mini-transcribe" },
-      },
-    };
-    const temperature = Number(config && config.temperature);
-    if (Number.isFinite(temperature)) {
-      sessionUpdate.session.temperature = Math.max(0, Math.min(2, temperature));
-    }
     try {
-      state.dataChannel.send(JSON.stringify(sessionUpdate));
+      state.dataChannel.send(
+        JSON.stringify({
+          type: "session.update",
+          session: {
+            voice: resolveVoice(config),
+            instructions: buildInstructionText(config, launchSession),
+          },
+        })
+      );
     } catch (_err) {}
   }
 
-  async function startRealtimeSession() {
-    if (state.connecting || state.connected) return;
-    if (!state.config || typeof state.config !== "object") return;
-    if (!window.RTCPeerConnection) {
-      postError("WebRTC is not available in this browser.");
-      return;
-    }
-
-    state.connecting = true;
-    state.hasSentInitialGreeting = false;
-    state.hasSentDelayedFollowup = false;
-    state.hasReceivedUserInput = false;
-    state.assistantSpeaking = false;
-    state.listeningForUser = false;
-    state.assistantSpeechStartedAt = 0;
-    state.remoteAudioPlaying = false;
-    clearDelayedFollowupTimer();
-    clearAssistantActivityTimer();
-    syncVoiceActivity();
-    setStatus("Connecting Claire voice session…", false);
-    setOrbActive(true);
-
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      state.mediaStream = mediaStream;
-
-      // GPT-Live path: gpt-live-1 + Vesper (British male natural voice).
-      // Server POSTs SDP to OpenAI /v1/live/sessions (API key stays server-side).
-      const peerConnection = new RTCPeerConnection();
-      state.peerConnection = peerConnection;
-
-      const remoteAudio = document.createElement("audio");
-      remoteAudio.autoplay = true;
-      remoteAudio.playsInline = true;
-      state.remoteAudio = remoteAudio;
-      remoteAudio.addEventListener("playing", function () {
-        state.remoteAudioPlaying = true;
-        markAssistantActivity(2200);
-      });
-      remoteAudio.addEventListener("pause", function () {
-        state.remoteAudioPlaying = false;
-        if (state.activeResponseAudio && state.activeResponseAudio.size > 0) return;
-        markAssistantActivity(ASSISTANT_ACTIVITY_RELEASE_MS);
-      });
-      remoteAudio.addEventListener("ended", function () {
-        state.remoteAudioPlaying = false;
-        if (state.activeResponseAudio && state.activeResponseAudio.size > 0) return;
-        markAssistantActivity(ASSISTANT_ACTIVITY_RELEASE_MS);
-      });
-
-      peerConnection.ontrack = function (event) {
-        const stream = event.streams && event.streams[0]
-          ? event.streams[0]
-          : new MediaStream([event.track]);
-        remoteAudio.srcObject = stream;
-        remoteAudio.play().catch(function () {});
-        postToParent("audio_output", { type: "remote_track" });
-      };
-
-      mediaStream.getTracks().forEach(function (track) {
-        peerConnection.addTrack(track, mediaStream);
-      });
-
-      const dataChannel = peerConnection.createDataChannel("oai-events");
-      state.dataChannel = dataChannel;
-      dataChannel.addEventListener("open", function () {
-        window.setTimeout(function () {
-          try { sendAutoGreetingIfNeeded(); } catch (_e) {}
-        }, 200);
-        setStatus("Willow Live connection ready.", false);
-      });
-      dataChannel.addEventListener("message", function (messageEvent) {
-        let parsed = null;
-        try {
-          parsed = JSON.parse(messageEvent.data);
-        } catch (_err) {
-          return;
-        }
-        handleRealtimeEvent(parsed);
-      });
-      dataChannel.addEventListener("error", function (event) {
-        postError(event && event.error ? event.error : "Live data channel error.");
-      });
-
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
-      await new Promise(function (resolve) {
-        if (peerConnection.iceGatheringState === "complete") return resolve();
-        const done = function () {
-          if (peerConnection.iceGatheringState === "complete") {
-            peerConnection.removeEventListener("icegatheringstatechange", done);
-            resolve();
-          }
-        };
-        peerConnection.addEventListener("icegatheringstatechange", done);
-        setTimeout(resolve, 1500);
-      });
-
-      const liveEndpoint =
-        coerceText(state.config.openai_live_session_endpoint) ||
-        coerceText(state.config.live_session_endpoint) ||
-        (typeof DEFAULT_LIVE_SESSION_ENDPOINT !== "undefined" ? DEFAULT_LIVE_SESSION_ENDPOINT : "") ||
-        "/api/openai/live/session";
-      const instructions = buildInstructionText(state.config, state.launchSession);
-      const model = resolveModel(state.config) || "gpt-live-1";
-      const voice = resolveVoice(state.config) || "vesper";
-
-      const liveResponse = await fetch(liveEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sdp: peerConnection.localDescription && peerConnection.localDescription.sdp,
-          model: model,
-          voice: voice,
-          instructions: instructions,
-        }),
-      });
-      const liveText = await liveResponse.text();
-      let livePayload = null;
-      try { livePayload = JSON.parse(liveText); } catch (_e) { livePayload = null; }
-      if (!liveResponse.ok) {
-        const msg =
-          (livePayload && livePayload.error && (livePayload.error.message || livePayload.error)) ||
-          liveText ||
-          ("Live session create failed (" + liveResponse.status + ").");
-        throw new Error(typeof msg === "string" ? msg : JSON.stringify(msg));
-      }
-      const answerSdp =
-        (livePayload && livePayload.transport && livePayload.transport.sdp) ||
-        (livePayload && livePayload.sdp) ||
-        "";
-      if (!coerceText(answerSdp)) {
-        throw new Error("Live session response missing SDP answer.");
-      }
-      await peerConnection.setRemoteDescription({
-        type: "answer",
-        sdp: answerSdp,
-      });
-
-      state.connected = true;
-      state.connecting = false;
-      state.listeningForUser = true;
-      emitExpandedFrame();
-      setStatus("Listening…", false);
-      syncVoiceActivity();
-    } catch (error) {
-      state.connected = false;
-      state.connecting = false;
-      state.listeningForUser = false;
-      setOrbActive(false);
-      postError(error);
-      closeRealtimeSession();
-    }
-  }
 
   function applyConfig(payload) {
     state.config = payload && typeof payload === "object" ? Object.assign({}, payload) : {};

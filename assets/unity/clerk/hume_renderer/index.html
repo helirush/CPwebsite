@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" style="background-color:transparent!important;">
+
+<head>
+  <meta charset=" UTF-8" />
+  <link rel="icon" type="image/png" href="../unity-icon-circle-192.png?ue_icon=20260701a" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + React + TS</title>
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      const originalConsoleError = console.error;
+      let lastForwardedSignature = "";
+      let lastForwardedAt = 0;
+
+      function buildErrorPayload(args) {
+        if (!Array.isArray(args) || args.length === 0) return null;
+        const firstArg = args[0];
+        if (firstArg && typeof firstArg === "object") {
+          const type = String(firstArg.type || "").toLowerCase();
+          if (type === "mic_error" || type === "socket_error" || type === "audio_error" || type === "error") {
+            return {
+              type: type || "error",
+              message: String(firstArg.message || firstArg.detail || firstArg.reason || "Voice session error"),
+            };
+          }
+        }
+        const flattened = args
+          .map(function (value) {
+            if (value == null) return "";
+            if (typeof value === "string") return value;
+            if (typeof value === "object") {
+              try {
+                return JSON.stringify(value);
+              } catch (_err) {
+                return String(value);
+              }
+            }
+            return String(value);
+          })
+          .join(" ")
+          .toLowerCase();
+        if (/mic_error|socket_error|audio_error/.test(flattened)) {
+          const inferredType = /mic_error/.test(flattened)
+            ? "mic_error"
+            : /socket_error/.test(flattened)
+              ? "socket_error"
+              : "audio_error";
+          return {
+            type: inferredType,
+            message:
+              inferredType === "mic_error"
+                ? "Microphone permission denied"
+                : inferredType === "socket_error"
+                  ? "Voice connection error"
+                  : "Audio initialization error",
+          };
+        }
+        return null;
+      }
+
+      function maybeForwardToParent(payload) {
+        if (!payload || typeof payload !== "object") return;
+        if (!window.parent || window.parent === window || typeof window.parent.postMessage !== "function") return;
+        const signature = `${payload.type || "error"}::${payload.message || ""}`;
+        const now = Date.now();
+        if (signature === lastForwardedSignature && now - lastForwardedAt < 1200) return;
+        lastForwardedSignature = signature;
+        lastForwardedAt = now;
+        window.parent.postMessage(
+          {
+            type: payload.type || "error",
+            message: payload.message || "Voice session error",
+          },
+          "*"
+        );
+      }
+
+      console.error = function () {
+        try {
+          const args = Array.prototype.slice.call(arguments);
+          const payload = buildErrorPayload(args);
+          if (payload) maybeForwardToParent(payload);
+        } catch (_err) {}
+        return originalConsoleError.apply(this, arguments);
+      };
+    })();
+  </script>
+  <script>
+    (function () {
+      if (typeof window === "undefined") return;
+      const postProbe = function (eventName, detail) {
+        if (!window.parent || window.parent === window || typeof window.parent.postMessage !== "function") return;
+        try {
+          window.parent.postMessage(
+            {
+              type: "maxwellian_probe",
+              payload: {
+                source: "hume_renderer",
+                event: String(eventName || "").toLowerCase(),
+                at: new Date().toISOString(),
+                detail: detail && typeof detail === "object" ? detail : {},
+              },
+            },
+            "*"
+          );
+        } catch (_err) {}
+      };
+
+      postProbe("renderer-bootstrap-init", {
+        href: window.location.href,
+        user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+      });
+
+      if (navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === "function") {
+        const nativeGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+        navigator.mediaDevices.getUserMedia = function (constraints) {
+          postProbe("media-getusermedia-request", {
+            has_audio: Boolean(constraints && constraints.audio),
+            has_video: Boolean(constraints && constraints.video),
+          });
+          return nativeGetUserMedia(constraints)
+            .then(function (stream) {
+              postProbe("media-getusermedia-success", {
+                audio_tracks: stream && typeof stream.getAudioTracks === "function" ? stream.getAudioTracks().length : 0,
+                video_tracks: stream && typeof stream.getVideoTracks === "function" ? stream.getVideoTracks().length : 0,
+              });
+              return stream;
+            })
+            .catch(function (error) {
+              postProbe("media-getusermedia-failed", {
+                name: error && error.name ? String(error.name) : "",
+                message: error && error.message ? String(error.message) : "",
+              });
+              throw error;
+            });
+        };
+      }
+
+      let maxwellianVoiceOverrideId = "";
+      const normalizeVoiceOverride = function (value) {
+        return typeof value === "string" ? value.trim() : "";
+      };
+      try {
+        const initialParams = new URL(window.location.href).searchParams;
+        maxwellianVoiceOverrideId =
+          normalizeVoiceOverride(initialParams.get("voice_id")) ||
+          normalizeVoiceOverride(initialParams.get("voiceId")) ||
+          normalizeVoiceOverride(initialParams.get("hume_voice_id")) ||
+          "";
+        if (maxwellianVoiceOverrideId) {
+          postProbe("voice-override-seeded-from-url", { voice_id: maxwellianVoiceOverrideId });
+        }
+      } catch (_err) {}
+      window.addEventListener("message", function (event) {
+        const data = event && event.data && typeof event.data === "object" ? event.data : null;
+        if (!data || String(data.type || "").toLowerCase() !== "update_config") return;
+        const payload = data.payload && typeof data.payload === "object" ? data.payload : {};
+        const nextVoiceId =
+          normalizeVoiceOverride(payload.voiceId) ||
+          normalizeVoiceOverride(payload.voice_id) ||
+          normalizeVoiceOverride(payload.hume_voice_id) ||
+          normalizeVoiceOverride(payload.openai_voice);
+        if (nextVoiceId) {
+          maxwellianVoiceOverrideId = nextVoiceId;
+          postProbe("voice-override-received", { voice_id: nextVoiceId });
+        }
+      });
+
+      const appendVoiceIdToHumeSocketUrl = function (url) {
+        const rawUrl = typeof url === "string" ? url : "";
+        if (!rawUrl || !maxwellianVoiceOverrideId) return rawUrl;
+        if (!/\/v0\/evi\/chat/i.test(rawUrl)) return rawUrl;
+        try {
+          const parsed = new URL(rawUrl);
+          if (!parsed.searchParams.get("voice_id")) {
+            parsed.searchParams.set("voice_id", maxwellianVoiceOverrideId);
+          }
+          return parsed.toString();
+        } catch (_err) {
+          return rawUrl;
+        }
+      };
+
+      const NativeWebSocket = window.WebSocket;
+      if (typeof NativeWebSocket === "function") {
+        window.WebSocket = function () {
+          const args = Array.prototype.slice.call(arguments);
+          const requestedUrl = args.length > 0 ? String(args[0] || "") : "";
+          const effectiveUrl = appendVoiceIdToHumeSocketUrl(requestedUrl);
+          if (args.length > 0) {
+            args[0] = effectiveUrl;
+          }
+          postProbe("websocket-create", {
+            url: effectiveUrl,
+            requested_url: requestedUrl,
+            voice_override_id: maxwellianVoiceOverrideId || "",
+          });
+          const ws = new NativeWebSocket(...args);
+          ws.addEventListener("open", function () {
+            postProbe("websocket-open", { url: effectiveUrl });
+          });
+          ws.addEventListener("close", function (event) {
+            postProbe("websocket-close", {
+              url: effectiveUrl,
+              code: event && Number.isFinite(Number(event.code)) ? Number(event.code) : null,
+              reason: event && event.reason ? String(event.reason) : "",
+              was_clean: Boolean(event && event.wasClean),
+            });
+          });
+          ws.addEventListener("error", function () {
+            postProbe("websocket-error", { url: effectiveUrl });
+          });
+          return ws;
+        };
+        window.WebSocket.prototype = NativeWebSocket.prototype;
+        Object.setPrototypeOf(window.WebSocket, NativeWebSocket);
+      }
+
+      const NativeAudioContext = window.AudioContext || window.webkitAudioContext;
+      if (typeof NativeAudioContext === "function") {
+        const WrappedAudioContext = function () {
+          postProbe("audio-context-create", {});
+          const ctx = new NativeAudioContext(...arguments);
+          if (ctx && typeof ctx.addEventListener === "function") {
+            ctx.addEventListener("statechange", function () {
+              postProbe("audio-context-statechange", { state: String(ctx.state || "") });
+            });
+          }
+          return ctx;
+        };
+        WrappedAudioContext.prototype = NativeAudioContext.prototype;
+        if (window.AudioContext) {
+          window.AudioContext = WrappedAudioContext;
+        } else if (window.webkitAudioContext) {
+          window.webkitAudioContext = WrappedAudioContext;
+        }
+      }
+
+      window.addEventListener("error", function (event) {
+        postProbe("renderer-window-error", {
+          message: event && event.message ? String(event.message) : "",
+          filename: event && event.filename ? String(event.filename) : "",
+          lineno: event && Number.isFinite(Number(event.lineno)) ? Number(event.lineno) : null,
+        });
+      });
+      window.addEventListener("unhandledrejection", function (event) {
+        const reason = event && event.reason ? event.reason : null;
+        postProbe("renderer-unhandled-rejection", {
+          reason:
+            reason && typeof reason === "object"
+              ? String(reason.message || reason.name || "")
+              : String(reason || ""),
+        });
+      });
+      window.addEventListener("DOMContentLoaded", function () {
+        postProbe("renderer-dom-ready", {});
+      });
+      window.addEventListener("load", function () {
+        postProbe("renderer-window-load", {});
+      });
+    })();
+  </script>
+  <script type="module" crossorigin src="./assets/index-C5TD8TH6-r1.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-fIou9ls5.css">
+</head>
+
+<body style="background-color:transparent!important;">
+  <div id="root"></div>
+</body>
+
+</html>

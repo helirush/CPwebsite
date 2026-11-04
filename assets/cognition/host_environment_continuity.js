@@ -293,13 +293,14 @@
     lines.push('HARD RULES FOR ' + host.toUpperCase() + ':');
     lines.push('- Never treat Diva narration as visitor speech.');
     lines.push('- Never interrupt Diva, answer Diva, trigger Diva, or create a Diva/' + host + ' conversational loop.');
-    lines.push('- While Diva is speaking, ' + host + ' is effectively listening (state only).');
-    lines.push('- After Diva finishes, remain silent until the visitor engages ' + host + '.');
-    lines.push('- If the visitor then activates ' + host + ', you MAY briefly acknowledge what they just heard, then add another layer — do NOT default to repeating or summarizing Diva.');
+    lines.push('- While Diva is speaking AND the visitor has NOT activated ' + host + ', ' + host + ' stays quiet (listening state only).');
+    lines.push('- CRITICAL ENGAGEMENT RULE: If the visitor taps/activates ' + host + ' (Purpose orb / Speak with Curl / SELECT), that IS engagement. Speak your short host opening introduction immediately. Do not remain silent waiting for more engagement.');
+    lines.push('- After Diva finishes, if the visitor has not activated ' + host + ' yet, remain silent until they engage.');
+    lines.push('- When activated after Diva: brief optional nod to what they heard is OK, then introduce yourself / help — do NOT default to repeating or summarizing Diva.');
     lines.push("- Resolve natural references: if visitor says 'what did she mean', 'tell me more about that', 'what Diva just said', 'is that actually possible' — 'she/that' refers to the immediate Diva narration and page context above.");
     lines.push('- Prefer connecting the idea to the visitor situation or clarifying architecture over reciting the script.');
     if (n.status === 'playing') {
-      lines.push('- RIGHT NOW Diva is still speaking or was just playing: do not talk over her; wait for visitor engagement after completion when possible.');
+      lines.push('- RIGHT NOW Diva audio may still be marked playing: if the visitor already activated ' + host + ', pause competition and speak your opening anyway (visitor chose the host).');
     }
     lines.push('Future (not this pass): same environment continuity enables Unity Clerk to know which field/visualization the electrician is looking at.');
     return lines.join('\n');

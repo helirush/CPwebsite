@@ -978,21 +978,21 @@
         coerceText(window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT)
       );
     }
-    appendRuntimeAuthEndpointCandidate(candidates, "..");
-    appendRuntimeAuthEndpointCandidate(candidates, "...json");
-    appendRuntimeAuthEndpointCandidate(candidates, "");
-    appendRuntimeAuthEndpointCandidate(candidates, ".json");
+    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "../api/hume/runtime-auth.json");
+    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth");
+    appendRuntimeAuthEndpointCandidate(candidates, "/api/hume/runtime-auth.json");
     const pathPrefixes = getRuntimeAuthEndpointPathPrefixes();
     pathPrefixes.forEach(function (prefix) {
-      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}`);
-      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}.json`);
+      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}/api/hume/runtime-auth`);
+      appendRuntimeAuthEndpointCandidate(candidates, `${prefix}/api/hume/runtime-auth.json`);
     });
     return candidates;
   }
 
   function getRuntimeAuthEndpoint(cfgOrOptions) {
     const candidates = buildRuntimeAuthEndpointCandidates(cfgOrOptions);
-    return candidates[0] || "";
+    return candidates[0] || "/api/hume/runtime-auth";
   }
 
   function getRuntimeAuthEndpointDisplayLabel(cfgOrOptions, endpointOverride) {
@@ -1002,7 +1002,7 @@
         ? coerceText(window.MAXWELLIAN_ACTIVE_RUNTIME_AUTH_ENDPOINT)
         : "") ||
       getRuntimeAuthEndpoint(cfgOrOptions);
-    if (!endpoint) return "";
+    if (!endpoint) return "/api/hume/runtime-auth";
     if (typeof window === "undefined" || !window.location) return endpoint;
     try {
       const parsed = new URL(endpoint, window.location.href);
@@ -1159,7 +1159,7 @@
       floating_launcher_response_style_hint: "",
       clerk_page_access_control_enabled: false,
       clerk_voice_allowed_pages: [],
-      clerk_voice_blocked_pages: ["index", "home"],
+      clerk_voice_blocked_pages: [], // Claire/Curl parity: never default-block index/home
       lead_capture_enabled: true,
       lead_capture_collect_company: true,
       lead_capture_prompt_intent: true,
@@ -1290,7 +1290,7 @@
       character_background_url: "",
       embed_url: "/UnityEnergy/openai_renderer/index.html?v=20260423r5",
       openai_session_endpoint: "/api/openai/realtime/session",
-      openai_realtime_model: "gpt-live-1",
+      openai_realtime_model: "gpt-4o-realtime-preview",
       openai_voice: "ash",
       allow_openai_fallback: false,
       allow_openai_voice_fallback: false,
@@ -1489,10 +1489,13 @@
   }
 
   function detectVoiceEngine(cfg) {
-    // OPENAI_LIVE_ONLY_20261019 — Hume removed from CP stack
-    try {
-      if (cfg && typeof cfg === "object") cfg.voice_engine = "openai";
-    } catch (_e) {}
+    const explicit = coerceText(
+      cfg && (cfg.voice_engine || cfg.voiceEngine || cfg.engine || cfg.voice_stack || cfg.voiceStack)
+    ).toLowerCase();
+    if (explicit === "hume" || explicit === "openai") return explicit;
+    const embedUrl = coerceText(cfg && cfg.embed_url).toLowerCase();
+    if (embedUrl.includes("/hume_renderer/")) return "hume";
+    if (embedUrl.includes("/openai_renderer/")) return "openai";
     return "openai";
   }
 
@@ -1507,7 +1510,7 @@
     );
     if (!explicitlyEnabled) return false;
     const embedUrl = coerceText(cfg && cfg.embed_url).toLowerCase();
-    if (embedUrl.includes("/openai_renderer/")) {
+    if (embedUrl.includes("/hume_renderer/")) {
       // Current self-hosted Hume renderer requires explicit runtime auth.
       return false;
     }
@@ -1516,7 +1519,7 @@
 
   function getVoiceEngineMissingConfigMessage(cfg) {
     if (detectVoiceEngine(cfg) === "hume") {
-      return "Voice session config is missing. Set Hume auth (accessToken/apiKey) in runtime auth and confirm embed_url points to openai_renderer.";
+      return "Voice session config is missing. Set Hume auth (accessToken/apiKey) in runtime auth and confirm embed_url points to hume_renderer.";
     }
     return "Voice session config is missing. Set openai_session_endpoint and openai_realtime_model in hume_character_config.js.";
   }
@@ -1557,8 +1560,8 @@
     if (explicit) return explicit;
     const embedUrl = coerceText(cfg && cfg.embed_url);
     if (embedUrl && /\/openai_renderer\//i.test(embedUrl)) return embedUrl;
-    if (embedUrl && /\/openai_renderer\//i.test(embedUrl)) {
-      return embedUrl.replace(/\/openai_renderer\//i, "/openai_renderer/");
+    if (embedUrl && /\/hume_renderer\//i.test(embedUrl)) {
+      return embedUrl.replace(/\/hume_renderer\//i, "/openai_renderer/");
     }
     return "/UnityEnergy/openai_renderer/index.html?v=20260423r5";
   }
@@ -4191,7 +4194,8 @@
     const enabled = Boolean(source.clerk_page_access_control_enabled);
     const allowedPages = normalizeClerkPageSlugList(source.clerk_voice_allowed_pages);
     const configuredBlockedPages = normalizeClerkPageSlugList(source.clerk_voice_blocked_pages);
-    const blockedPages = configuredBlockedPages.length > 0 ? configuredBlockedPages : ["index", "home"];
+    // Curl lesson: empty blocked list means block nothing (do not invent index/home).
+    const blockedPages = configuredBlockedPages;
     return {
       enabled: enabled,
       allowedPages: allowedPages,
@@ -8237,23 +8241,13 @@
   }
 
   function shouldUseUnityStartGate(cfg) {
-    // CP OpenAI Live: never block config handshake behind Unity start gate.
-    // Gate was stranding renderer on "Waiting for session config…".
-    if (cfg && cfg.force_unity_start_gate === true) return true;
-    if (cfg && cfg.use_unity_start_gate === false) return false;
-    try {
-      if (typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE) return false;
-      if (cfg && (cfg.openai_live_api || cfg.voice_engine === "openai" || cfg.openai_session_endpoint || cfg.openai_live_session_endpoint)) {
-        return false;
-      }
-    } catch (_e) {}
     if (cfg && typeof cfg.force_unity_start_gate === "boolean") {
       return cfg.force_unity_start_gate;
     }
     if (cfg && typeof cfg.use_unity_start_gate === "boolean") {
       return cfg.use_unity_start_gate;
     }
-    return false;
+    return isAppleMobileWebKitBrowser();
   }
   function shouldRunMicPreflight(cfg) {
     if (cfg && typeof cfg.preflight_microphone_on_launch === "boolean") {
@@ -9381,26 +9375,6 @@
 
   function buildWidgetConnectConfig(cfg, launchSession) {
     if (!cfg || typeof cfg !== "object") return null;
-    /* CP_OPENAI_LIVE_ACTIVATE_20261019 */
-    try {
-      const apiBase = (typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE)
-        ? String(window.CP_OPENAI_LIVE_API_BASE).replace(/\/+$/, "")
-        : "";
-      if (apiBase) {
-        cfg.openai_session_endpoint = apiBase + "/api/openai/realtime/session";
-        cfg.openai_live_session_endpoint = apiBase + "/api/openai/live/session";
-        cfg.session_endpoint = cfg.openai_session_endpoint;
-        cfg.live_session_endpoint = cfg.openai_live_session_endpoint;
-      }
-      cfg.voice_engine = "openai";
-      cfg.openai_live_api = true;
-      if (!cfg.openai_realtime_model && !cfg.openai_model && !cfg.model) {
-        cfg.openai_realtime_model = "gpt-live-1";
-      }
-      if (!cfg.openai_voice && !cfg.voice_id && !cfg.voice) {
-        cfg.openai_voice = "willow";
-      }
-    } catch (_e) {}
     if (detectVoiceEngine(cfg) === "hume") {
       return buildHumeConnectConfig(cfg, launchSession);
     }
@@ -9409,10 +9383,10 @@
       "/api/openai/realtime/session";
     const model =
       coerceText(cfg.openai_realtime_model || cfg.openai_model || cfg.model) ||
-      "gpt-live-1";
+      "gpt-4o-realtime-preview";
     const voice =
       coerceText(cfg.openai_voice || cfg.voice_id || cfg.voice) ||
-      "willow";
+      "ash";
     if (!sessionEndpoint || !model) return null;
     const connectConfig = {
       sessionEndpoint: sessionEndpoint,
@@ -9691,18 +9665,18 @@
   function getMicrophoneRecoveryMessage(payloadOrMessage) {
     const signature = getMicrophoneErrorSignature(payloadOrMessage);
     if (/secure context|insecure|https|localhost/.test(signature)) {
-      return "Microphone requires a secure page. Open this site with https:// or localhost, then tap Waiting on Clerk again.";
+      return "Microphone requires a secure page. Open this site with https:// or localhost, then tap Claire is ready again.";
     }
     if (/notfounderror|no microphone|device not found|audio input/.test(signature)) {
-      return "No microphone was found. Connect a microphone, allow access for this site, then tap Waiting on Clerk again.";
+      return "No microphone was found. Connect a microphone, allow access for this site, then tap Claire is ready again.";
     }
     if (/notreadableerror|could not start audio source|hardware|busy/.test(signature)) {
-      return "Microphone is busy or unavailable. Close other apps using the microphone, then tap Waiting on Clerk again.";
+      return "Microphone is busy or unavailable. Close other apps using the microphone, then tap Claire is ready again.";
     }
     if (isLikelyMicrophonePermissionError(signature)) {
-      return "Microphone access is blocked. Tap Waiting on Clerk, allow access for this site in browser settings, and try again.";
+      return "Microphone access is blocked. Tap Claire is ready, allow access for this site in browser settings, and try again.";
     }
-    return "Microphone is unavailable. Tap Waiting on Clerk, verify browser microphone access, and try again.";
+    return "Microphone is unavailable. Tap Claire is ready, verify browser microphone access, and try again.";
   }
   function getWidgetIframeLaunchDiagnostic() {
     const frame = document.getElementById("clerkVoiceFrame");
@@ -9830,10 +9804,10 @@
     );
     clearFrameLoadTimer();
     const cfg = getRuntimeVoiceConfig();
-    if (unityStartGatePending && !(typeof window !== "undefined" && window.CP_OPENAI_LIVE_API_BASE) && detectVoiceEngine(getRuntimeVoiceConfig()) !== "openai") {
+    if (unityStartGatePending) {
       const gateMessage =
         coerceText(unityStartGatePreflightStatusMessage) ||
-        "Tap Waiting on Clerk to begin speaking with Clerk.";
+        "Tap Claire is ready to begin speaking with Claire.";
       const startBtn = document.getElementById("clerkVoiceStartBtn");
       if (startBtn) startBtn.textContent = START_BUTTON_WAITING_LABEL;
       setStatus(gateMessage, unityStartGatePendingRequiresRecovery, true);
@@ -9867,7 +9841,6 @@
     setCompactSquareFrameSize();
     setPanelMode("centered");
     const readyRetrySchedule = getUnityStartGateRetrySchedule(cfg, "ready");
-    expandWidgetFromClient();
     scheduleIframeStartConversationRetry(
       readyRetrySchedule.maxAttempts,
       readyRetrySchedule.delayMs
@@ -9878,12 +9851,12 @@
       if (hasConversationStarted) return;
       unityStartGatePending = true;
       unityStartGatePendingRequiresRecovery = false;
-      unityStartGatePreflightStatusMessage = "Tap Waiting on Clerk to begin speaking with Clerk.";
+      unityStartGatePreflightStatusMessage = "Tap Claire is ready to begin speaking with Claire.";
       const retryBtn = document.getElementById("clerkVoiceStartBtn");
       if (retryBtn) retryBtn.textContent = START_BUTTON_WAITING_LABEL;
       setStartButtonVisible(true);
       setLaunchEmblemVisible(true);
-      setStatus("Tap Waiting on Clerk to begin speaking with Clerk.", false, true);
+      setStatus("Tap Claire is ready to begin speaking with Claire.", false, true);
     }, getUnityStartGatePostReadyPromptDelayMs(cfg));
     setSessionDiagnostics(
       buildSessionDiagnostics(
@@ -11123,7 +11096,7 @@
             class="clerk-voice-frame"
             title="Meet with Clerk"
             loading="lazy"
-            allow="microphone *; autoplay *; camera *; clipboard-read; clipboard-write"
+            allow="microphone; autoplay; clipboard-read; clipboard-write"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
       </div>
@@ -11179,7 +11152,7 @@
       clearUnityStartGateLaunchTimers();
       noteUnityStartGateProgress("start-button-tap");
       setLaunchEmblemVisible(true);
-      setWidgetFrameVisible(true);
+      setWidgetFrameVisible(false);
       setStatus("Requesting microphone access…", false, true);
       try {
         await requestTopLevelMicAccess();
@@ -11236,8 +11209,8 @@
         return;
       }
       setCompactSquareFrameSize();
-      setWidgetFrameVisible(true);
-      setLaunchEmblemVisible(false);
+      setWidgetFrameVisible(false);
+      setLaunchEmblemVisible(true);
       expandWidgetFromClient();
       const tapRetrySchedule = getUnityStartGateRetrySchedule(cfg, "tap");
       scheduleIframeStartConversationRetry(
@@ -11477,16 +11450,14 @@
         unityStartGatePreflightAttempted &&
         !unityStartGatePendingRequiresRecovery
     );
-    // OpenAI Live needs the iframe alive through connect + conversation.
-    // Hiding it (opacity 0) during SELECT/connect is a common "almost starts" failure.
-    const openaiLive = true;
-    const shouldExposeRenderer = true; // CP OpenAI Live: keep iframe active through connect
+    const shouldExposeRenderer = Boolean(
+      (visible || keepRendererVisibleAfterStartGateTap) &&
+        !hasConversationStarted
+    );
     const shouldShowSignalStage = Boolean(hasConversationStarted || preConversationSignalVisible);
     if (frame) {
-      frame.style.opacity = "1";
-      frame.style.pointerEvents = "auto";
-      frame.style.visibility = "visible";
-      frame.style.display = "";
+      frame.style.opacity = shouldExposeRenderer ? "1" : "0";
+      frame.style.pointerEvents = shouldExposeRenderer ? "auto" : "none";
     }
     if (!shouldShowSignalStage || (!visible && !preConversationSignalVisible)) {
       setSignalStageVisible(false);
@@ -11692,7 +11663,7 @@
     unityStartGateStallSequence += 1;
     const stallSequence = unityStartGateStallSequence;
     const frameSrc = document.getElementById("clerkVoiceFrame")?.src || "";
-    const waitingMessage = "Still waiting on Clerk. Tap Waiting on Clerk again if needed.";
+    const waitingMessage = "Still waiting on Clerk. Tap Claire is ready again if needed.";
     const retryLimit = getUnityStartGateStallRetryLimit(cfg);
     const authlessHumeMode =
       detectVoiceEngine(cfg) === "hume" && allowsHumeAuthlessConnect(cfg);
@@ -11714,7 +11685,7 @@
       }
       const retryMessage =
         exceededRetryLimit && authlessHumeMode
-          ? "Clerk is still connecting on this device. Tap Waiting on Clerk again in a moment."
+          ? "Clerk is still connecting on this device. Tap Claire is ready again in a moment."
           : waitingMessage;
       const retryBtn = document.getElementById("clerkVoiceStartBtn");
       if (retryBtn) retryBtn.textContent = START_BUTTON_WAITING_LABEL;
@@ -11851,7 +11822,7 @@
       setStartButtonVisible(false);
       setLaunchEmblemVisible(false);
       setSessionDiagnostics("", false);
-      setStatus("Meet with Clerk is currently unavailable in this release.", false, true);
+      setStatus("Meet with Claire is currently unavailable in this release.", false, true);
       return;
     }
     clearUnityStartGateLaunchTimers();
@@ -11917,8 +11888,8 @@
     unityStartGatePendingRequiresRecovery = preflightFailed;
     if (unityStartGatePending) {
       unityStartGatePreflightStatusMessage = preflightFailed
-        ? preflightStatusMessage || "Microphone access is blocked. Tap Waiting on Clerk and allow access for this site."
-        : "Tap Waiting on Clerk to begin speaking with Clerk.";
+        ? preflightStatusMessage || "Microphone access is blocked. Tap Claire is ready and allow access for this site."
+        : "Tap Claire is ready to begin speaking with Claire.";
     }
     setWidgetFrameVisible(false);
     const policyDecision =
@@ -12076,27 +12047,6 @@
 
     activeFrameOrigin = getEmbedOrigin(url);
     frame.src = url;
-    /* CP_FORCE_CONFIG_AFTER_SRC_20261019 */
-    window.setTimeout(function () {
-      try {
-        const cfgNow = getRuntimeVoiceConfig();
-        unityStartGatePending = false;
-        const ok = sendWidgetConfig(cfgNow, pendingLaunchSession);
-        if (ok) {
-          expandWidgetFromClient();
-          scheduleIframeStartConversationRetry(30, 200);
-        }
-      } catch (_e) {}
-    }, 400);
-    window.setTimeout(function () {
-      try {
-        const cfgNow = getRuntimeVoiceConfig();
-        unityStartGatePending = false;
-        sendWidgetConfig(cfgNow, pendingLaunchSession);
-        expandWidgetFromClient();
-        scheduleIframeStartConversationRetry(30, 200);
-      } catch (_e) {}
-    }, 1200);
     trackExperimentTelemetryEvent(
       "iframe-src-set",
       {

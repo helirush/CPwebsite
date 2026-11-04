@@ -405,12 +405,6 @@
   }
 
   function resolveSessionEndpoint(config) {
-    try {
-      const parentBase = (window.parent && window.parent.CP_OPENAI_LIVE_API_BASE) ? window.parent.CP_OPENAI_LIVE_API_BASE : "";
-      const localBase = window.CP_OPENAI_LIVE_API_BASE || "";
-      const apiBase = String(parentBase || localBase || "").replace(/\/+$/, "");
-      if (apiBase) return apiBase + "/api/openai/realtime/session";
-    } catch (_e) {}
     const candidate = coerceText(
       config && (
         config.sessionEndpoint ||
@@ -642,15 +636,26 @@
       const instructions = buildDelayedFollowupInstructions(state.config, state.launchSession);
       if (!instructions) return;
       try {
-        state.dataChannel.send(
-          JSON.stringify({
-            type: "response.create",
-            response: {
-              modalities: ["text", "audio"],
-              instructions: instructions,
-            },
-          })
-        );
+        if (isLiveApi(state.config)) {
+          state.dataChannel.send(
+            JSON.stringify({
+              type: "session.instructions.append",
+              event_id: "live_followup_1",
+              delegation_id: null,
+              content: instructions,
+            })
+          );
+        } else {
+          state.dataChannel.send(
+            JSON.stringify({
+              type: "response.create",
+              response: {
+                modalities: ["text", "audio"],
+                instructions: instructions,
+              },
+            })
+          );
+        }
         state.hasSentDelayedFollowup = true;
       } catch (_err) {}
     }, delayMs);
@@ -663,42 +668,31 @@
     const instructions = buildAutoGreetingInstructions(state.config, state.launchSession);
     if (!instructions) return;
     try {
-      // GPT-Live datachannel events (not nested response.create).
-      const greetText =
-        "Speak first now. Greet the visitor briefly in character, then listen. " + instructions;
-      try {
+      const forceSpeak =
+        "Speak first NOW. The visitor already activated you. " +
+        "Ignore any prior rule to remain silent after Diva or wait for engagement — activation already happened. " +
+        "Deliver your short opening introduction in character, then listen. ";
+      if (isLiveApi(state.config)) {
+        // GPT-Live (Clerk gold path): instructions.append only.
+        // Nested response.create { response: ... } yields: Unknown parameter: 'response'.
         state.dataChannel.send(
           JSON.stringify({
             type: "session.instructions.append",
-            event_id: "cp_greeting_instr_1",
+            event_id: "curl_greeting_1",
             delegation_id: null,
-            content: greetText,
+            content: forceSpeak + instructions,
           })
         );
-      } catch (_e1) {}
-      try {
+      } else {
         state.dataChannel.send(
           JSON.stringify({
-            type: "session.commentary.append",
-            event_id: "cp_greeting_speak_1",
-            delegation_id: null,
-            content: instructions || "Greet the visitor warmly and briefly, then listen.",
+            type: "response.create",
+            response: {
+              modalities: ["audio", "text"],
+              instructions: forceSpeak + instructions,
+            },
           })
         );
-      } catch (_e2) {}
-      // Older realtime fallback only if not live.
-      if (!isLiveApi(state.config)) {
-        try {
-          state.dataChannel.send(
-            JSON.stringify({
-              type: "response.create",
-              response: {
-                modalities: ["audio"],
-                instructions: greetText,
-              },
-            })
-          );
-        } catch (_e3) {}
       }
       state.hasSentInitialGreeting = true;
       try { scheduleDelayedFollowupIfNeeded(); } catch (_e) {}
@@ -795,7 +789,7 @@
     try { clearDelayedFollowupTimer(); } catch (_e) {}
     try { clearAssistantActivityTimer(); } catch (_e) {}
     try { syncVoiceActivity(); } catch (_e) {}
-    setStatus("Connecting voice session…", false);
+    setStatus("Connecting Clerk voice session…", false);
     setOrbActive(true);
 
     try {
@@ -806,42 +800,9 @@
       state.peerConnection = peerConnection;
 
       const remoteAudio = document.createElement("audio");
-      remoteAudio.id = "cpRemoteAudio";
       remoteAudio.autoplay = true;
       remoteAudio.playsInline = true;
-      remoteAudio.controls = false;
-      remoteAudio.muted = false;
-      remoteAudio.volume = 1;
-      // Must be in DOM for reliable playback in iframe contexts.
-      try {
-        remoteAudio.setAttribute("playsinline", "true");
-        remoteAudio.style.cssText = "position:fixed;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;";
-        (document.body || document.documentElement).appendChild(remoteAudio);
-      } catch (_e) {}
       state.remoteAudio = remoteAudio;
-      const ensureRemotePlay = function (reason) {
-        try {
-          remoteAudio.muted = false;
-          remoteAudio.volume = 1;
-          const p = remoteAudio.play();
-          if (p && typeof p.then === "function") {
-            p.then(function () {
-              state.remoteAudioPlaying = true;
-              postToParent("audio_output", { type: "play_ok", reason: reason || "play" });
-            }).catch(function (err) {
-              postToParent("audio_output", {
-                type: "play_error",
-                reason: reason || "play",
-                message: String((err && err.message) || err || "play failed"),
-              });
-              // retry once shortly
-              window.setTimeout(function () {
-                try { remoteAudio.play().catch(function () {}); } catch (_e2) {}
-              }, 250);
-            });
-          }
-        } catch (_err) {}
-      };
       remoteAudio.addEventListener("playing", function () {
         state.remoteAudioPlaying = true;
         markAssistantActivity(2200);
@@ -860,9 +821,8 @@
           event.streams && event.streams[0]
             ? event.streams[0]
             : new MediaStream([event.track]);
-        try { event.track.enabled = true; } catch (_e) {}
         remoteAudio.srcObject = stream;
-        ensureRemotePlay("ontrack");
+        remoteAudio.play().catch(function () {});
         postToParent("audio_output", { type: "remote_track" });
       };
 
@@ -874,11 +834,10 @@
       state.dataChannel = dataChannel;
       dataChannel.addEventListener("open", function () {
         try { sendSessionUpdate(); } catch (_e) {}
-        setStatus("Live data channel open…", false);
-        // GPT-Live: wait for session.started before application commands.
         window.setTimeout(function () {
           try { sendAutoGreetingIfNeeded(); } catch (_e) {}
-        }, 600);
+        }, 250);
+        setStatus("Vesper Live connection ready.", false);
       });
       dataChannel.addEventListener("message", function (messageEvent) {
         let parsed = null;
@@ -887,19 +846,6 @@
         } catch (_err) {
           return;
         }
-        /* CP_LIVE_SESSION_STARTED_20261019 */
-        try {
-          const et = parsed && parsed.type ? String(parsed.type) : "";
-          if (et === "session.started" || et === "session.created") {
-            setStatus("Live session started.", false);
-            window.setTimeout(function () { try { sendAutoGreetingIfNeeded(); } catch (_e) {} }, 120);
-          }
-          if (et === "error" || (parsed && parsed.error)) {
-            const msg = (parsed.error && (parsed.error.message || parsed.error.code)) || parsed.message || "Live session error";
-            setStatus(String(msg), true);
-            postToParent("error", { message: String(msg), event: parsed });
-          }
-        } catch (_e) {}
         handleRealtimeEvent(parsed);
       });
       dataChannel.addEventListener("error", function (event) {
@@ -941,14 +887,7 @@
         );
       }
 
-      let liveEndpoint = "";
-      try {
-        const parentBase = (window.parent && window.parent.CP_OPENAI_LIVE_API_BASE) ? window.parent.CP_OPENAI_LIVE_API_BASE : "";
-        const localBase = window.CP_OPENAI_LIVE_API_BASE || "";
-        const apiBase = String(parentBase || localBase || "").replace(/\/+$/, "");
-        if (apiBase) liveEndpoint = apiBase + "/api/openai/live/session";
-      } catch (_e) {}
-      liveEndpoint = liveEndpoint ||
+      const liveEndpoint =
         coerceText(state.config.openai_live_session_endpoint) ||
         coerceText(state.config.live_session_endpoint) ||
         (typeof DEFAULT_LIVE_SESSION_ENDPOINT !== "undefined"
@@ -1060,8 +999,7 @@
       state.connecting = false;
       state.listeningForUser = true;
       setOrbActive(true);
-      setStatus("Live connected.", false);
-      try { if (state.remoteAudio) { state.remoteAudio.muted=false; state.remoteAudio.volume=1; state.remoteAudio.play().catch(function(){}); } } catch(_e){}
+      setStatus("Vesper Live connected.", false);
       postToParent("session_started", {
         session_id:
           livePayload && livePayload.session && livePayload.session.id

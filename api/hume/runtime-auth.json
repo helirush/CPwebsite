@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "auth": {
+    "type": "apiKey",
+    "value": "ylwtF2tVPD6mXgX1tyXNkj2APzVC69q5P3OLzNjmBeKDGY6N"
+  },
+  "source": "cpwebsite-rev2-local-static-runtime-auth",
+  "note": "Local same-origin mirror for python http.server testing. Mirrors Unity static runtime-auth."
+}

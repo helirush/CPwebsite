@@ -37,7 +37,7 @@
 
 ## LIVE ENABLE 20260819-curl-live-1
 - Pages 1–5 now load: hume_auth_bootstrap + curl_character_config + curl_voice_widget + curl_host_controller
-- embed_url fixed to `./assets/cognition/curl/openai_renderer/`
+- embed_url fixed to `./assets/cognition/curl/hume_renderer/`
 - Visible-guard allows modal only when `body.curl-host-active`
 - Halo contract: selected glow on arm; radiate rings only while speaking
 - IDs: voice `23982fd1-d6a5-4acc-b396-2454b5715d43` / config `242d8c4f-bb9c-49e2-9e3e-2a4bc59061cf`
@@ -54,7 +54,7 @@
 
 
 ## CLAIRE PARITY AUTH FIX 20260819-curl-claire-parity-1
-Why local failed: python http.server has no `` (404). Claire/Clerk demos that work either run where that API exists or already have runtime auth hydrated.
+Why local failed: python http.server has no `/api/hume/runtime-auth` (404). Claire/Clerk demos that work either run where that API exists or already have runtime auth hydrated.
 Curl now:
 1. Preloads Unity auth in page head (absolute URL)
 2. Bootstrap prefers Unity auth first
@@ -83,3 +83,13 @@ Unity endpoint verified live earlier.
 - Principle doc: `assets/cognition/HOST_ENVIRONMENT_CONTINUITY_PRINCIPLE.md`
 - Curl launch injects environment block; SELECT deferred while Diva playing
 - Operating Canon untouched
+
+## HOST VOICE STANDARD 20261103 (Clerk baseline)
+- Curl session mint retargeted from `127.0.0.1:8600` → Workers relay (same as Clerk)
+- Relay realtime: `https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session`
+- Relay live: `https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session`
+- Voice remains **marin**; model **gpt-live-1**
+- Renderer stamp: `20261103-host-voice-standard-1`
+- Optional local override only: add `?openaiLocal=1` and run `openai_realtime_server.py --port 8600`
+- Canon: `Maxwellian/Unity/Library/Systems/CANON_Host_Voice_Standard_OpenAI_Live_Clerk_Baseline.md`
+

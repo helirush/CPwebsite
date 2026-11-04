@@ -22,7 +22,7 @@
   <meta name="theme-color" content="#2f5e4f">
   
 
-  <link rel="stylesheet" href="./styles.css?v=20260902-close-curl-final-pos-1">
+  <link rel="stylesheet" href="./styles.css?v=20261103-reason-text-right-25-1">
 
 <!-- CP_R2_JOURNEY_10_LIVE: final authority after styles.css -->
 <style id="cp-journey-10-live">
@@ -182,9 +182,31 @@
       opacity: 1 !important;
       pointer-events: auto !important;
     }
-    .site-wrap { display: grid !important; height: 100dvh !important; }
-    .page-card, .cp-r1-card { height: 100% !important; min-height: 60vh !important; }
-    .page-image, .cp-r1-image { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block !important; }
+    /* Match Possibility page11 shell width */
+    .site-wrap {
+      display: grid !important;
+      height: 100dvh !important;
+      width: min(100vw, 2600px) !important;
+      max-width: min(100vw, 2600px) !important;
+      margin: 0 auto !important;
+      padding: clamp(8px, 1.1vh, 14px) clamp(10px, 1.5vw, 20px) !important;
+      transform: none !important;
+    }
+    .page-card, .cp-r1-card {
+      height: 100% !important;
+      min-height: 60vh !important;
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 auto !important;
+      transform: none !important;
+    }
+    .page-image, .cp-r1-image {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+      object-position: center center !important;
+      display: block !important;
+    }
     /* Keep overlays hidden ONLY while Curl is idle. When host is active, allow modal. */
     body:not(.curl-host-active) #clerkVoiceModal,
     body:not(.curl-host-active) .clerk-voice-modal,
@@ -236,7 +258,7 @@
 <!-- CP_CURL_TEXT_LIVE: edit these vars; this tag loads AFTER styles.css -->
   <style id="cp-curl-text-live">
     :root {
-      --cp-curl-text-x: -40px;
+      --cp-curl-text-x: -15px;
       --cp-curl-text-y: 0px;
       --cp-curl-l1-size: 12px;
       --cp-curl-l1-weight: 600;
@@ -328,7 +350,7 @@
 /* Edit these dials — master CSS at end of styles.css reads them */
 :root {
   --cp-curl-orb-x: -50px;
-  --cp-curl-orb-y: -7px;
+  --cp-curl-orb-y: -2px;
   --cp-curl-orb-size-px: 156px;
   --cp-curl-plate-px: 162px;
   --cp-curl-plate-y: 0px;
@@ -347,7 +369,7 @@
 :root {
   --cp-curl-plate-px: 162px;
   --cp-curl-orb-size-px: 156px;
-  --cp-curl-orb-y: -7px;
+  --cp-curl-orb-y: -2px;
   --cp-curl-contrast: 0.78;
 }
 </style>
@@ -603,7 +625,7 @@
           </a>
           </div>
 
-        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Speak with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
+        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Reason with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
           <span class="cp-r2-purpose-orb-wrap" aria-hidden="true">
             <span class="cp-r2-purpose-orb-plate" aria-hidden="true"></span>
             <span class="cp-r2-purpose-ring cp-r2-purpose-ring--1"></span>
@@ -616,7 +638,7 @@
             <img class="cp-r2-purpose-orb" src="./assets/curl/curl_orb_live_20260820-172503_1d0b8b7e31.png" alt="" />
           </span>
           <span class="cp-r2-purpose-copy">
-            <span class="cp-r2-purpose-kicker">UNDERSTAND WITH</span>
+            <span class="cp-r2-purpose-kicker">REASON WITH</span>
             <span class="cp-r2-purpose-name"><span class="cp-r2-purpose-name-brand">CURL.</span></span>
             <span class="cp-r2-purpose-role">Curl Maxwell · Cognition Host</span>
             <span class="cp-r2-purpose-hint">Tap or speak anytime.</span>
@@ -1061,7 +1083,7 @@
     window.MAXWELLIAN_RUNTIME_AUTH_ENDPOINT = "/api/hume/runtime-auth";
     window.MAXWELLIAN_FORCE_RUNTIME_AUTH_BOOTSTRAP = true;
     window.__CURL_FORCE_NO_FLOAT__ = true;
-    window.__CURL_LOCAL_EMBED__ = "./assets/cognition/curl/openai_renderer/";
+    window.__CURL_LOCAL_EMBED__ = './assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-clerk-parity-1';
     window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
     window.MAXWELLIAN_HUME.embed_url = window.__CURL_LOCAL_EMBED__;
     window.MAXWELLIAN_HUME.renderer_url = window.__CURL_LOCAL_EMBED__;
@@ -1119,14 +1141,53 @@
     })();
   </script>
   <script src="./assets/cognition/curl/hume_auth_bootstrap.js?v=20260831-curl-select-pos-1"></script>
-  <script src="./assets/cognition/curl/curl_character_config.js?v=20261012-curl-openai-form-1"></script>
-  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261012-curl-openai-form-1"></script>
+  <script src="./assets/cognition/curl/curl_character_config.js?v=20261103-p1-unblock-index-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261103-p1-unblock-index-1"></script>
   <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
   
   <script src="./assets/cognition/cp_narration_journey.js?v=20260831-tim-qa-narration-1"></script>
 
   
-  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261012-curl-openai-form-1"></script>
+  <script src="./assets/cognition/curl/curl_host_controller.js?v=20261103-p1-unblock-index-1"></script>
+
+
+<style id="cp-cp-page13-width-match-peers">
+  /* 20261103-page11-width-match-1: cp-page13 header/footer/background width matches page11 */
+  html body.cp-page13 .site-wrap.cp-r1-wrap,
+  html body.cp-page13 .site-wrap {
+    display: grid !important;
+    height: 100dvh !important;
+    width: min(100vw, 2600px) !important;
+    max-width: min(100vw, 2600px) !important;
+    margin: 0 auto !important;
+    padding: clamp(8px, 1.1vh, 14px) clamp(10px, 1.5vw, 20px) !important;
+    transform: none !important;
+  }
+  html body.cp-page13 .page-card.cp-r1-card,
+  html body.cp-page13 .page-card,
+  html body.cp-page13 .cp-r1-card {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 60vh !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+  html body.cp-page13 .page-image,
+  html body.cp-page13 .cp-r1-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+  html body.cp-page13 .cp-r1-top-card,
+  html body.cp-page13 .cp-r2-top-card,
+  html body.cp-page13 .cp-r2-media-card,
+  html body.cp-page13 .cp-r2-footer-motto-band {
+    width: auto !important;
+    max-width: none !important;
+  }
+</style>
 
 </body>
 </html>
