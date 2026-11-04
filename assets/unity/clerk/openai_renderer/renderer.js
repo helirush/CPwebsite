@@ -405,58 +405,75 @@
   }
 
   function resolveSessionEndpoint(config) {
-    const candidate = coerceText(
-      config && (
-        config.sessionEndpoint ||
-        config.openai_session_endpoint ||
-        config.openai_session_url
-      )
-    );
-    return candidate || DEFAULT_SESSION_ENDPOINT;
+    const livePreferred = String(
+      (config && (config.openai_live_session_endpoint || config.openai_live_session_url || config.liveSessionEndpoint)) || ""
+    ).trim();
+    const configured = String(
+      (config && (config.sessionEndpoint || config.openai_session_endpoint || config.openai_session_url)) || ""
+    ).trim();
+    // Prefer explicit live endpoint when present (public production path).
+    if (livePreferred) return livePreferred;
+    if (configured) return configured;
+    // On public hosts, never default to a relative API that GitHub Pages cannot POST.
+    try {
+      const host = String((window.location && window.location.hostname) || "").toLowerCase();
+      const isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
+      if (!isLocal) return "https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session";
+    } catch (_e) {}
+    return DEFAULT_SESSION_ENDPOINT;
   }
 
-  function buildSessionEndpointCandidates(endpoint) {
-    const primary = coerceText(endpoint) || DEFAULT_SESSION_ENDPOINT;
-    const candidates = [];
-    const pushCandidate = function (value) {
-      const normalized = coerceText(value);
-      if (!normalized) return;
-      if (candidates.includes(normalized)) return;
-      candidates.push(normalized);
+  function buildSessionEndpointCandidates(primaryEndpoint) {
+    const primary = String(primaryEndpoint || "").trim() || DEFAULT_SESSION_ENDPOINT;
+    const out = [];
+    const push = (u) => {
+      const s = String(u || "").trim();
+      if (!s) return;
+      if (out.indexOf(s) === -1) out.push(s);
     };
-    const locationHost = coerceText(window.location && window.location.hostname).toLowerCase();
-    const locationPort = coerceText(window.location && window.location.port);
-    const locationProtocol = coerceText(window.location && window.location.protocol) || "http:";
-    const isLocalHost =
-      locationHost === "127.0.0.1" ||
-      locationHost === "localhost" ||
-      locationHost === "0.0.0.0" ||
-      locationHost.endsWith(".local");
-    const onVoicePort = locationPort === "8600";
-    // Local CP pages are often served by plain http.server (:8001) which 501s POST.
-    // Prefer the OpenAI Live/Realtime process on :8600 FIRST.
-    if (isLocalHost && !onVoicePort) {
-      if (primary.startsWith("/")) {
-        pushCandidate(`http://127.0.0.1:8600${primary}`);
-        pushCandidate(`http://localhost:8600${primary}`);
-        if (locationHost && locationHost !== "127.0.0.1" && locationHost !== "localhost") {
-          pushCandidate(`${locationProtocol}//${locationHost}:8600${primary}`);
+    let host = "";
+    let origin = "";
+    try {
+      host = String((window.location && window.location.hostname) || "").toLowerCase();
+      origin = String((window.location && window.location.origin) || "");
+    } catch (_e) {}
+    const isLocal = host === "localhost" || host === "127.0.0.1";
+
+    push(primary);
+
+    // Absolute primary on production: keep it; add workers.dev live/realtime siblings if same family missing.
+    const isAbs = /^https?:\/\//i.test(primary);
+    if (!isLocal) {
+      // PUBLIC / PRODUCTION — never touch 127.0.0.1 (that "resets" the path and breaks Clerk/Curl/Claire).
+      if (!isAbs) {
+        // Relative /api/... on GitHub Pages cannot accept POST session minting.
+        push("https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session");
+        push("https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session");
+        if (origin) {
+          push(origin.replace(/\/$/, "") + (primary.charAt(0) === "/" ? primary : "/" + primary));
         }
-      } else if (/\/api\/openai\//.test(primary) && primary.indexOf(":8600") === -1) {
-        // absolute but wrong origin — still try 8600 path
-        try {
-          const u = new URL(primary, window.location.href);
-          pushCandidate(`http://127.0.0.1:8600${u.pathname}`);
-          pushCandidate(`http://localhost:8600${u.pathname}`);
-        } catch (_e) {}
+      } else {
+        if (primary.indexOf("/api/openai/live/session") !== -1) push(primary.replace("/api/openai/live/session", "/api/openai/realtime/session"));
+        if (primary.indexOf("/api/openai/realtime/session") !== -1) push(primary.replace("/api/openai/realtime/session", "/api/openai/live/session"));
+        push("https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session");
+        push("https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session");
       }
+      return out;
     }
-    pushCandidate(primary);
-    if (primary.startsWith("/") && isLocalHost) {
-      pushCandidate(`http://127.0.0.1:8600${primary}`);
-      pushCandidate(`http://localhost:8600${primary}`);
+
+    // LOCAL DEV ONLY — allow :8600 voice server candidates
+    if (!isAbs) {
+      push("http://127.0.0.1:8600" + (primary.charAt(0) === "/" ? primary : "/" + primary));
+      push("http://localhost:8600" + (primary.charAt(0) === "/" ? primary : "/" + primary));
+      push("http://127.0.0.1:8600/api/openai/live/session");
+      push("http://127.0.0.1:8600/api/openai/realtime/session");
+      push("http://localhost:8600/api/openai/live/session");
+      push("http://localhost:8600/api/openai/realtime/session");
+    } else {
+      push("http://127.0.0.1:8600/api/openai/live/session");
+      push("http://127.0.0.1:8600/api/openai/realtime/session");
     }
-    return candidates;
+    return out;
   }
 
   function appendInstructionBlock(blocks, value) {
@@ -940,9 +957,7 @@
       }
       if (!liveResponse) {
         const hint =
-          "Voice API server is not running (got HTTP 501 on POST). " +
-          "In Terminal run: cd ~/eestream/eWebmaster/UnityEnergy && python3 openai_realtime_server.py --port 8600 " +
-          "then open http://127.0.0.1:8600/UnityEnergy/contact-us.html (not plain http.server).";
+          "Voice session could not start (HTTP 501). Public pages must use the Live relay endpoint; local dev needs openai_realtime_server.py on :8600.";
         if (lastLiveError && lastLiveError.static) {
           throw new Error(hint);
         }
@@ -961,9 +976,7 @@
         // python -m http.server returns HTML 501 for POST — wrong process.
         if (!msg && /Unsupported method|Error code: 501|do not support this operation/i.test(raw)) {
           msg =
-            "Voice API server is not running (got HTTP 501 on POST). " +
-            "In Terminal run: cd ~/eestream/eWebmaster/UnityEnergy && python3 openai_realtime_server.py --port 8600 " +
-            "then open http://127.0.0.1:8600/UnityEnergy/contact-us.html (not plain http.server).";
+            "Voice session could not start (HTTP 501). Public pages must use the Live relay endpoint; local dev needs openai_realtime_server.py on :8600.";
         } else if (!msg && raw && raw.indexOf("<html") >= 0) {
           msg =
             "Live session endpoint returned HTML instead of JSON (HTTP " +
