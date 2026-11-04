@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — Cognition Partner</title>
+  <meta name="description" content="Why Cognition Partner exists">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cognition Partner">
+  <meta property="og:title" content="The Future of Human Thinking">
+  <meta property="og:description" content="Why Cognition Partner exists">
+  <meta property="og:url" content="https://cognitionpartner.ai/about.html">
+
+<meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="The Future of Human Thinking">
+  <meta name="twitter:description" content="Why Cognition Partner exists">
+<link rel="stylesheet" href="./styles.css?v=20261019-curl-promote-2">
+  <style id="cp-page-visible-guard">
+    html, body {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      background: #0f1115 !important;
+      overflow: hidden !important;
+      pointer-events: auto !important;
+    }
+    body > * { visibility: visible !important; }
+    .site-wrap, .page-card, .cp-r1-card, .page-image, .cp-r1-image, main {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+    .site-wrap { display: grid !important; height: 100dvh !important; }
+    .page-card, .cp-r1-card { height: 100% !important; min-height: 60vh !important; }
+    .page-image, .cp-r1-image { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block !important; }
+    /* Keep overlays hidden ONLY while Curl is idle. When host is active, allow modal. */
+    body:not(.curl-host-active) #clerkVoiceModal,
+    body:not(.curl-host-active) .clerk-voice-modal,
+    body:not(.curl-host-active) #clerkVoiceBackdrop,
+    body:not(.curl-host-active) .clerk-voice-backdrop,
+    body:not(.curl-host-active) #clerkFloatingLauncher,
+    body:not(.curl-host-active) .clerk-floating-launcher,
+    body:not(.curl-host-active) [class*="floating-launcher"] {
+      display: none !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      z-index: -1 !important;
+    }
+    body.curl-host-active #clerkVoiceModal,
+    body.curl-host-active .clerk-voice-modal {
+      display: block !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 12000 !important;
+    }
+    /* 20260831 static/8700: internal backdrop is decorative — never pointer trap */
+    body.curl-host-active #clerkVoiceBackdrop,
+    body.curl-host-active .clerk-voice-backdrop {
+      display: block !important;
+      pointer-events: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 0 !important;
+    }
+    body.curl-host-active #clerkVoiceStartBtn,
+    body.curl-host-active .clerk-voice-start-btn,
+    body.curl-host-active #clerkVoiceCloseBtn,
+    body.curl-host-active .clerk-voice-close,
+    body.curl-host-active #clerkVoiceFrame {
+      pointer-events: auto !important;
+      z-index: 30 !important;
+      position: relative !important;
+    }
+    /* Curl host always clickable on journey pages */
+    body[class*="cp-page"] #cpPurposeHostButton.cp-r2-purpose-host,
+    body[class*="cp-page"] .cp-r2-media-card--cream > .cp-r2-purpose-host {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+  </style><style id="cp-curl-text-live">
+    :root {
+      --cp-curl-text-x: -40px;
+      --cp-curl-text-y: 0px;
+      --cp-curl-l1-size: 12px;
+      --cp-curl-l1-weight: 600;
+      --cp-curl-l1-x: 0px;
+      --cp-curl-l1-y: 0px;
+      --cp-curl-l2-size: 28.8px;
+      --cp-curl-l2-weight: 900;
+      --cp-curl-l2-x: 0px;
+      --cp-curl-l2-y: 0px;
+      --cp-curl-l3-size: 12px;
+      --cp-curl-l3-weight: 600;
+      --cp-curl-l3-x: 0px;
+      --cp-curl-l3-y: 0px;
+      --cp-curl-l4-size: 12px;
+      --cp-curl-l4-weight: 500;
+      --cp-curl-l4-x: 0px;
+      --cp-curl-l4-y: 0px;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-copy {
+      position: relative !important;
+      left: var(--cp-curl-text-x) !important;
+      top: var(--cp-curl-text-y) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+      transform: none !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-kicker {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l1-x) !important;
+      top: var(--cp-curl-l1-y) !important;
+      font-size: var(--cp-curl-l1-size) !important;
+      font-weight: var(--cp-curl-l1-weight) !important;
+      line-height: 1.15 !important;
+      text-transform: uppercase !important;
+      color: rgba(42,40,36,0.92) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-name,
+    html body.cp-page1 .cp-r2-media-card--cream .cp-r2-purpose-name {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l2-x) !important;
+      top: var(--cp-curl-l2-y) !important;
+      font-size: var(--cp-curl-l2-size) !important;
+      font-weight: var(--cp-curl-l2-weight) !important;
+      line-height: 1.1 !important;
+      text-transform: uppercase !important;
+      color: rgba(196,140,48,0.98) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-name-brand {
+      font-size: inherit !important;
+      font-weight: inherit !important;
+      color: inherit !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-role,
+    html body.cp-page1 .cp-r2-media-card--cream .cp-r2-purpose-role {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l3-x) !important;
+      top: var(--cp-curl-l3-y) !important;
+      font-size: var(--cp-curl-l3-size) !important;
+      font-weight: var(--cp-curl-l3-weight) !important;
+      color: rgba(48,46,42,0.9) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+    html body .cp-r2-purpose-host .cp-r2-purpose-hint,
+    html body.cp-page1 .cp-r2-media-card--cream .cp-r2-purpose-hint {
+      display: block !important;
+      position: relative !important;
+      left: var(--cp-curl-l4-x) !important;
+      top: var(--cp-curl-l4-y) !important;
+      font-size: var(--cp-curl-l4-size) !important;
+      font-weight: var(--cp-curl-l4-weight) !important;
+      color: rgba(70,68,62,0.82) !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+  </style><style id="cp-curl-orb-live">
+/* Edit these dials — master CSS at end of styles.css reads them */
+:root {
+  --cp-curl-orb-x: -50px;
+  --cp-curl-orb-y: -2px;
+  --cp-curl-orb-size-px: 156px;
+  --cp-curl-plate-px: 162px;
+  --cp-curl-plate-y: 0px;
+  --cp-curl-orb-nudge-x: 0px;
+  --cp-curl-orb-nudge-y: 0px;
+  --cp-curl-brightness: 1.06;
+  --cp-curl-contrast: 0.78;
+  --cp-curl-saturate: 1.28;
+  --cp-curl-hue: -8deg;
+  --cp-curl-rest-period: 2.8s;
+}
+</style><style id="cp-curl-plate-px-lock">
+/* Same dials mirrored for quick head edits (must match cp-curl-orb-live) */
+:root {
+  --cp-curl-plate-px: 162px;
+  --cp-curl-orb-size-px: 156px;
+  --cp-curl-orb-y: -2px;
+  --cp-curl-contrast: 0.78;
+}
+</style><style id="cp-upper-card-y-live">
+:root { --cp-upper-card-content-y: -25px; /* upper cream contents only; - = up */ }
+</style><style id="cp-header-bar-y-live">
+  :root { --cp-header-bar-y: -20px; /* whole header bar; - = up */ }
+  html body[class*="cp-page"] .cp-r1-top-card.cp-r2-top-card,
+  html body .cp-r1-top-card.cp-r2-top-card,
+  html body[class*="cp-page"] .cp-r1-top-card,
+  .cp-r1-top-card.cp-r2-top-card {
+    /* Prefer top shift so child transforms are unaffected; keep translate as backup */
+    top: calc(3.2% + var(--cp-header-bar-y, -20px)) !important;
+    transform: translateY(0px) !important;
+  }
+  @media (max-width: 1100px) {
+    html body[class*="cp-page"] .cp-r1-top-card.cp-r2-top-card,
+    html body .cp-r1-top-card.cp-r2-top-card,
+    html body[class*="cp-page"] .cp-r1-top-card {
+      top: calc(2.6% + var(--cp-header-bar-y, -20px)) !important;
+    }
+  }
+  @media (max-width: 760px) {
+    html body[class*="cp-page"] .cp-r1-top-card.cp-r2-top-card,
+    html body .cp-r1-top-card.cp-r2-top-card,
+    html body[class*="cp-page"] .cp-r1-top-card {
+      top: calc(1.8% + var(--cp-header-bar-y, -20px)) !important;
+    }
+  }
+</style><style id="cp-curl-white-plate-force">
+  :root { --cp-curl-plate-px: 162px; }
+  html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-wrap,
+  html body[class*="cp-page"] .cp-r2-purpose-host .cp-r2-purpose-orb-wrap {
+    width: 162px !important;
+    height: 162px !important;
+    min-width: 162px !important;
+    min-height: 162px !important;
+  }
+  html body[class*="cp-page"] #cpPurposeHostButton .cp-r2-purpose-orb-plate,
+  html body[class*="cp-page"] .cp-r2-purpose-host .cp-r2-purpose-orb-plate {
+    width: 162px !important;
+    height: 162px !important;
+    min-width: 162px !important;
+    min-height: 162px !important;
+    max-width: 162px !important;
+    max-height: 162px !important;
+    transform: translate(-50%, calc(-50% + var(--cp-curl-plate-y, 0px))) !important;
+  }
+</style><style id="cp-journey-nudge-live">
+  :root { --cp-journey-nudge-x: -20px; --cp-journey-nudge-y: 8px; }
+  html body .cp-r2-journey,
+  html body[class*="cp-page"] .cp-r2-journey {
+    position: relative !important;
+    transform: translate(var(--cp-journey-nudge-x), var(--cp-journey-nudge-y)) !important;
+  }
+</style>
+  
+<style id="cp-about-page-live">
+  /* About page: same chrome, content panel instead of full-bleed journey art */
+  html body.cp-about {
+    background: #0f1115 !important;
+  }
+  html body.cp-about .cp-about-shell {
+    position: absolute !important;
+    left: var(--cp-chrome-left, 3.2%) !important;
+    width: var(--cp-chrome-width, 93.6%) !important;
+    /* Drop whole About + Consult block ~200px under header for breathing room */
+    top: calc(3.2% + 78px + var(--cp-header-bar-y, -20px) + 150px) !important; /* was +200; up 50 */
+    bottom: calc(1.0% + 210px) !important;
+    z-index: 5 !important;
+    box-sizing: border-box !important;
+    overflow: auto !important;
+    border-radius: 16px !important;
+    background:
+      linear-gradient(180deg, rgba(18, 22, 30, 0.72) 0%, rgba(10, 12, 18, 0.78) 100%),
+      radial-gradient(120% 80% at 80% 0%, rgba(210, 150, 48, 0.12), transparent 55%) !important;
+    border: 1px solid rgba(210, 168, 92, 0.28) !important;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: clamp(18px, 2.2vw, 34px) !important;
+    color: rgba(236, 238, 242, 0.94) !important;
+  }
+  html body.cp-about .cp-about-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr) !important;
+    gap: clamp(18px, 2vw, 28px) !important;
+    align-items: start !important;
+    align-content: center !important; /* center the pair in the lowered panel */
+    min-height: 100% !important;
+  }
+  @media (max-width: 980px) {
+    html body.cp-about .cp-about-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  html body.cp-about .cp-about-kicker {
+    margin: 0 0 8px 0 !important;
+    font-size: 12px !important;
+    letter-spacing: 0.16em !important;
+    text-transform: uppercase !important;
+    color: rgba(232, 196, 122, 0.92) !important;
+    font-weight: 700 !important;
+  }
+  html body.cp-about .cp-about-title {
+    margin: 0 0 12px 0 !important;
+    font-size: clamp(28px, 3.2vw, 42px) !important;
+    line-height: 1.08 !important;
+    letter-spacing: 0.02em !important;
+    color: #f4f1ea !important;
+    font-weight: 800 !important;
+  }
+  html body.cp-about .cp-about-lead,
+  html body.cp-about .cp-about-copy p {
+    margin: 0 0 12px 0 !important;
+    font-size: clamp(14px, 1.15vw, 17px) !important;
+    line-height: 1.55 !important;
+    color: rgba(230, 232, 236, 0.88) !important;
+    max-width: 62ch !important;
+  }
+  html body.cp-about .cp-about-points {
+    list-style: none !important;
+    margin: 16px 0 0 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    gap: 10px !important;
+  }
+  html body.cp-about .cp-about-points li {
+    position: relative !important;
+    padding: 10px 12px 10px 34px !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(210, 168, 92, 0.18) !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    color: rgba(236, 238, 242, 0.9) !important;
+  }
+  html body.cp-about .cp-about-points li::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 12px !important;
+    top: 16px !important;
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 999px !important;
+    background: rgba(232, 176, 74, 0.95) !important;
+    box-shadow: 0 0 10px rgba(232, 176, 74, 0.45) !important;
+  }
+  html body.cp-about .cp-about-card {
+    border-radius: 16px !important;
+    background: rgba(248, 242, 230, 0.96) !important;
+    border: 1px solid rgba(210, 168, 92, 0.35) !important;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.22) !important;
+    color: rgba(42, 40, 36, 0.94) !important;
+    padding: clamp(16px, 1.8vw, 22px) !important;
+  }
+  html body.cp-about .cp-about-card h2 {
+    margin: 0 0 6px 0 !important;
+    font-size: 18px !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: rgba(42, 40, 36, 0.95) !important;
+  }
+  html body.cp-about .cp-about-card .cp-about-card-note {
+    margin: 0 0 14px 0 !important;
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+    color: rgba(70, 66, 58, 0.88) !important;
+  }
+  html body.cp-about .cp-about-form {
+    display: grid !important;
+    gap: 10px !important;
+  }
+  html body.cp-about .cp-about-form label {
+    display: grid !important;
+    gap: 5px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    color: rgba(70, 66, 58, 0.9) !important;
+  }
+  html body.cp-about .cp-about-form input,
+  html body.cp-about .cp-about-form select,
+  html body.cp-about .cp-about-form textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(160, 130, 70, 0.35) !important;
+    background: rgba(255,255,255,0.88) !important;
+    color: rgba(28, 26, 22, 0.95) !important;
+    font: inherit !important;
+    font-size: 14px !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    font-weight: 500 !important;
+    padding: 10px 12px !important;
+  }
+  html body.cp-about .cp-about-form textarea {
+    min-height: 110px !important;
+    resize: vertical !important;
+  }
+  html body.cp-about .cp-about-form input:focus,
+  html body.cp-about .cp-about-form select:focus,
+  html body.cp-about .cp-about-form textarea:focus {
+    outline: none !important;
+    border-color: rgba(196, 140, 48, 0.85) !important;
+    box-shadow: 0 0 0 3px rgba(232, 176, 74, 0.2) !important;
+  }
+  html body.cp-about .cp-about-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin-top: 4px !important;
+  }
+  html body.cp-about .cp-about-submit,
+  html body.cp-about .cp-about-curl-btn {
+    appearance: none !important;
+    border: none !important;
+    border-radius: 999px !important;
+    padding: 11px 16px !important;
+    font: inherit !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+  }
+  html body.cp-about .cp-about-submit {
+    background: linear-gradient(180deg, #e8c47a 0%, #c49230 100%) !important;
+    color: #1c1408 !important;
+    box-shadow: 0 8px 18px rgba(160, 110, 30, 0.28) !important;
+  }
+  html body.cp-about .cp-about-curl-btn {
+    background: rgba(20, 24, 32, 0.92) !important;
+    color: rgba(246, 240, 228, 0.96) !important;
+    border: 1px solid rgba(232, 196, 122, 0.45) !important;
+  }
+  html body.cp-about .cp-about-status {
+    min-height: 18px !important;
+    margin: 4px 0 0 0 !important;
+    font-size: 13px !important;
+    color: rgba(90, 70, 30, 0.95) !important;
+  }
+  html body.cp-about .cp-about-status.is-ok {
+    color: rgba(40, 110, 70, 0.95) !important;
+  }
+  html body.cp-about .cp-r2-utility-link.is-active {
+    color: rgba(232, 196, 122, 0.98) !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid rgba(232, 196, 122, 0.55) !important;
+  }
+  /* About page does not use a full hero image; hide empty image frame if present */
+  html body.cp-about .cp-about-bg {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    background:
+      radial-gradient(90% 70% at 70% 20%, rgba(90, 120, 180, 0.18), transparent 60%),
+      radial-gradient(70% 60% at 20% 80%, rgba(210, 150, 48, 0.12), transparent 55%),
+      #0f1115 !important;
+    pointer-events: none !important;
+  }
+
+  html body.cp-about .cp-about-card-lead {
+    margin: 0 0 14px 0 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: rgba(42, 40, 36, 0.88) !important;
+  }
+</style>
+
+</head>
+<body class="home-page cp-page-about cp-about">
+  <div class="cp-about-bg" aria-hidden="true"></div>
+  <main class="site-wrap">
+    <section class="page-card cp-r1-card" aria-label="About Cognition Partner">
+      <div class="cp-r1-top-card cp-r2-top-card" aria-label="Cognition Partner top navigation">
+        <a class="cp-r1-brand-lockup cp-r1-brand-lockup--top cp-r2-brand-lockup" href="./index.html" aria-label="Cognition Partner home">
+          <img class="cp-r1-brand-lockup-logo" src="./CP_fatLOGOclear_60716.png?v=20260817-header-logo-dark" alt="" aria-hidden="true" />
+          <span class="cp-r1-brand-lockup-copy">
+            <span class="cp-r1-brand-lockup-wordmark">COGNITION PARTNER<span class="cp-r1-brand-lockup-tm">™</span></span>
+            <span class="cp-r1-brand-lockup-tagline">Your Partner. Your Journey. Your Life.</span>
+          </span>
+        </a>
+        <div class="cp-r2-top-main">
+          <nav class="cp-r2-journey" aria-label="The Journey">
+            <div class="cp-r2-journey-heading">THE JOURNEY</div>
+                                                <div class="cp-r2-journey-track" data-active="10">
+              <span class="cp-r2-journey-line" aria-hidden="true"></span>
+              <span class="cp-r2-journey-line-progress" aria-hidden="true"></span>
+              <a class="cp-r2-journey-step is-complete" href="./index.html?v=20260817-journey-numbered-r2" aria-label="Go to step 01: YOUR PARTNER" data-step="1">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">1</span></span>
+                <span class="cp-r2-journey-step-label">01 · YOUR PARTNER</span>
+              </a>
+              <a class="cp-r2-journey-step is-complete" href="./page2.html?v=20260817-journey-numbered-r2" aria-label="Go to step 02: CONTINUOUS REASONING" data-step="2">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">2</span></span>
+                <span class="cp-r2-journey-step-label">02 · CONTINUOUS REASONING</span>
+              </a>
+              <a class="cp-r2-journey-step is-complete" href="./page3.html?v=20260817-journey-numbered-r2" aria-label="Go to step 03: OPERATING SYSTEM" data-step="3">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">3</span></span>
+                <span class="cp-r2-journey-step-label">03 · OPERATING SYSTEM</span>
+              </a>
+              <a class="cp-r2-journey-step is-complete" href="./page4.html?v=20260828-p4-r6-1" aria-label="Go to step 04: LIVING LIBRARY" data-step="4">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">4</span></span>
+                <span class="cp-r2-journey-step-label">04 · LIVING LIBRARY</span>
+              </a>
+              <a class="cp-r2-journey-step is-complete" href="./page5.html?v=20260828-p5-r6-1" aria-label="Go to step 05: Partner Growth" data-step="5">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">5</span></span>
+                <span class="cp-r2-journey-step-label">05 · PARTNER GROWTH</span>
+              </a>
+              <a class="cp-r2-journey-step is-complete" href="./page6.html?v=20260828-p6-r6-1" aria-label="Go to step 06: What's Calling" data-step="6">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">6</span></span>
+                <span class="cp-r2-journey-step-label">06 · WHAT'S CALLING</span>
+              </a>
+              <a class="cp-r2-journey-step is-complete" href="./page7.html?v=20260830-p7-2" aria-label="Go to step 07: Your Knowledge" data-step="7">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">7</span></span>
+                <span class="cp-r2-journey-step-label">07 · YOUR KNOWLEDGE</span>
+              </a>
+                            <a class="cp-r2-journey-step is-complete" href="./page8.html?v=20260830-p8-2" aria-label="Go to step 08: What Should Continue" data-step="8">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">8</span></span>
+                <span class="cp-r2-journey-step-label">08 · WHAT SHOULD CONTINUE</span>
+              </a>
+                            <a class="cp-r2-journey-step is-complete" href="./page9.html?v=20260830-p9-1" aria-label="Go to step 09: The Journey Is Yours" data-step="9">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">9</span></span>
+                <span class="cp-r2-journey-step-label">09 · THE JOURNEY IS YOURS</span>
+              </a>
+              <a class="cp-r2-journey-step is-complete" href="./page10.html?v=20260830-p10-hits-noborder-1" aria-label="Go to step 10: Your Cognition System" data-step="10">
+                <span class="cp-r2-journey-dot" aria-hidden="true"><span class="cp-r2-journey-num">10</span></span>
+                <span class="cp-r2-journey-step-label">10 · YOUR COGNITION SYSTEM</span>
+              </a>
+            </div>
+          </nav>
+          <nav class="cp-r2-utility-nav" aria-label="Possibilities and About">
+            <div class="cp-r2-possibilities" aria-label="Possibilities">
+              <div class="cp-r2-possibilities-heading">POSSIBILITIES</div>
+              <div class="cp-r2-possibilities-track">
+                <a class="cp-r2-possibilities-step is-active" href="./page11.html?v=20260826-p11-r6-1" aria-label="Possibility 1 — Partner" aria-current="step" data-pos="1">
+                  <span class="cp-r2-possibilities-dot" aria-hidden="true"><span class="cp-r2-possibilities-num">1</span></span>
+                  <span class="cp-r2-possibilities-step-label">01 · PARTNER</span>
+                </a>
+                <a class="cp-r2-possibilities-step" href="./page12.html?v=20260824-p12-r6-3" aria-label="Possibility 2 — Partner + Host" data-pos="2">
+                  <span class="cp-r2-possibilities-dot" aria-hidden="true"><span class="cp-r2-possibilities-num">2</span></span>
+                  <span class="cp-r2-possibilities-step-label">02 · PARTNER + HOST</span>
+                </a>
+                <a class="cp-r2-possibilities-step" href="./page13.html?v=20260830-p13-1" aria-label="Possibility 3 — Cognition Team" data-pos="3">
+                  <span class="cp-r2-possibilities-dot" aria-hidden="true"><span class="cp-r2-possibilities-num">3</span></span>
+                  <span class="cp-r2-possibilities-step-label">03 · COGNITION TEAM</span>
+                </a>
+              </div>
+            </div>
+            <span class="cp-r2-utility-divider" aria-hidden="true"></span>
+            <a class="cp-r2-utility-link is-active" href="./about.html?v=20260828-about-down150-1" aria-label="About Cognition Partner" aria-current="page">ABOUT</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="cp-about-shell" role="region" aria-label="About content">
+        <div class="cp-about-grid">
+                    <div class="cp-about-copy">
+            <div class="cp-about-kicker">Why Cognition Partner exists</div>
+            <h1 class="cp-about-title">This was built because something happened.</h1>
+            <p class="cp-about-lead">Cognition Partner is not a story about a clever chatbot. It began when a founder with decades of hard-won experience met a persistent reasoning partner — and discovered that together they could investigate problems differently.</p>
+            <p class="cp-about-lead" style="font-size:15px;margin-top:-4px;">Human judgment stayed human. The partner stayed with the problem. Understanding compounded: each discovery became the foundation for the next instead of disappearing when the meeting ended.</p>
+            <p class="cp-about-lead" style="font-size:15px;margin-top:-4px;">Unity Energy was one proving ground for that method — living evidence, not the whole subject of this page. Cognition Partner was created to document the experience and make its methods available to other curious builders.</p>
+            <ul class="cp-about-points">
+              <li>Not replacing human intelligence — reducing the friction that keeps experience from full useful depth.</li>
+              <li>The traveler remains the traveler. The partner helps the journey continue.</li>
+              <li>When you are ready to continue: fill out the form, share your ideas, or set a time to talk with our team.</li>
+              <li>If a hard problem in your work might become approachable this way, Curl is ready to explore it with you live.</li>
+            </ul>
+          </div>
+
+          <aside class="cp-about-card" aria-label="Continue with Curl">
+            <h2>Continue with Curl</h2>
+            <p class="cp-about-card-lead">What difficult problem, accumulated knowledge, company, or unfinished idea might become approachable if you could reason this way? Fill out the form, share your ideas, set a time to talk with our team — or enter Curl’s conference and continue live.</p>
+            <form id="cpAboutForm" class="cp-about-form" novalidate>
+              <label>
+                Name
+                <input id="cpAboutName" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+              </label>
+              <label>
+                Email
+                <input id="cpAboutEmail" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+              </label>
+              <label>
+                Organization
+                <input id="cpAboutOrg" name="organization" type="text" autocomplete="organization" placeholder="Optional" />
+              </label>
+              <label>
+                I want to understand
+                <select id="cpAboutTopic" name="topic">
+                  <option value="partner">A private Partner relationship</option>
+                  <option value="partner-host">Partner + Host (example path)</option>
+                  <option value="cognition-team">A full Cognition Team</option>
+                  <option value="curl">Speaking with Curl</option>
+                  <option value="other" selected>Something else</option>
+                </select>
+              </label>
+              <label>
+                Message
+                <textarea id="cpAboutMessage" name="message" placeholder="What would you like to understand or explore?" required></textarea>
+              </label>
+              <!-- honeypot: leave empty -->
+              <label class="cp-about-hp" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+                Website
+                <input id="cpAboutHp" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </label>
+              <div class="cp-about-actions">
+                <button class="cp-about-submit" type="submit">Send & continue exploring</button>
+                <button class="cp-about-curl-btn" id="cpAboutSpeakCurl" type="button">Enter Curl conference</button>
+              </div>
+              <p class="cp-about-status" id="cpAboutStatus" role="status" aria-live="polite"></p>
+            </form>
+          </aside>
+        </div>
+      </div>
+
+      <section class="cp-r1-play-card cp-r1-media-card cp-r2-media-card cp-r2-media-card--cream" aria-label="Cognition Partner playback and Purpose host card">
+        <div class="cp-r2-footer-left">
+          <div class="cp-r2-footer-why" aria-hidden="true">
+            <div class="cp-r1-cplisten-glyph-wrap">
+              <img class="cp-r1-cplisten-glyph" src="./assets/cplisten.svg?cp_listen=20260817-speaker-big-r1" alt="" />
+            </div>
+            <div class="cp-r1-listen-copy">
+              <div class="cp-r1-listen-copy-title">WHY IT MATTERS</div>
+              <div class="cp-r1-listen-copy-body">Why Cognition Partner exists<br>— and what to do next.</div>
+            </div>
+          </div>
+          <span class="cp-r2-footer-vbar" aria-hidden="true"></span>
+          <button id="cpR11PlayButton" type="button" class="cp-r2-transport-control cp-r2-listen" aria-label="Listen to Why it matters narration">
+            <span class="cp-r2-transport-icon cp-r2-listen-icon" aria-hidden="true">▶</span>
+            <span class="cp-r2-transport-label">LISTEN</span>
+          </button>
+
+          <div class="cp-r2-audio-scrub" id="cpR11AudioScrub" data-audio="cpR11NarrationAudio">
+            <div class="cp-r2-audio-scrub-title" aria-hidden="true">U&nbsp;&nbsp;N&nbsp;&nbsp;D&nbsp;&nbsp;E&nbsp;&nbsp;R&nbsp;&nbsp;S&nbsp;&nbsp;T&nbsp;&nbsp;A&nbsp;&nbsp;N&nbsp;&nbsp;D&nbsp;&nbsp;I&nbsp;&nbsp;N&nbsp;&nbsp;G</div>
+            <canvas class="cp-r2-audio-scrub-wave" id="cpR11AudioScrubWave" width="280" height="40" aria-hidden="true"></canvas>
+            <div class="cp-r2-audio-scrub-row">
+              <input class="cp-r2-audio-scrub-range" id="cpR11AudioScrubRange" type="range" min="0" max="1000" value="0" step="1" aria-label="Narration position" />
+              <span class="cp-r2-audio-scrub-time" id="cpR11AudioScrubTime">0:00 / 0:20</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cp-r2-footer-transport" role="group" aria-label="Page navigation">
+                              <a class="cp-r2-transport-control cp-r2-prev" href="./index.html?v=20260827-about-1" aria-label="Previous page — YOUR COGNITION SYSTEM">
+            <span class="cp-r2-transport-icon" aria-hidden="true">←</span>
+            <span class="cp-r2-transport-label">PREVIOUS</span>
+            <span class="cp-r2-transport-sublabel">HOME</span>
+          </a>
+          <a class="cp-r2-transport-control cp-r2-next" href="./page10.html" aria-label="Next page — PARTNER + HOST">
+            <span class="cp-r2-transport-icon" aria-hidden="true">→</span>
+            <span class="cp-r2-transport-label">NEXT</span>
+            <span class="cp-r2-transport-sublabel">COGNITION SYSTEM</span>
+          </a>
+          </div>
+
+        <button id="cpPurposeHostButton" type="button" class="cp-r2-purpose-host is-idle is-breathing" aria-label="Speak with Curl Maxwell, your Cognition Host" aria-pressed="false" data-purpose-state="idle">
+          <span class="cp-r2-purpose-orb-wrap" aria-hidden="true">
+            <span class="cp-r2-purpose-orb-plate" aria-hidden="true"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--1"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--2"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--3"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--4"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--5"></span>
+            <span class="cp-r2-purpose-ring cp-r2-purpose-ring--6"></span>
+            <span class="cp-r2-purpose-glitter"></span>
+            <img class="cp-r2-purpose-orb" src="./assets/curl/curl_orb_live_20260820-172503_1d0b8b7e31.png" alt="" />
+          </span>
+          <span class="cp-r2-purpose-copy">
+            <span class="cp-r2-purpose-kicker">UNDERSTAND WITH</span>
+            <span class="cp-r2-purpose-name"><span class="cp-r2-purpose-name-brand">CURL.</span></span>
+            <span class="cp-r2-purpose-role">Curl Maxwell · Cognition Host</span>
+            <span class="cp-r2-purpose-hint">Tap or speak anytime.</span>
+          </span>
+        </button>
+
+        <!-- Keep wave node for existing narration JS (off-layout via CSS) -->
+        <div class="cp-r1-why-wave" id="cpR11WhyWave" hidden aria-hidden="true">
+          <canvas id="cpR11WhyWaveCanvas" class="cp-r1-why-wave-canvas"></canvas>
+        </div>
+      </section>
+
+      <div class="cp-r2-footer-motto-band" aria-hidden="false">
+        <p class="cp-r2-footer-motto" aria-label="Explore. Understand. Create. Leave a legacy.">
+          <span>EXPLORE.</span>
+          <span>UNDERSTAND.</span>
+          <span>CREATE.</span>
+          <span>LEAVE A LEGACY.</span>
+        </p>
+      </div>
+    </section>
+
+      <button id="cpR11PauseButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
+      <button id="cpR11RestartButton" type="button" hidden aria-hidden="true" tabindex="-1"></button>
+      <audio playsinline webkit-playsinline id="cpR11NarrationAudio" preload="auto" src="./assets/audio/CognitionPartner_about_r1.mp3?v=20260901-about-cta-finish-1">
+        Your browser does not support audio playback.
+      </audio>
+
+  </main>
+  <script src="./assets/cognition/cp_openai_live_api_base.js?v=20261020-visitor-live-worker-1"></script>
+<script src="./assets/cognition/curl/curl_character_config.js?v=20261019-voice-activate-1"></script>
+  <script src="./assets/cognition/curl/curl_voice_widget.js?v=20261019-voice-live-events-1"></script>
+  <script src="./assets/cognition/host_environment_continuity.js?v=20260831-curl-select-pos-1"></script>
+  
+  
+  <script>
+  // About closing narration: continue only if journey consent already established;
+  // never override explicit stop; direct About arrivals stay quiet until LISTEN.
+  (function () {
+    try {
+      var CONSENT = 'cp_narration_journey_consent_v1';
+      var STOPPED = 'cp_narration_user_stopped_v1';
+      var consented = false, stopped = false;
+      try { consented = sessionStorage.getItem(CONSENT) === '1'; } catch (e) {}
+      try { stopped = sessionStorage.getItem(STOPPED) === '1'; } catch (e) {}
+      window.__CP_ABOUT_NARRATION_POLICY__ = { consented: consented, stopped: stopped, autoplay: consented && !stopped };
+      // If continuing, mark consent so journey controller may autoplay on this page too
+      // (About is page-like surface with narration audio + LISTEN).
+      if (consented && !stopped) {
+        try { sessionStorage.setItem(CONSENT, '1'); sessionStorage.removeItem(STOPPED); } catch (e) {}
+      }
+    } catch (e) {}
+  })();
+  </script>
+
+  <script src="./assets/cognition/cp_narration_journey.js?v=20260901-about-cta-finish-1"></script>
+  
+<script id="cp-curl-marin-live">
+(function () {
+  try {
+    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+    var c = window.MAXWELLIAN_HUME;
+    c.voice_engine = 'openai';
+    c.openai_voice = 'marin';
+    c.voice_id = 'marin';
+    c.openai_realtime_model = 'gpt-live-1';
+    c.openai_model = 'gpt-live-1';
+    c.openai_live_api = true;
+    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
+    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
+    c.runtime_auth_bootstrap_enabled = false;
+    c.widget_url = c.widget_url || './assets/cognition/curl/openai_renderer/index.html?v=20261019-openai-live-only-1';
+  } catch (e) {}
+})();
+</script>
+
+<script id="cp-openai-live-only">
+(function () {
+  try {
+    window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+    var c = window.MAXWELLIAN_HUME;
+    c.voice_engine = 'openai';
+    c.runtime_auth_bootstrap_enabled = false;
+    c.runtime_auth_endpoint = '';
+    c.hume_runtime_auth_endpoint = '';
+    c.authless_hume_connection = false;
+    c.hume_api_key = '';
+    c.hume_config_id = '';
+    c.openai_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session';
+    c.openai_live_session_endpoint = 'https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session';
+    c.openai_live_api = true;
+    if (!c.openai_realtime_model) c.openai_realtime_model = 'gpt-live-1';
+    if (!c.openai_model) c.openai_model = 'gpt-live-1';
+    if (c.widget_url && /openai_renderer/i.test(String(c.widget_url))) {
+      c.widget_url = String(c.widget_url).replace(/openai_renderer/ig, 'openai_renderer');
+    }
+  } catch (e) {}
+})();
+</script>
+<script src="./assets/cognition/curl/curl_host_controller.js?v=20261019-voice-live-events-1"></script>
+  <script>
+    (() => {
+      const form = document.getElementById('cpAboutForm');
+      const status = document.getElementById('cpAboutStatus');
+      const speakBtn = document.getElementById('cpAboutSpeakCurl');
+      const purpose = document.getElementById('cpPurposeHostButton');
+      if (speakBtn && purpose) {
+        speakBtn.addEventListener('click', () => {
+        try {
+          window.MAXWELLIAN_HUME = window.MAXWELLIAN_HUME || {};
+          const aboutBridge =
+            'VISITOR CONTEXT — ABOUT CLOSING JOURNEY:\n' +
+            'The visitor has reached About after the Cognition Partner journey (or selected About directly).\n' +
+            'Purpose of About: explain WHY Cognition Partner exists — not chatbot novelty.\n' +
+            'Origin: a founder with decades of experience + persistent reasoning partner (Mike & Cove).\n' +
+            'Discovery: persistent partnership made hard problems practical; understanding compounds.\n' +
+            'Unity Energy is evidence of the method, not the subject.\n' +
+            'Closing principle: CP does not replace human intelligence; it reduces friction. Traveler remains traveler.\n' +
+            'Your role: Curl Maxwell, public Cognition Host. Help them consider what difficult problem, knowledge, company, or unfinished idea might become approachable if they could reason this way.\n' +
+            'If organizational: learn who they are, their organization, what interested them, what they want to explore; invite contact so the CP team can continue. Feel like beginning of exploration, not a sales funnel end.';
+          window.MAXWELLIAN_HUME.session_context = (window.MAXWELLIAN_HUME.session_context || '') + '\n\n' + aboutBridge;
+          window.MAXWELLIAN_HUME.opening_line =
+            window.MAXWELLIAN_HUME.opening_line ||
+            'Welcome — I am Curl Maxwell, your Cognition Host. You have reached the closing of this journey. What difficult problem or unfinished idea might you want to reason into next?';
+          if (window.MAXWELLIAN_HUME.session_variables) {
+            window.MAXWELLIAN_HUME.session_variables.about_closing_journey = 'true';
+            window.MAXWELLIAN_HUME.session_variables.page_surface = 'about';
+          }
+        } catch (e) {}
+
+          try { purpose.click(); } catch (e) {}
+          try { purpose.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+        });
+      }
+      if (!form) return;
+      // Destination architecture:
+      // 1) browser durable store (localStorage) for immediate continuity
+      // 2) optional POST to CP_ABOUT_INQUIRY_ENDPOINT (server/Maxwellian intake when available)
+      // 3) Unity fallback intake URL if configured
+      window.CP_ABOUT_INQUIRY_ENDPOINT = window.CP_ABOUT_INQUIRY_ENDPOINT || 'https://hostintake.relay-3b0.workers.dev/api/cp-about-inquiry';
+      window.CP_ABOUT_INQUIRY_FALLBACK_ENDPOINT = window.CP_ABOUT_INQUIRY_FALLBACK_ENDPOINT || 'https://hostintake.relay-3b0.workers.dev/';
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const name = (document.getElementById('cpAboutName') || {}).value || '';
+        const email = (document.getElementById('cpAboutEmail') || {}).value || '';
+        const org = (document.getElementById('cpAboutOrg') || {}).value || '';
+        const topic = (document.getElementById('cpAboutTopic') || {}).value || '';
+        const message = (document.getElementById('cpAboutMessage') || {}).value || '';
+        const website = (document.getElementById('cpAboutHp') || {}).value || '';
+        if (!name.trim() || !email.trim() || !message.trim()) {
+          if (status) {
+            status.classList.remove('is-ok');
+            status.textContent = 'Please add your name, email, and a short message.';
+          }
+          return;
+        }
+        const payload = {
+          source: 'cpwebsite-rev2-about',
+          channel: 'about-form',
+          created_at: new Date().toISOString(),
+          name: name.trim(),
+          email: email.trim(),
+          organization: org.trim(),
+          topic,
+          message: message.trim(),
+          page: location.pathname + location.search,
+          user_agent: navigator.userAgent,
+          intent_tags: ['fill_form', 'share_ideas', 'schedule_talk'],
+          website: website.trim(),
+          host: 'curl',
+          program: 'cognition-partner',
+          source_form: 'cpAboutForm'
+        };
+
+        // Durable browser capture (survives tab refresh; not Maxwellian server yet)
+        let localSaved = false;
+        try {
+          const key = 'cp_about_inquiries_v1';
+          const prev = JSON.parse(localStorage.getItem(key) || sessionStorage.getItem(key) || '[]');
+          const next = Array.isArray(prev) ? prev : [];
+          next.push(payload);
+          localStorage.setItem(key, JSON.stringify(next));
+          sessionStorage.setItem(key, JSON.stringify(next));
+          localStorage.setItem('cp_about_last_inquiry_v1', JSON.stringify(payload));
+          sessionStorage.setItem('cp_about_last_inquiry_v1', JSON.stringify(payload));
+          localSaved = true;
+        } catch (e) {}
+
+        // Attempt server intake (static 8050 will 404/405 until backend is mounted)
+        let remoteSaved = false;
+        let remoteNote = '';
+        const endpoints = [window.CP_ABOUT_INQUIRY_ENDPOINT, window.CP_ABOUT_INQUIRY_FALLBACK_ENDPOINT].filter(Boolean);
+        for (const ep of endpoints) {
+          try {
+            const resp = await fetch(ep, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify(payload),
+              mode: 'cors',
+              credentials: ep.indexOf('http') === 0 ? 'omit' : 'same-origin',
+              cache: 'no-store'
+            });
+            if (resp && resp.ok) {
+              let data = null;
+              try { data = await resp.json(); } catch (e) {}
+              if (data && data.accepted === true) {
+                remoteSaved = true;
+                try { console.info('[About] inquiry accepted', ep, data.inquiry_id || ''); } catch (e) {}
+                break;
+              }
+            }
+          } catch (e) {}
+        }
+
+        if (status) {
+          if (remoteSaved) {
+            status.classList.add('is-ok');
+            status.textContent = 'Received by the Cognition Partner team. This is the beginning of an exploration — continue with Curl anytime.';
+            form.reset();
+          } else {
+            status.classList.remove('is-ok');
+            status.textContent = 'We could not reach the intake service just now. Your entries are still on the form — please retry in a moment, or Speak with Curl.';
+            // Do NOT clear fields on failure (CONFIRM requirement)
+          }
+        }
+      });
+    })();
+  </script>
+<script src="assets/js/founder_share_panel.js?v=20261019-hotspot-30" onerror="this.onerror=null;this.src='https://unityenergy.com/UnityEnergy/founder_share_panel.js?v=20261019-hotspot-30';"></script>
+</body>
+</html>

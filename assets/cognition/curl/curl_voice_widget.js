@@ -1318,7 +1318,7 @@
       character_avatar_url: "assets/images/ClerkMaxwell_60423t.png",
       character_background_url: "",
       embed_url: "./assets/cognition/curl/openai_renderer/index.html?v=20261103-curl-restore-1",
-      openai_session_endpoint: "/api/openai/realtime/session",
+      openai_session_endpoint: "https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session",
       openai_realtime_model: "gpt-4o-realtime-preview",
       openai_voice: "ash",
       allow_openai_fallback: false,
@@ -9437,7 +9437,7 @@
     }
     const sessionEndpoint =
       coerceText(cfg.openai_session_endpoint || cfg.openai_session_url || cfg.session_endpoint) ||
-      "/api/openai/realtime/session";
+      "https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session";
     const model =
       coerceText(cfg.openai_realtime_model || cfg.openai_model || cfg.model) ||
       "gpt-4o-realtime-preview";
@@ -11230,8 +11230,8 @@
         cfg.openai_voice = cfg.openai_voice || "marin";
         cfg.voice_id = "marin";
         cfg.openai_realtime_model = cfg.openai_realtime_model || "gpt-live-1";
-        cfg.openai_session_endpoint = cfg.openai_session_endpoint || "/api/openai/realtime/session";
-        cfg.openai_live_session_endpoint = cfg.openai_live_session_endpoint || "/api/openai/live/session";
+        cfg.openai_session_endpoint = cfg.openai_session_endpoint || "https://openai-live-session.relay-3b0.workers.dev/api/openai/realtime/session";
+        cfg.openai_live_session_endpoint = cfg.openai_live_session_endpoint || "https://openai-live-session.relay-3b0.workers.dev/api/openai/live/session";
         const rurl = "./assets/cognition/curl/openai_renderer/index.html";
         cfg.embed_url = cfg.embed_url || cfg.openai_embed_url || cfg.openai_renderer_url || rurl;
         cfg.openai_embed_url = cfg.openai_embed_url || cfg.embed_url;

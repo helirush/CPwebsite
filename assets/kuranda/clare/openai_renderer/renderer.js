@@ -763,7 +763,20 @@
         lastErrorMessage =
           coerceText(payload && payload.error && payload.error.message) ||
           `OpenAI session endpoint failed with status ${response.status}.`;
-        if (response.status === 404 || response.status === 405) {
+        // Continue to next candidate on static-host method failures (GH Pages 501)
+        // and common gateway errors so production can fall through to workers.dev relay.
+        if (
+          response.status === 404 ||
+          response.status === 405 ||
+          response.status === 501 ||
+          response.status === 502 ||
+          response.status === 503 ||
+          response.status === 0
+        ) {
+          continue;
+        }
+        // If more candidates remain, keep trying instead of hard-failing the whole chain.
+        if (index < endpointCandidates.length - 1) {
           continue;
         }
         throw new Error(lastErrorMessage);
